@@ -218,7 +218,7 @@ const commonOpts = {
         maxRotation: 0, 
         minRotation: 0, 
         font: { 
-          size: 8, 
+          size: 10, /* ✅ X축 라벨 폰트 크기 10px로 재조정 */
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 10
+          size: 10 /* Y축 라벨 폰트 크기 10px 유지 */
         }
       }
     }
@@ -263,7 +263,6 @@ new Chart(document.getElementById("revenueChart"), {
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
-    // 1년부터 20년까지의 라벨 데이터 (20개)
     labels: Array.from({length:20},(_,i)=>`${i+1}년`), 
     datasets: [
       {
@@ -287,7 +286,7 @@ new Chart(document.getElementById("accumChart"), {
           minRotation: 0,
           font: { size: 10 }, 
           callback: function(value, index, values) {
-            // ✅ 수정된 로직: 인덱스가 0 (1년) 이거나 (index + 1)이 홀수(3년, 5년, 7년...)일 때만 표시
+            // 1년, 3년, 5년... 홀수 연도만 표시 (0, 2, 4...)
             if (index % 2 === 0) { 
               return this.getLabelForValue(value);
             }
