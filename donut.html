@@ -63,10 +63,11 @@
   }
   button:hover { background: #1d3557; }
   
-  /* ✅ 중앙 텍스트 스타일: 캔버스 영역 중앙에 위치하도록 조정 */
+  /* 중앙 강조 정보 스타일 (도넛 차트 전용) */
   #center-text {
       position: absolute;
-      top: 120px; /* ✅ 캔버스 높이(230px)와 차트박스 상단 패딩(15px) 등을 고려한 중앙값 */
+      /* ✅ 캔버스가 들어있는 차트 박스(chart-box) 내부의 중앙을 맞추도록 top 조정 */
+      top: 135px; /* ✅ 차트 박스 상단(0px) 기준, 캔버스 중앙(약 120px + 레전드 높이)에 오도록 값 조정 */
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none; 
@@ -94,7 +95,7 @@
       font-size: 1em; 
       margin-left: 4px; 
   }
-  /* 캔버스 높이 고정 */
+  /* 캔버스 높이 고정 (사이즈 축소) */
   #powerChart, #contributionChart {
       height: 230px !important; 
   }
@@ -113,11 +114,8 @@
     <div id="doughnut-chart-area" class="chart-box">
         <h2>에너지원별 발전량 영향 분석</h2>
         
-        <div style="position: relative;">
-            <canvas id="powerChart"></canvas>
-            <div id="center-text"></div> </div>
-
-        <div class="button-group">
+        <canvas id="powerChart"></canvas>
+        <div id="center-text"></div> <div class="button-group">
             <button id="show-before">기존 현황 보기</button>
             <button id="show-after">태양광 발전량 추가</button>
         </div>
@@ -220,7 +218,7 @@ function updateChart(state) {
       newColors[renewableIndex] = '#4caf50'; 
       dataSet.backgroundColor = newColors;
       
-      // 중앙 텍스트 내용 업데이트
+      // ✅ 중앙 텍스트 내용 업데이트
       centerTextElement.innerHTML = `
           <span class="title">태양광 발전 효과</span><br>
           <span class="value-gwh">+${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 4})} GWh</span>
@@ -238,7 +236,7 @@ function updateChart(state) {
 
 document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
 document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
-updateChart('after'); // 초기 상태를 'after'로 설정하여 태양광 발전 효과가 보이도록
+updateChart('after');
 
 
 // ========================================================
