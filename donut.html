@@ -11,16 +11,16 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px; 
+    padding: 50px 20px; /* ✅ 상단 패딩 증가로 내용의 수직 위치 조정 */
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-start; /* 상단 시작 */
   }
   .main-container {
     display: flex;
-    flex-direction: row; /* ✅ 기본 가로 배치 */
+    flex-direction: row; 
     gap: 20px; 
-    max-width: 700px; /* ✅ 최종 최대 너비 700px로 축소 */
+    max-width: 700px; 
     width: 100%;
   }
   .chart-box {
@@ -30,16 +30,14 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex-shrink: 1; 
     flex-grow: 1;
-    min-width: 300px; /* ✅ 각 박스의 최소 너비 */
+    min-width: 300px; 
   }
   /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
-    width: 48%; 
     position: relative;
   }
   /* 오른쪽 기여도 차트 영역 크기 */
   #contribution-chart-area { 
-    width: 48%; 
   }
 
   h2 {
@@ -98,9 +96,9 @@
       font-size: 1.1em; 
       margin-left: 5px;
   }
-  /* 캔버스 높이 고정 (사이즈 축소) */
+  /* 캔버스 높이 고정 */
   #powerChart, #contributionChart {
-      height: 300px !important; /* 높이 300px 유지 */
+      height: 300px !important; 
   }
 
   /* 좁은 화면에서 세로 배치로 전환 (모바일 최적화) */
@@ -195,7 +193,7 @@ let powerChart = new Chart(ctx_doughnut, {
   options: {
     responsive: true, cutout: '70%', animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
-      legend: { position: 'top', labels: { font: { size: 12 } } }, 
+      legend: { position: 'top', labels: { font: { size: 14 } } }, 
       tooltip: {
         callbacks: {
           label: function(context) {
@@ -274,7 +272,7 @@ new Chart(document.getElementById('contributionChart'), {
         plugins: {
             legend: {
                 position: 'top',
-                labels: { font: { size: 12 } } 
+                labels: { font: { size: 14 } } /* 폰트 크기 복구 */
             },
             tooltip: {
                 callbacks: {
