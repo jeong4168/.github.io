@@ -218,7 +218,7 @@ const commonOpts = {
         maxRotation: 0, 
         minRotation: 0, 
         font: { 
-          size: 8, /* X축 라벨 폰트 크기 8px */
+          size: 8, 
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 10 /* Y축 라벨 폰트 크기 10px */
+          size: 10
         }
       }
     }
@@ -280,16 +280,15 @@ new Chart(document.getElementById("accumChart"), {
   options: {
     ...commonOpts,
     scales: {
-      // X축 개별 설정 (X축 라벨 필터링)
       x: {
         ticks: { 
           autoSkip: false,
           maxRotation: 0, 
           minRotation: 0,
-          font: { size: 10 }, /* 누적 차트 라벨은 10px로 약간 키움 */
+          font: { size: 10 }, 
           callback: function(value, index, values) {
-            // 1년, 3년, 5년... 홀수 연도만 표시
-            if ((index + 1) % 2 === 1) { 
+            // ✅ 수정된 로직: 인덱스가 0 (1년) 이거나 (index + 1)이 홀수(3년, 5년, 7년...)일 때만 표시
+            if (index % 2 === 0) { 
               return this.getLabelForValue(value);
             }
             return '';
