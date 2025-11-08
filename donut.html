@@ -19,8 +19,8 @@
   .main-container {
     display: flex;
     flex-direction: row; /* ✅ 가로 배치 유지 */
-    gap: 20px; /* 간격 복구 */
-    max-width: 800px; /* ✅ 최대 너비 800px로 확장 */
+    gap: 20px; 
+    max-width: 800px; /* ✅ 가로 배치를 위한 최대 너비 800px */
     width: 100%;
   }
   .chart-box {
@@ -30,7 +30,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex-shrink: 1; 
     flex-grow: 1;
-    min-width: 350px; /* ✅ 가로 배치를 위한 최소 너비 확보 */
+    min-width: 350px; /* ✅ 가로 배치를 위한 최소 너비 */
   }
   /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
@@ -101,12 +101,12 @@
       height: 300px !important; 
   }
 
-  /* ✅ 750px 미만에서는 세로 배치로 전환 (반응형 필수) */
+  /* ✅ 좁은 화면에서만 세로 배치로 전환하는 반응형 코드 (750px 이하) */
   @media (max-width: 750px) { 
     .main-container {
       flex-direction: column;
       align-items: center;
-      max-width: 400px; /* 세로 배열 시 너비 제한 */
+      max-width: 400px; 
     }
     .chart-box {
         min-width: 100%;
