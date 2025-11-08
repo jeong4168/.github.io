@@ -214,11 +214,11 @@ const commonOpts = {
   scales: {
     x: {
       ticks: { 
-        autoSkip: false, /* 모든 월 라벨 표시 유지 */
+        autoSkip: false, 
         maxRotation: 0, 
         minRotation: 0, 
         font: { 
-          size: 8, /* ✅ X축 라벨 폰트 크기 8px로 조정 */
+          size: 8, /* X축 라벨 폰트 크기 8px */
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 10 /* ✅ Y축 라벨 폰트 크기 10px로 조정 */
+          size: 10 /* Y축 라벨 폰트 크기 10px */
         }
       }
     }
@@ -259,11 +259,12 @@ new Chart(document.getElementById("revenueChart"), {
   options: { ...commonOpts }
 });
 
-// 3. 20년 누적 수익 차트
+// 3. 20년 누적 수익 차트 (라벨 간격 조정)
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
-    labels: Array.from({length:20},(_,i)=>`${i+1}년`), /* 1년, 2년, ..., 20년 형식 유지 */
+    // 1년부터 20년까지의 라벨 데이터 (20개)
+    labels: Array.from({length:20},(_,i)=>`${i+1}년`), 
     datasets: [
       {
         label:'누적 수익',
@@ -278,6 +279,25 @@ new Chart(document.getElementById("accumChart"), {
   },
   options: {
     ...commonOpts,
+    scales: {
+      // X축 개별 설정 (X축 라벨 필터링)
+      x: {
+        ticks: { 
+          autoSkip: false,
+          maxRotation: 0, 
+          minRotation: 0,
+          font: { size: 10 }, /* 누적 차트 라벨은 10px로 약간 키움 */
+          callback: function(value, index, values) {
+            // 1년, 3년, 5년... 홀수 연도만 표시
+            if ((index + 1) % 2 === 1) { 
+              return this.getLabelForValue(value);
+            }
+            return '';
+          }
+        }
+      },
+      y: commonOpts.scales.y
+    },
     plugins: { tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } }, legend: { display: false } }
   }
 });
