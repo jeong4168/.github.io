@@ -13,7 +13,7 @@
     padding: 20px; 
   }
   .container {
-    max-width: 420px; /* ✅ 최종 전체 너비 420px로 재조정 (안정화) */
+    max-width: 420px; /* 최종 전체 너비 420px 유지 */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -82,7 +82,7 @@
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 17vh !important; /* 세로 길이 17vh 유지 */
+    height: 17vh !important; 
     max-height: 900px !important;
     width: 100% !important;
   }
@@ -218,7 +218,7 @@ const commonOpts = {
         maxRotation: 0, 
         minRotation: 0, 
         font: { 
-          size: 9, /* ✅ X축 라벨 폰트 크기 9px로 조정 (겹침 방지) */
+          size: 8, /* ✅ X축 라벨 폰트 크기 8px로 조정 */
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 11
+          size: 10 /* ✅ Y축 라벨 폰트 크기 10px로 조정 */
         }
       }
     }
@@ -263,7 +263,7 @@ new Chart(document.getElementById("revenueChart"), {
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
-    labels: Array.from({length:20},(_,i)=>`${i+1}년`),
+    labels: Array.from({length:20},(_,i)=>`${i+1}년`), /* 1년, 2년, ..., 20년 형식 유지 */
     datasets: [
       {
         label:'누적 수익',
