@@ -1,87 +1,90 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>태양광 발전량 계산 결과</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body {
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  background: #f8fafc;
-  margin: 0;
-  padding: 30px;
-}
-.container {
-  max-width: 1200px;
-  margin: auto;
-}
+  body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    padding: 30px;
+  }
+  .container {
+    max-width: 1200px;
+    margin: auto;
+  }
 
-/* ✅ 요약표 (변경 없음) */
-.summary-box {
-  background:#f5f7ff;
-  border:1px solid #d6dbff;
-  border-radius:10px;
-  padding:14px 20px;
-  margin:0 auto 35px;
-  max-width:750px;
-  font-size:14px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.04);
-}
-.summary-box h2 {
-  text-align:center;
-  color:#1d3557;
-  margin-bottom:10px;
-  font-size:18px;
-}
-.summary-box table {
-  width:100%;
-  border-collapse:collapse;
-}
-.summary-box th {
-  background:#e8ecff;
-  color:#1d3557;
-  text-align:left;
-  padding:6px 10px;
-  border-bottom:1px solid #dce2ff;
-  font-weight:600;
-  width:55%;
-}
-.summary-box td {
-  text-align:right;
-  padding:6px 10px;
-  border-bottom:1px solid #edf0ff;
-  color:#333;
-  font-weight:500;
-}
-.summary-box tr:last-child th,
-.summary-box tr:last-child td {
-  border-bottom:none;
-}
+  /* ✅ 요약표 (변경 없음) */
+  .summary-box {
+    background:#f5f7ff;
+    border:1px solid #d6dbff;
+    border-radius:10px;
+    padding:14px 20px;
+    margin:0 auto 35px;
+    max-width:750px;
+    font-size:14px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+  }
+  .summary-box h2 {
+    text-align:center;
+    color:#1d3557;
+    margin-bottom:10px;
+    font-size:18px;
+  }
+  .summary-box table { width:100%; border-collapse:collapse; }
+  .summary-box th {
+    background:#e8ecff;
+    color:#1d3557;
+    text-align:left;
+    padding:6px 10px;
+    border-bottom:1px solid #dce2ff;
+    font-weight:600;
+    width:55%;
+  }
+  .summary-box td {
+    text-align:right;
+    padding:6px 10px;
+    border-bottom:1px solid #edf0ff;
+    color:#333;
+    font-weight:500;
+  }
+  .summary-box tr:last-child th,
+  .summary-box tr:last-child td { border-bottom:none; }
 
-/* ✅ 그래프 영역 — 오직 여기서 높이/비율 조정됨 */
-.chart-container {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-.chart-card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  height: 560px;            /* ↑ 카드 세로 높이 (더 여유 있게) */
-}
-.chart-card h3 {
-  text-align:center;
-  color:#1d3557;
-  font-size:16px;
-  margin-bottom:10px;
-}
-.chart-card canvas {
-  height: 520px !important; /* ↑ 캔버스 높이 (차트 내부 세로 여유) */
-  width: 100% !important;
-}
+  /* 그래프 영역 — 반응형 높이 (뷰포트 기반) */
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  .chart-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    /* 카드 자체는 내용 크기에 맞게 유지 (높이 자동) */
+  }
+  .chart-card h3 {
+    text-align:center;
+    color:#1d3557;
+    font-size:16px;
+    margin-bottom:10px;
+  }
+  /* 캔버스를 뷰포트 높이 기준으로 설정 — 반응형 */
+  .chart-card canvas {
+    height: 60vh !important;       /* 뷰포트 높이의 60% */
+    max-height: 900px !important;  /* 너무 큰 화면에서 최대값 제한 */
+    width: 100% !important;
+  }
+
+  /* 모바일에서 라벨 여유 주기 (선택적) */
+  @media (max-width: 600px) {
+    .summary-box { padding:12px 14px; font-size:13px; }
+    .chart-card canvas { height: 50vh !important; }
+  }
 </style>
 </head>
 <body>
@@ -96,10 +99,12 @@ body {
       <h3>월별 발전량 (kWh)</h3>
       <canvas id="monthlyChart"></canvas>
     </div>
+
     <div class="chart-card">
       <h3>월별 매출액 (원)</h3>
       <canvas id="revenueChart"></canvas>
     </div>
+
     <div class="chart-card">
       <h3>20년 누적 수익 (원)</h3>
       <canvas id="accumChart"></canvas>
@@ -146,6 +151,7 @@ const siteData = {
   }
 };
 
+// 단가 정보
 const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
 const pricePerKwh = 163;
@@ -160,7 +166,7 @@ const totalKW = moduleCount * (power/1000) || 0;
 const months = Object.keys(irradiance);
 const irradianceVals = Object.values(irradiance);
 
-// 월별 발전량 (kWh) — 정수로
+// 월별 발전량 (kWh) — 정수
 const monthlyEnergy = irradianceVals.map(val => Math.round(totalKW * val));
 
 // 월별 매출액 계산
@@ -187,7 +193,7 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>손익분기점</th><td>${breakeven ? breakeven.toLocaleString() + ' 원' : '-'}</td></tr>
 `;
 
-// 공통 차트 옵션 (비율 유지, 캔버스 고정 높이 사용)
+// 공통 차트 옵션
 const commonOpts = {
   responsive: true,
   maintainAspectRatio: false,
@@ -206,16 +212,16 @@ const commonOpts = {
   }
 };
 
-// create charts with controlled bar width
+// 차트 생성 (바 너비 적당)
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage: 0.6, categoryPercentage: 0.6 }] },
+  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.5, categoryPercentage:0.5 }] },
   options: { ...commonOpts }
 });
 
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c', barPercentage: 0.6, categoryPercentage: 0.6 }] },
+  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c', barPercentage:0.5, categoryPercentage:0.5 }] },
   options: { ...commonOpts }
 });
 
@@ -224,9 +230,8 @@ new Chart(document.getElementById("accumChart"), {
   data: { 
     labels: Array.from({length:20},(_,i)=>`${i+1}년`),
     datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor:'#90be6d', order: 1, barPercentage: 0.7, categoryPercentage: 0.7 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', 
-        borderDash:[6,4], borderWidth:2, pointRadius:0, order: 0 }
+      { label:'누적 수익', data: accumRevenue, backgroundColor:'#90be6d', order: 1, barPercentage:0.6, categoryPercentage:0.6 },
+      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0, order: 0 }
     ]
   },
   options: {
