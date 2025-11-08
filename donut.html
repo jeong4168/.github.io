@@ -11,57 +11,57 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 30px;
+    padding: 20px; /* body padding 축소 */
     display: flex;
     justify-content: center;
     align-items: flex-start;
   }
   .main-container {
     display: flex;
-    gap: 20px;
-    max-width: 700px; /* ✅ 최대 너비를 1200px에서 700px로 축소 */
+    gap: 15px; /* 간격 축소 */
+    max-width: 480px; /* ✅ 최종 최대 너비 480px로 대폭 축소 */
     width: 100%;
   }
   .chart-box {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* 둥근 모서리 축소 */
+    padding: 15px; /* 내부 패딩 축소 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
   }
-  /* 왼쪽 도넛 차트 영역 크기 조정 */
+  /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
     width: 48%; 
-    min-width: 300px; /* 최소 너비 조정 */
+    min-width: 200px; /* 최소 너비 조정 */
     position: relative;
   }
-  /* 오른쪽 기여도 차트 영역 크기 조정 */
+  /* 오른쪽 기여도 차트 영역 크기 */
   #contribution-chart-area { 
     width: 48%; 
-    min-width: 300px; /* 최소 너비 조정 */
+    min-width: 200px; /* 최소 너비 조정 */
   }
 
   h2 {
     text-align: center;
     color: #1d3557;
-    margin-bottom: 20px;
-    font-size: 1.4em;
+    margin-bottom: 15px; /* 마진 축소 */
+    font-size: 1.2em; /* 폰트 크기 축소 */
     font-weight: 700;
   }
   .button-group {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 15px;
   }
   button {
-    padding: 8px 15px;
-    margin: 0 5px;
+    padding: 6px 12px; /* 버튼 패딩 축소 */
+    margin: 0 4px;
     background: #457b9d;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.9em;
+    font-size: 0.8em; /* 버튼 폰트 축소 */
     transition: background 0.3s;
   }
   button:hover { background: #1d3557; }
@@ -75,36 +75,35 @@
       pointer-events: none; 
       text-align: center;
       font-weight: 700;
-      line-height: 1.4; 
+      line-height: 1.3; /* 줄 간격 축소 */
       color: #1d3557;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
       width: 80%; 
   }
   #center-text.visible { opacity: 1; }
-  #center-text .title { font-size: 0.9em; font-weight: 600; color: #333; }
-  .value-gwh { font-size: 1.5em; color: #4caf50; display: block; margin-top: 5px; }
+  .value-gwh { font-size: 1.2em; color: #4caf50; display: block; margin-top: 3px; } /* 폰트 크기 축소 */
 
   /* 기여도 차트 하단 정보 */
   .reduction-info {
       text-align: center;
-      font-size: 1.1em;
+      font-size: 0.9em; /* 폰트 크기 축소 */
       font-weight: 700;
       color: #1d3557;
-      margin-top: 15px;
+      margin-top: 10px; /* 마진 축소 */
   }
   .info-value {
       color: #e76f51; 
-      font-size: 1.3em;
+      font-size: 1.1em; /* 폰트 크기 축소 */
       margin-left: 5px;
   }
 
   /* 반응형 조정 */
-  @media (max-width: 750px) { /* ✅ 모바일/태블릿 기준 분기점 조정 */
+  @media (max-width: 520px) { /* 분기점 조정 */
     .main-container {
       flex-direction: column;
       align-items: center;
-      max-width: 400px; /* 세로 배열 시 컨테이너 너비 제한 */
+      max-width: 350px; 
     }
     #doughnut-chart-area, #contribution-chart-area {
       width: 100%;
@@ -147,12 +146,10 @@ Chart.register(ChartDataLabels);
 // 공통 데이터 및 계산
 // ========================================================
 
-// 2018년 전력 배출량 (목표 기준)
 const emission2018 = 15894.70; 
 const INCHEON_TARGET_RATE = 0.31; 
 const reductionTarget_kt = emission2018 * INCHEON_TARGET_RATE; 
 
-// 태양광 설치 발전량 (kWh) 및 감축량 계산
 const solarGenerationKWh = 1930712676 + 55172575 + 16546822; 
 const REDUCTION_FACTOR_KWH = 0.4781; 
 const KILOGRAMS_TO_KILOTONNES = 1000000;
@@ -190,7 +187,7 @@ let powerChart = new Chart(ctx_doughnut, {
   options: {
     responsive: true, cutout: '70%', animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
-      legend: { position: 'top', labels: { font: { size: 14 } } },
+      legend: { position: 'top', labels: { font: { size: 12 } } }, /* 폰트 축소 */
       tooltip: {
         callbacks: {
           label: function(context) {
@@ -269,7 +266,7 @@ new Chart(document.getElementById('contributionChart'), {
         plugins: {
             legend: {
                 position: 'top',
-                labels: { font: { size: 14 } }
+                labels: { font: { size: 12 } } /* 폰트 축소 */
             },
             tooltip: {
                 callbacks: {
