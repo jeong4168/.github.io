@@ -90,7 +90,7 @@
         <canvas id="powerChart"></canvas>
         <div class="button-group">
             <button id="show-before">기존 현황 보기</button>
-            <button id="show-after">태양광 발전량 추가</button>
+            <button id="show-after">추가 태양광 발전량 </button>
         </div>
     </div>
 
@@ -98,10 +98,13 @@
         <h2>인천시 2030년 목표 대비 감축 기여도</h2>
         <canvas id="contributionChart"></canvas>
         
+        <!-- ✅ 수정된 텍스트 정렬 부분 -->
         <div class="reduction-info">
             목표 감축량 (2018년 대비 31.0%): 
-            <span id="target-reduction-amount" class="info-value">0</span> ktCO2e ｜ 
-            태양광 예상 감축량: 
+            <span id="target-reduction-amount" class="info-value">0</span> ktCO2e
+        </div>
+        <div class="reduction-info">
+            온실가스 예상 감축량: 
             <span id="reduction-amount" class="info-value">0</span> ktCO2e
         </div>
     </div>
@@ -133,7 +136,7 @@ const renewableIndex = labels.indexOf('신재생');
 
 const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
 
-// ✅ 도넛 중앙에 텍스트 표시
+// ✅ 도넛 중앙 텍스트
 const centerTextPlugin = {
   id: 'centerTextPlugin',
   afterDraw(chart) {
@@ -167,7 +170,7 @@ let powerChart = new Chart(ctx_doughnut, {
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false, // ✅ 도넛 비율 유지
+    maintainAspectRatio: false,
     cutout: '65%',
     animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
@@ -229,7 +232,7 @@ new Chart(contributionCtx, {
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false, // ✅ 원형 유지
+    maintainAspectRatio: false,
     cutout: '0%',
     plugins: {
       legend: { position: 'top', labels: { font: { size: 12 } } },
