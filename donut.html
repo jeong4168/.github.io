@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>에너지 발전 영향 및 온실가스 감축 시뮬레이션</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <style>
   body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
@@ -32,8 +31,7 @@
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-    width: 100%; 
+    width: 100%;
   }
 
   h2 {
@@ -63,7 +61,7 @@
   button:hover { background: #1d3557; }
 
   #powerChart {
-      height: 320px !important; /* ✅ 도넛 그래프 키움 */
+      height: 340px !important; /* ✅ 도넛 크기 키움 */
   }
   #contributionChart {
       height: 230px !important;
@@ -75,17 +73,12 @@
       font-weight: 700;
       color: #1d3557;
       margin-top: 6px;
-      white-space: nowrap; /* ✅ 줄바꿈 방지 */
+      white-space: nowrap;
   }
   .info-value {
       color: #e76f51; 
       font-size: 1em;
       margin-left: 4px; 
-  }
-
-  @media (max-width: 420px) { 
-    #powerChart { height: 340px !important; }
-    #contributionChart { height: 250px !important; }
   }
 </style>
 </head>
@@ -115,11 +108,8 @@
 </div>
 
 <script>
-Chart.register(ChartDataLabels);
+Chart.register();
 
-// ================================
-// 데이터
-// ================================
 const emission2018 = 15894.70;
 const INCHEON_TARGET_RATE = 0.31;
 const reductionTarget_kt = emission2018 * INCHEON_TARGET_RATE;
@@ -130,13 +120,11 @@ const KILOGRAMS_TO_KILOTONNES = 1000000;
 const totalReduction_kt = (solarGenerationKWh * REDUCTION_FACTOR_KWH) / KILOGRAMS_TO_KILOTONNES;
 const remainingReductionNeeded = reductionTarget_kt - totalReduction_kt;
 
-// ================================
-// 도넛 차트 데이터
-// ================================
 const dataBefore = {원자력: 188754, 석탄: 167160, LNG: 167205, 신재생: 63155, 유류: 1204, 양수: 4677, 기타: 3413};
 const newRenewableEnergy = 65157.432073;
 const increaseValue = newRenewableEnergy - dataBefore.신재생;
 const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
+
 const labels = Object.keys(dataBefore);
 const initialData = Object.values(dataBefore);
 const finalData = Object.values(dataAfter);
@@ -145,68 +133,60 @@ const renewableIndex = labels.indexOf('신재생');
 
 const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
 
-// ✅ 중심 텍스트 플러그인 (afterDraw 사용)
+// ✅ 도넛 중앙에 텍스트 표시 (정확한 중앙 정렬)
 const centerTextPlugin = {
   id: 'centerTextPlugin',
   afterDraw(chart) {
-    const { ctx, chartArea: { width, height } } = chart;
-    const centerX = width / 2;
-    const centerY = height / 2 + 10;
+    const { ctx, chartArea, chartArea: { left, top, right, bottom } } = chart;
+    const centerX = (left + right) / 2;
+    const centerY = (top + bottom) / 2;
     const dataSet = chart.data.datasets[0].data;
-    if (dataSet !== finalData) return; // “after” 상태일 때만 표시
 
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    // 제목
-    ctx.font = '600 14px Pretendard';
-    ctx.fillStyle = '#1d3557';
-    ctx.fillText('태양광 발전 효과', centerX, centerY - 26);
-
-    // 숫자
-    ctx.font = '700 20px Pretendard';
-    ctx.fillStyle = '#4caf50';
-    ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 1 })} GWh`, centerX, centerY + 4);
-
-    ctx.restore();
+    if (dataSet === finalData) {
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '700 20px Pretendard';
+      ctx.fillStyle = '#4caf50';
+      ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, centerX, centerY);
+      ctx.restore();
+    }
   }
 };
 
 let powerChart = new Chart(ctx_doughnut, {
   type: 'doughnut',
   data: {
-    labels: labels,
+    labels,
     datasets: [{
       data: initialData,
       backgroundColor: backgroundColors,
       borderWidth: 1,
-      offset: labels.map((_, i) => (i === renewableIndex) ? 5 : 0)
+      offset: labels.map((_, i) => i === renewableIndex ? 5 : 0)
     }]
   },
   options: {
     responsive: true,
-    cutout: '70%',
+    cutout: '65%',
     animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
       legend: { position: 'top', labels: { font: { size: 12 } } },
       tooltip: {
         callbacks: {
-          label: function(context) {
+          label(context) {
             let label = context.label || '';
-            if (label) { label += ': '; }
+            if (label) label += ': ';
             const value = context.parsed;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = ((value / total) * 100).toFixed(2) + '%';
-            let tooltipText = label + value.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' GWh (' + percentage + ')';
+            let tooltipText = `${label}${value.toLocaleString()} GWh (${percentage})`;
             if (context.label === '신재생' && powerChart.data.datasets[0].data === finalData) {
               tooltipText += ` (증가량: +${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 2})} GWh)`;
             }
             return tooltipText;
           }
         }
-      },
-      datalabels: { display: false }
+      }
     }
   },
   plugins: [centerTextPlugin]
@@ -235,18 +215,17 @@ updateChart('after');
 // ================================
 // 감축 기여도 차트
 // ================================
-const contributionDoughnutData = {
-  labels: ['태양광 감축 기여', '추가 감축 목표량'],
-  datasets: [{
+const contributionCtx = document.getElementById('contributionChart').getContext('2d');
+new Chart(contributionCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['태양광 감축 기여', '추가 감축 목표량'],
+    datasets: [{
       data: [totalReduction_kt, remainingReductionNeeded],
       backgroundColor: ['#4caf50', '#e9c46a'], 
       borderWidth: 1
-  }]
-};
-
-new Chart(document.getElementById('contributionChart'), {
-  type: 'doughnut',
-  data: contributionDoughnutData,
+    }]
+  },
   options: {
     responsive: true,
     cutout: '0%',
@@ -254,31 +233,21 @@ new Chart(document.getElementById('contributionChart'), {
       legend: { position: 'top', labels: { font: { size: 12 } } },
       tooltip: {
         callbacks: {
-          label: function(context) {
+          label(context) {
             let label = context.label || '';
-            if (label) { label += ': '; }
+            if (label) label += ': ';
             const value = context.parsed;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = (value / total * 100).toFixed(2) + '%';
-            return label + value.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' ktCO2e (' + percentage + ')';
+            return `${label}${value.toLocaleString(undefined, {maximumFractionDigits: 2})} ktCO2e (${percentage})`;
           }
         }
-      },
-      datalabels: {
-        color: '#fff',
-        formatter: (value, context) => {
-          const total = context.dataset.data.reduce((a, b) => a + b, 0);
-          const percentage = (value / total * 100).toFixed(1) + '%';
-          if (value / total * 100 < 5) return ''; 
-          return percentage;
-        },
-        font: { weight: 'bold', size: 12 }
       }
     }
   }
 });
 
-// 하단 수치 업데이트
+// 하단 텍스트 업데이트
 document.getElementById('target-reduction-amount').textContent = reductionTarget_kt.toLocaleString(undefined, {maximumFractionDigits: 2});
 document.getElementById('reduction-amount').textContent = totalReduction_kt.toLocaleString(undefined, {maximumFractionDigits: 2});
 </script>
