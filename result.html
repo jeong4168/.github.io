@@ -13,7 +13,7 @@
     padding: 20px; 
   }
   .container {
-    max-width: 350px; /* ✅ 최종 전체 너비 350px로 조정 */
+    max-width: 450px; /* ✅ 최종 전체 너비 450px로 조정 */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -25,11 +25,11 @@
     background:#f5f7ff;
     border:1px solid #d6dbff;
     border-radius:10px;
-    padding:10px 15px;
+    padding:10px 15px; /* ✅ 요약표 내부 여백 조정 */
     margin:0;
     max-width: 100%;
     width: 100%;
-    font-size: 13px;
+    font-size: 13px; /* ✅ 요약표 본문 글꼴 크기 조정 */
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
     flex-grow: 0;
     flex-shrink: 0;
@@ -37,7 +37,7 @@
   .summary-box h2 {
     text-align:center;
     color:#1d3557;
-    font-size:16px;
+    font-size:16px; /* ✅ 요약표 제목 크기 조정 */
     margin-bottom: 5px;
   }
   .summary-box table { width:100%; border-collapse:collapse; }
@@ -45,14 +45,14 @@
     background:#e8ecff;
     color:#1d3557;
     text-align:left;
-    padding:4px 8px;
+    padding:4px 8px; /* ✅ 요약표 셀 여백 조정 */
     border-bottom:1px solid #dce2ff;
     font-weight:600;
     width:55%;
   }
   .summary-box td {
     text-align:right;
-    padding:4px 8px;
+    padding:4px 8px; /* ✅ 요약표 셀 여백 조정 */
     border-bottom:1px solid #edf0ff;
     color:#333;
     font-weight:500;
@@ -64,7 +64,7 @@
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     flex-grow: 1;
     min-width: 100%;
   }
@@ -82,13 +82,13 @@
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 16vh !important; /* ✅ 최종 세로 길이 16vh로 조정 */
+    height: 17vh !important; /* ✅ 세로 길이 17vh로 복구 */
     max-height: 900px !important;
     width: 100% !important;
   }
 
   /* 모바일 대응: 전체 너비 감소에 따라 분기점 조정 */
-  @media (max-width: 420px) {
+  @media (max-width: 470px) { /* 분기점을 470px로 조정 */
     .container {
       flex-direction: column;
       gap: 15px;
@@ -215,10 +215,10 @@ const commonOpts = {
     x: {
       ticks: { 
         autoSkip: true, 
-        maxRotation: 45, /* ✅ X축 라벨 회전 각도 45도로 설정 (찌그러짐 방지) */
-        minRotation: 45, /* 찌그러짐 방지를 위해 minRotation도 동일하게 설정 */
+        maxRotation: 0, /* ✅ 회전 설정 제거 */
+        minRotation: 0, /* ✅ 회전 설정 제거 */
         font: { 
-          size: 13, 
+          size: 13, /* ✅ X축 라벨 폰트 크기 13px 유지 */
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 11
+          size: 11 /* Y축 라벨 폰트 크기 11px 유지 */
         }
       }
     }
