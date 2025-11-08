@@ -11,59 +11,59 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    /* ✅ body padding을 상하로 넓게 설정하여 콘텐츠가 아래쪽에 위치하도록 유도 */
-    padding: 100px 20px; 
+    padding: 20px; 
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* 상단 시작 */
-    min-height: 100vh; /* 전체 화면 높이 확보 */
+    align-items: flex-start;
   }
   .main-container {
     display: flex;
-    gap: 20px; /* 간격 복구 */
-    max-width: 1200px; /* ✅ 최대 너비 확장 (잘림 방지) */
+    flex-direction: column; /* ✅ 세로로 쌓음 */
+    gap: 15px; 
+    max-width: 420px; /* ✅ 최대 너비 420px로 강제 축소 */
     width: 100%;
   }
   .chart-box {
     background: white;
-    border-radius: 12px; /* 둥근 모서리 복구 */
-    padding: 20px; /* 내부 패딩 복구 */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; 
+    padding: 15px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+    width: 100%;
   }
   /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
-    width: 48%; 
-    min-width: 350px; /* 최소 너비 유지 */
+    width: 100%; /* ✅ 너비 100% */
+    min-width: auto; /* ✅ 최소 너비 제약 해제 */
     position: relative;
   }
   /* 오른쪽 기여도 차트 영역 크기 */
   #contribution-chart-area { 
-    width: 48%; 
-    min-width: 350px; /* 최소 너비 유지 */
+    width: 100%; /* ✅ 너비 100% */
+    min-width: auto; /* ✅ 최소 너비 제약 해제 */
   }
 
   h2 {
     text-align: center;
     color: #1d3557;
-    margin-bottom: 20px; 
-    font-size: 1.4em; 
+    margin-bottom: 15px; 
+    font-size: 1.2em; 
     font-weight: 700;
   }
   .button-group {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 15px;
   }
   button {
-    padding: 8px 15px; 
-    margin: 0 5px;
+    padding: 6px 12px; 
+    margin: 0 4px;
     background: #457b9d;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.9em; 
+    font-size: 0.8em; 
     transition: background 0.3s;
   }
   button:hover { background: #1d3557; }
@@ -99,19 +99,12 @@
       font-size: 1.1em; 
       margin-left: 5px;
   }
-
-  /* 반응형 조정 */
-  @media (max-width: 750px) {
-    .main-container {
-      flex-direction: column;
-      align-items: center;
-      max-width: 400px; /* 세로 배열 시 컨테이너 너비 제한 */
-    }
-    #doughnut-chart-area, #contribution-chart-area {
-      width: 100%;
-      min-width: auto;
-    }
+  /* 캔버스 높이 고정 (사이즈 축소의 핵심) */
+  #powerChart, #contributionChart {
+      height: 280px !important; /* ✅ 높이 고정으로 사이즈 축소 */
   }
+
+  /* 모바일 대응: 기본 레이아웃이 세로 쌓기이므로 추가 조정 불필요 */
 </style>
 </head>
 <body>
