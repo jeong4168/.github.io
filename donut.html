@@ -61,10 +61,10 @@
   button:hover { background: #1d3557; }
 
   #powerChart {
-      height: 340px !important; /* ✅ 도넛 그래프 크게 */
+      height: 340px !important; /* ✅ 도넛 크기 키움 */
   }
   #contributionChart {
-      height: 340px !important; /* ✅ 눌림 해소 — 원형 복원 */
+      height: 300px !important; /* ✅ 눌리지 않게 비율 조정 */
   }
 
   .reduction-info {
@@ -99,10 +99,10 @@
         <canvas id="contributionChart"></canvas>
         
         <div class="reduction-info">
-            목표 감축량 (2018년 대비 31.0%): <span id="target-reduction-amount" class="info-value">0</span> ktCO2e
-        </div>
-        <div class="reduction-info">
-            태양광 예상 감축량: <span id="reduction-amount" class="info-value">0</span> ktCO2e
+            목표 감축량 (2018년 대비 31.0%): 
+            <span id="target-reduction-amount" class="info-value">0</span> ktCO2e ｜ 
+            태양광 예상 감축량: 
+            <span id="reduction-amount" class="info-value">0</span> ktCO2e
         </div>
     </div>
 </div>
@@ -133,13 +133,13 @@ const renewableIndex = labels.indexOf('신재생');
 
 const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
 
-// ✅ 중앙 텍스트
+// ✅ 도넛 중앙에 텍스트 표시
 const centerTextPlugin = {
   id: 'centerTextPlugin',
   afterDraw(chart) {
-    const { ctx, chartArea: { left, top, right, bottom } } = chart;
-    const centerX = (left + right) / 2;
-    const centerY = (top + bottom) / 2;
+    const { ctx, chartArea } = chart;
+    const centerX = (chartArea.left + chartArea.right) / 2;
+    const centerY = (chartArea.top + chartArea.bottom) / 2;
     const dataSet = chart.data.datasets[0].data;
 
     if (dataSet === finalData) {
@@ -167,7 +167,7 @@ let powerChart = new Chart(ctx_doughnut, {
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: false, // ✅ 도넛 비율 유지
     cutout: '65%',
     animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
@@ -229,8 +229,8 @@ new Chart(contributionCtx, {
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false, /* ✅ 비율 고정 해제 */
-    cutout: '55%', /* ✅ 원형 도넛 비율 보정 */
+    maintainAspectRatio: false, // ✅ 원형 유지
+    cutout: '0%',
     plugins: {
       legend: { position: 'top', labels: { font: { size: 12 } } },
       tooltip: {
