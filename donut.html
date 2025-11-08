@@ -11,16 +11,16 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px; 
+    padding: 10px; /* ✅ body padding 최소화 */
     display: flex;
     justify-content: center;
     align-items: flex-start;
   }
   .main-container {
     display: flex;
-    flex-direction: column; /* ✅ 세로로 쌓음 */
+    flex-direction: column; 
     gap: 15px; 
-    max-width: 420px; /* ✅ 최대 너비 420px로 강제 축소 */
+    max-width: 420px; /* 최대 너비 420px 유지 */
     width: 100%;
   }
   .chart-box {
@@ -33,14 +33,14 @@
   }
   /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
-    width: 100%; /* ✅ 너비 100% */
-    min-width: auto; /* ✅ 최소 너비 제약 해제 */
+    width: 100%; 
+    min-width: auto; 
     position: relative;
   }
   /* 오른쪽 기여도 차트 영역 크기 */
   #contribution-chart-area { 
-    width: 100%; /* ✅ 너비 100% */
-    min-width: auto; /* ✅ 최소 너비 제약 해제 */
+    width: 100%; 
+    min-width: auto; 
   }
 
   h2 {
@@ -101,7 +101,7 @@
   }
   /* 캔버스 높이 고정 (사이즈 축소의 핵심) */
   #powerChart, #contributionChart {
-      height: 280px !important; /* ✅ 높이 고정으로 사이즈 축소 */
+      height: 250px !important; /* ✅ 높이 250px로 추가 축소 */
   }
 
   /* 모바일 대응: 기본 레이아웃이 세로 쌓기이므로 추가 조정 불필요 */
