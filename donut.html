@@ -11,36 +11,33 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 10px; /* ✅ body padding 최소화 */
+    padding: 20px; 
     display: flex;
     justify-content: center;
     align-items: flex-start;
   }
   .main-container {
-    display: flex;
-    flex-direction: column; 
-    gap: 15px; 
-    max-width: 420px; /* 최대 너비 420px 유지 */
+    display: flex; /* ✅ 가로 배치 복구 */
+    flex-direction: row; 
+    gap: 20px; 
+    max-width: 750px; /* ✅ 가로 배치를 위한 최대 너비 확장 */
     width: 100%;
   }
   .chart-box {
     background: white;
     border-radius: 12px; 
-    padding: 15px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-    width: 100%;
+    padding: 20px; /* 내부 패딩 복구 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-shrink: 1; /* 축소 허용 */
+    flex-grow: 1; /* 확장 허용 */
+    min-width: 300px; /* ✅ 각 박스의 최소 너비 유지 */
   }
-  /* 왼쪽 도넛 차트 영역 크기 */
+  /* 왼쪽 도넛 차트 영역 */
   #doughnut-chart-area {
-    width: 100%; 
-    min-width: auto; 
     position: relative;
   }
-  /* 오른쪽 기여도 차트 영역 크기 */
+  /* 오른쪽 기여도 차트 영역 */
   #contribution-chart-area { 
-    width: 100%; 
-    min-width: auto; 
   }
 
   h2 {
@@ -99,12 +96,26 @@
       font-size: 1.1em; 
       margin-left: 5px;
   }
-  /* 캔버스 높이 고정 (사이즈 축소의 핵심) */
+  /* 캔버스 높이 고정 (비율 개선) */
   #powerChart, #contributionChart {
-      height: 250px !important; /* ✅ 높이 250px로 추가 축소 */
+      height: 300px !important; /* ✅ 높이를 300px로 늘려 찌그러짐 방지 */
   }
 
-  /* 모바일 대응: 기본 레이아웃이 세로 쌓기이므로 추가 조정 불필요 */
+  /* ✅ 750px 미만에서 세로 배치로 전환 */
+  @media (max-width: 750px) { 
+    .main-container {
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px; /* 세로 배열 시 너비 제한 */
+    }
+    #doughnut-chart-area, #contribution-chart-area {
+      width: 100%;
+      min-width: auto;
+    }
+    #powerChart, #contributionChart {
+      height: 350px !important; /* 세로 배치 시 높이 다시 늘림 */
+    }
+  }
 </style>
 </head>
 <body>
