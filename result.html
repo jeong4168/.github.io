@@ -13,22 +13,21 @@
     padding: 30px;
   }
   .container {
-    max-width: 1400px; /* 전체 컨테이너 너비 확장 */
+    max-width: 1400px;
     margin: auto;
-    /* ✅ 핵심 변경: 플렉스 컨테이너로 설정 */
     display: flex;
-    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
-    gap: 30px; /* 요소 간 간격 */
+    flex-wrap: wrap;
+    gap: 30px;
   }
 
-  /* ✅ 요약표 (너비 조정 및 위치 변경) */
+  /* 요약표 */
   .summary-box {
     background:#f5f7ff;
     border:1px solid #d6dbff;
     border-radius:10px;
     padding:14px 20px;
     margin:0;
-    max-width: 400px; /* 너비 감소 (그래프 대비 좁게) */
+    max-width: 400px;
     width: 100%;
     font-size:14px;
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
@@ -61,11 +60,11 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
-  /* ✅ 그래프 영역 — 남은 공간 전체 사용 */
+  /* 그래프 영역 */
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* ✅ 간격 줄임: 25px -> 15px */
+    gap: 15px; /* 그래프 간격 */
     flex-grow: 1;
     min-width: 500px;
   }
@@ -81,24 +80,24 @@
     font-size:16px;
     margin-bottom:10px;
   }
-  /* 캔버스를 뷰포트 높이 기준으로 설정 — 세로 길이 조정 */
+  /* 캔버스를 뷰포트 높이 기준으로 설정 — 최종 세로 길이 25vh */
   .chart-card canvas {
-    height: 40vh !important; /* ✅ 세로 길이 줄임: 60vh -> 40vh */
+    height: 25vh !important; /* ✅ 최종 세로 길이 25vh로 설정 */
     max-height: 900px !important;
     width: 100% !important;
   }
 
-  /* ✅ 모바일 대응: 요약표와 그래프를 세로로 배열 */
+  /* 모바일 대응: 세로 높이 조정 */
   @media (max-width: 850px) {
     .container {
       flex-direction: column;
       gap: 20px;
     }
     .summary-box {
-      max-width: 100%; /* 모바일에서는 전체 너비 사용 */
+      max-width: 100%;
       margin: 0 auto;
     }
-    .chart-card canvas { height: 50vh !important; }
+    .chart-card canvas { height: 35vh !important; } /* 모바일에서는 35vh */
   }
 </style>
 </head>
@@ -227,14 +226,14 @@ const commonOpts = {
   }
 };
 
-// 차트 생성 (바 너비 조정)
+// 차트 생성 (바 너비 조정 유지)
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{
     data: monthlyEnergy,
     backgroundColor: '#1d3557',
-    barPercentage:0.7,      /* ✅ 막대 너비 조정 */
-    categoryPercentage:0.8  /* ✅ 막대 너비 조정 */
+    barPercentage:0.7,
+    categoryPercentage:0.8
   }] },
   options: { ...commonOpts }
 });
@@ -244,8 +243,8 @@ new Chart(document.getElementById("revenueChart"), {
   data: { labels: months, datasets: [{
     data: monthlyRevenue,
     backgroundColor: '#ff9f1c',
-    barPercentage:0.7,      /* ✅ 막대 너비 조정 */
-    categoryPercentage:0.8  /* ✅ 막대 너비 조정 */
+    barPercentage:0.7,
+    categoryPercentage:0.8
   }] },
   options: { ...commonOpts }
 });
@@ -260,8 +259,8 @@ new Chart(document.getElementById("accumChart"), {
         data: accumRevenue,
         backgroundColor:'#90be6d',
         order: 1,
-        barPercentage:0.7,      /* ✅ 막대 너비 조정 */
-        categoryPercentage:0.8  /* ✅ 막대 너비 조정 */
+        barPercentage:0.7,
+        categoryPercentage:0.8
       },
       { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0, order: 0 }
     ]
