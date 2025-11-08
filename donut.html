@@ -63,20 +63,19 @@
   button:hover { background: #1d3557; }
 
   #powerChart {
-      height: 290px !important; /* 🔹 도넛 그래프 키움 */
+      height: 320px !important; /* ✅ 도넛 그래프 키움 */
   }
   #contributionChart {
       height: 230px !important;
   }
 
-  /* ✅ 하단 정보 한 줄 정렬 */
   .reduction-info {
       text-align: center;
       font-size: 0.85em;
       font-weight: 700;
       color: #1d3557;
       margin-top: 6px;
-      white-space: nowrap; /* 🔹 줄바꿈 방지 */
+      white-space: nowrap; /* ✅ 줄바꿈 방지 */
   }
   .info-value {
       color: #e76f51; 
@@ -85,7 +84,7 @@
   }
 
   @media (max-width: 420px) { 
-    #powerChart { height: 310px !important; }
+    #powerChart { height: 340px !important; }
     #contributionChart { height: 250px !important; }
   }
 </style>
@@ -146,26 +145,29 @@ const renewableIndex = labels.indexOf('신재생');
 
 const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
 
-// ✅ 커스텀 플러그인 (v4 호환)
+// ✅ 중심 텍스트 플러그인 (afterDraw 사용)
 const centerTextPlugin = {
   id: 'centerTextPlugin',
-  beforeDraw(chart) {
+  afterDraw(chart) {
     const { ctx, chartArea: { width, height } } = chart;
     const centerX = width / 2;
-    const centerY = height / 2 + 12;
+    const centerY = height / 2 + 10;
     const dataSet = chart.data.datasets[0].data;
-    if (dataSet !== finalData) return; // "after" 상태일 때만 표시
-    ctx.save();
+    if (dataSet !== finalData) return; // “after” 상태일 때만 표시
 
-    ctx.font = '600 14px Pretendard';
-    ctx.fillStyle = '#1d3557';
+    ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+
+    // 제목
+    ctx.font = '600 14px Pretendard';
+    ctx.fillStyle = '#1d3557';
     ctx.fillText('태양광 발전 효과', centerX, centerY - 26);
 
-    ctx.font = '700 19px Pretendard';
+    // 숫자
+    ctx.font = '700 20px Pretendard';
     ctx.fillStyle = '#4caf50';
-    ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 1 })} GWh`, centerX, centerY + 3);
+    ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 1 })} GWh`, centerX, centerY + 4);
 
     ctx.restore();
   }
@@ -184,7 +186,7 @@ let powerChart = new Chart(ctx_doughnut, {
   },
   options: {
     responsive: true,
-    cutout: '68%',
+    cutout: '70%',
     animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
       legend: { position: 'top', labels: { font: { size: 12 } } },
