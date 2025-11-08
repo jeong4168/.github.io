@@ -13,7 +13,7 @@
     padding: 20px; /* 여백도 약간 줄임 */
   }
   .container {
-    max-width: 500px; /* ✅ 최종 전체 너비 500px로 대폭 조정 */
+    max-width: 500px; /* 최종 전체 너비 500px로 대폭 조정 */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -65,7 +65,7 @@
     flex-direction: column;
     gap: 10px; /* 그래프 간격 추가 감소 */
     flex-grow: 1;
-    min-width: 100%; /* 500px 너비에서 그래프가 아래로 쌓이도록 설정 */
+    min-width: 100%;
   }
   .chart-card {
     background: white;
@@ -81,7 +81,7 @@
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 18vh !important; /* ✅ 세로 길이 최종 조정: 20vh -> 18vh */
+    height: 18vh !important; /* 최종 세로 길이 18vh로 설정 */
     max-height: 900px !important;
     width: 100% !important;
   }
@@ -212,7 +212,15 @@ const commonOpts = {
   },
   scales: {
     x: {
-      ticks: { autoSkip: true, maxRotation: 0, minRotation: 0 }
+      ticks: { 
+        autoSkip: true, 
+        maxRotation: 0, 
+        minRotation: 0,
+        font: { 
+          size: 10, /* ✅ X축 라벨 폰트 크기 명시 */
+          weight: 'normal'
+        }
+      }
     },
     y: {
       beginAtZero: true,
@@ -221,7 +229,7 @@ const commonOpts = {
   }
 };
 
-// 1. 월별 발전량 차트 (라벨 기존 유지)
+// 1. 월별 발전량 차트
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{
@@ -233,7 +241,7 @@ new Chart(document.getElementById("monthlyChart"), {
   options: { ...commonOpts }
 });
 
-// 2. 월별 매출액 차트 (✅ 라벨 추가)
+// 2. 월별 매출액 차트
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{
@@ -245,7 +253,7 @@ new Chart(document.getElementById("revenueChart"), {
   options: { ...commonOpts }
 });
 
-// 3. 20년 누적 수익 차트 (라벨 기존 유지)
+// 3. 20년 누적 수익 차트
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
