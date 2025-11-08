@@ -13,11 +13,11 @@ body {
   padding: 30px;
 }
 .container {
-  max-width: 800px; /* 전체 너비 축소 */
+  max-width: 1200px;
   margin: auto;
 }
 
-/* ✅ 요약표 */
+/* ✅ 요약표 (변경 없음) */
 .summary-box {
   background:#f5f7ff;
   border:1px solid #d6dbff;
@@ -59,18 +59,18 @@ body {
   border-bottom:none;
 }
 
-/* ✅ 그래프 영역 - 세로 배치 + 적절한 높이 */
+/* ✅ 그래프 영역 — 오직 여기서 높이 조정됨 */
 .chart-container {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: column; /* 세로 배치 유지 */
+  gap: 25px;
 }
 .chart-card {
   background: white;
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  height: 350px; /* 그래프 높이 적절히 유지 */
+  height: 520px; /* ← 그래프 카드 세로 높이를 충분히 늘림 */
 }
 .chart-card h3 {
   text-align:center;
@@ -79,7 +79,8 @@ body {
   margin-bottom:10px;
 }
 .chart-card canvas {
-  height: 300px !important; /* 캔버스 높이 적절히 유지 */
+  height: 480px !important; /* ← 실제 차트 캔버스 세로 높이 (비율 유지) */
+  width: 100% !important;
 }
 </style>
 </head>
@@ -107,16 +108,13 @@ body {
 </div>
 
 <script>
-// ==========================
-// URL 파라미터 읽기
-// ==========================
 const urlParams = new URLSearchParams(window.location.search);
 const site = urlParams.get('site');
 const width = parseFloat(urlParams.get('width'));
 const height = parseFloat(urlParams.get('height'));
 const power = parseFloat(urlParams.get('power'));
-const invest = parseFloat(urlParams.get('invest'));
-const support = parseFloat(urlParams.get('support'));
+const invest = parseFloat(urlParams.get('invest')) || 0;
+const support = parseFloat(urlParams.get('support')) || 0;
 
 const siteData = {
   "산업단지": {
@@ -148,39 +146,52 @@ const siteData = {
   }
 };
 
+// 단가 정보
 const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
 const pricePerKwh = 163;
 
-const { area, irradiance } = siteData[site];
-const panelArea = (width/1000)*(height/1000);
-const moduleCount = Math.floor(area / panelArea);
-const totalKW = moduleCount * (power/1000);
+const siteObj = siteData[site] || {};
+const area = siteObj.area || 0;
+const irradiance = siteObj.irradiance || {};
+const panelArea = (width/1000)*(height/1000) || 0;
+const moduleCount = panelArea > 0 ? Math.floor(area / panelArea) : 0;
+const totalKW = moduleCount * (power/1000) || 0;
 
 const months = Object.keys(irradiance);
 const irradianceVals = Object.values(irradiance);
-const monthlyEnergy = irradianceVals.map(val => (totalKW * val).toFixed(0));
-const monthlyRevenue = monthlyEnergy.map((val,i) => Math.round(val * (SMP[i] + REC[i]/1000)));
 
-const annualEnergy = monthlyEnergy.reduce((a,b)=>a+parseInt(b),0);
+// 월별 발전량 (kWh) — 정수로
+const monthlyEnergy = irradianceVals.map(val => Math.round(totalKW * val));
+
+// 월별 매출액 계산
+const monthlyRevenue = monthlyEnergy.map((val, i) => 
+  Math.round(val * (SMP[i] + (REC[i]/1000)))
+);
+
+// 절감액 및 손익분기점
+const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
 const saving = Math.round(annualEnergy * pricePerKwh);
 const breakeven = invest - support;
 
+// 누적 수익 (20년)
 const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-const accumRevenue = Array.from({length:20},(_,i)=> (yearlyRevenue*(i+1)).toFixed(0));
+const accumRevenue = Array.from({length:20},(_,i)=> (yearlyRevenue*(i+1)));
 
 document.getElementById("summaryTable").innerHTML = `
-  <tr><th>선택된 부지</th><td>${site}</td></tr>
-  <tr><th>발전 가능 면적</th><td>${area.toLocaleString()} ㎡</td></tr>
-  <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
-  <tr><th>총 발전용량</th><td>${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW</td></tr>
-  <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
-  <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년</td></tr>
-  <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
+  <tr><th>선택된 부지</th><td>${site || '-'}</td></tr>
+  <tr><th>발전 가능 면적</th><td>${area ? area.toLocaleString() + ' ㎡' : '-'}</td></tr>
+  <tr><th>모듈 수</th><td>${moduleCount ? moduleCount.toLocaleString() + ' 개' : '-'}</td></tr>
+  <tr><th>총 발전용량</th><td>${totalKW ? totalKW.toLocaleString(undefined,{maximumFractionDigits:1}) + ' kW' : '-'}</td></tr>
+  <tr><th>예상 연간 발전량</th><td>${annualEnergy ? annualEnergy.toLocaleString() + ' kWh' : '-'}</td></tr>
+  <tr><th>절감 전기요금</th><td>${saving ? saving.toLocaleString() + ' 원/년' : '-'}</td></tr>
+  <tr><th>손익분기점</th><td>${breakeven ? breakeven.toLocaleString() + ' 원' : '-'}</td></tr>
 `;
 
+// 공통 차트 옵션
 const commonOpts = {
   responsive: true,
+  maintainAspectRatio: false, // 캔버스 고정 높이 사용
   plugins: {
     tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() } },
     legend: { display: false }
@@ -188,18 +199,21 @@ const commonOpts = {
   scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } } }
 };
 
+// ① 월별 발전량 (남색)
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557' }] },
   options: { ...commonOpts }
 });
 
+// ② 월별 매출액 (주황)
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c' }] },
   options: { ...commonOpts }
 });
 
+// ③ 20년 누적 수익 (연두) + 손익분기점 (빨간 점선 앞으로)
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
