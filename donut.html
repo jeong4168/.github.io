@@ -18,10 +18,11 @@
   }
   .main-container {
     display: flex;
-    flex-direction: column; /* ✅ 세로 배치로 강제 */
+    flex-direction: column; /* ✅ 세로 배치로 변경 */
     gap: 20px; /* 그래프 간 간격 */
-    max-width: 450px; /* ✅ 최대 너비 450px로 설정 (세로 배치 최적화) */
+    max-width: 480px; /* ✅ 세로 배치에 적합한 너비로 조정 */
     width: 100%;
+    align-items: center; /* ✅ 중앙 정렬 */
   }
   .chart-box {
     background: white;
@@ -30,7 +31,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
     width: 100%; /* 너비를 컨테이너에 맞춤 */
-    min-width: auto; /* 최소 너비 제약 해제 */
+    min-width: auto; 
   }
 
   h2 {
@@ -213,7 +214,7 @@ function updateChart(state) {
       dataSet.backgroundColor = newColors;
       
       centerTextElement.innerHTML = `
-          <span class="title">태양광 발전 효과</span><br>
+          <span class="title">태양광 발전량 추가 효과</span><br>
           <span class="value-gwh">+${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 4})} GWh</span>
       `;
       centerTextElement.classList.add('visible');
