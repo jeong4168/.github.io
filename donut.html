@@ -20,28 +20,29 @@
   .main-container {
     display: flex;
     flex-direction: column; 
-    gap: 15px; /* 간격 축소 */
-    max-width: 380px; /* ✅ 최종 최대 너비 380px로 강제 축소 */
+    gap: 15px; 
+    max-width: 380px; 
     width: 100%;
     align-items: center;
-    padding: 15px 10px; /* main-container 패딩 최소화 */
+    padding: 15px 10px; 
     box-sizing: border-box; 
   }
   .chart-box {
     background: white;
-    border-radius: 10px; /* 모서리 축소 */
-    padding: 15px; /* 내부 패딩 축소 */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 그림자 축소 */
+    border-radius: 12px; 
+    padding: 15px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
     width: 100%; 
     min-width: auto; 
+    position: relative; /* ✅ 캔버스와 텍스트를 감싸는 부모 요소에 relative 설정 */
   }
 
   h2 {
     text-align: center;
     color: #1d3557;
     margin-bottom: 12px; 
-    font-size: 1.1em; /* 제목 폰트 축소 */
+    font-size: 1.1em; 
     font-weight: 700;
   }
   .button-group {
@@ -49,7 +50,7 @@
     margin-top: 10px; 
   }
   button {
-    padding: 6px 10px; /* 버튼 패딩 최소화 */
+    padding: 6px 10px; 
     margin: 0 3px;
     background: #457b9d;
     color: white;
@@ -65,13 +66,14 @@
   /* 중앙 강조 정보 스타일 (도넛 차트 전용) */
   #center-text {
       position: absolute;
-      top: 50%;
+      /* ✅ 캔버스 중앙에 위치시키기 위해 top/left 조정 */
+      top: 45%; /* 캔버스 중앙보다 약간 위로 조정 */
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none; 
       text-align: center;
       font-weight: 700;
-      line-height: 1.2; /* 줄 간격 최소화 */
+      line-height: 1.2; 
       color: #1d3557;
       opacity: 0; 
       transition: opacity 0.5s ease-in-out;
@@ -83,19 +85,19 @@
   /* 기여도 차트 하단 정보 */
   .reduction-info {
       text-align: center;
-      font-size: 0.85em; /* 폰트 축소 */
+      font-size: 0.85em; 
       font-weight: 700;
       color: #1d3557;
-      margin-top: 8px; /* 마진 축소 */
+      margin-top: 8px; 
   }
   .info-value {
       color: #e76f51; 
-      font-size: 1em; /* 폰트 축소 */
+      font-size: 1em; 
       margin-left: 4px; 
   }
-  /* 캔버스 높이 고정 (사이즈 축소의 핵심) */
+  /* 캔버스 높이 고정 (사이즈 축소) */
   #powerChart, #contributionChart {
-      height: 230px !important; /* ✅ 최종 높이 230px로 축소 */
+      height: 230px !important; 
   }
 
   /* 좁은 화면에서의 높이 유지 */
@@ -112,8 +114,7 @@
     <div id="doughnut-chart-area" class="chart-box">
         <h2>에너지원별 발전량 영향 분석</h2>
         <canvas id="powerChart"></canvas>
-        <div id="center-text"></div>
-        <div class="button-group">
+        <div id="center-text"></div> <div class="button-group">
             <button id="show-before">기존 현황 보기</button>
             <button id="show-after">태양광 발전량 추가</button>
         </div>
@@ -181,7 +182,7 @@ let powerChart = new Chart(ctx_doughnut, {
   options: {
     responsive: true, cutout: '70%', animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
-      legend: { position: 'top', labels: { font: { size: 11 } } }, /* 폰트 축소 */
+      legend: { position: 'top', labels: { font: { size: 11 } } }, 
       tooltip: {
         callbacks: {
           label: function(context) {
@@ -216,6 +217,7 @@ function updateChart(state) {
       newColors[renewableIndex] = '#4caf50'; 
       dataSet.backgroundColor = newColors;
       
+      // ✅ 중앙 텍스트 내용 업데이트
       centerTextElement.innerHTML = `
           <span class="title">태양광 발전 효과</span><br>
           <span class="value-gwh">+${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 4})} GWh</span>
@@ -233,8 +235,8 @@ function updateChart(state) {
 
 document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
 document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
-document.getElementById('powerChart').parentElement.appendChild(document.getElementById('center-text'));
 updateChart('after'); 
+
 
 // ========================================================
 // 2. 오른쪽 목표 기여 원형 차트 (contributionChart)
@@ -258,7 +260,7 @@ new Chart(document.getElementById('contributionChart'), {
         plugins: {
             legend: {
                 position: 'top',
-                labels: { font: { size: 11 } } /* 폰트 축소 */
+                labels: { font: { size: 11 } } 
             },
             tooltip: {
                 callbacks: {
@@ -282,7 +284,7 @@ new Chart(document.getElementById('contributionChart'), {
                 },
                 font: {
                     weight: 'bold',
-                    size: 12 /* 폰트 크기 조정 */
+                    size: 12
                 }
             }
         }
