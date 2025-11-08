@@ -1,201 +1,257 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>에너지원별 발전량 및 감축 기여도 분석</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: "Pretendard", sans-serif;
-      background-color: #f6f8fa;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      color: #1d3557;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>에너지 발전 영향 및 온실가스 감축 시뮬레이션</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    padding: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    min-height: 100vh; 
+  }
+  .main-container {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    max-width: 400px;
+    width: 100%;
+    align-items: center;
+    padding: 15px 10px;
+    box-sizing: border-box; 
+  }
+  .chart-box {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
 
-    .card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      padding: 24px;
-      margin-bottom: 20px;
-      width: 360px;
-      text-align: center;
-    }
+  h2 {
+    text-align: center;
+    color: #1d3557;
+    margin-bottom: 12px; 
+    font-size: 1.1em;
+    font-weight: 700;
+  }
 
-    h2 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 14px;
-    }
+  .button-group {
+    text-align: center;
+    margin-top: 10px; 
+  }
+  button {
+    padding: 6px 10px;
+    margin: 0 3px;
+    background: #457b9d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8em; 
+    transition: background 0.3s;
+  }
+  button:hover { background: #1d3557; }
 
-    .btn-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 12px;
-    }
+  #powerChart {
+      height: 340px !important; /* ✅ 도넛 크기 키움 */
+  }
+  #contributionChart {
+      height: 300px !important; /* ✅ 눌리지 않게 비율 조정 */
+  }
 
-    .btn {
-      background: #1d3557;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn:hover {
-      background: #457b9d;
-    }
-
-    canvas {
-      width: 100% !important;
-    }
-
-    /* ✅ 그래프별 세로 비율 통일 및 조정 */
-    #powerChart {
-      height: 270px !important;
-    }
-
-    #contributionChart {
-      height: 270px !important; /* 🔹 powerChart와 동일한 높이로 통일 */
-    }
-
-    .summary {
-      margin-top: 8px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #1d3557;
-    }
-
-    .summary span {
-      font-weight: 700;
-      color: #e63946;
-    }
-  </style>
+  .reduction-info {
+      text-align: center;
+      font-size: 0.85em;
+      font-weight: 700;
+      color: #1d3557;
+      margin-top: 6px;
+      white-space: nowrap;
+  }
+  .info-value {
+      color: #e76f51; 
+      font-size: 1em;
+      margin-left: 4px; 
+  }
+</style>
 </head>
 <body>
-    <div class="card">
-    <h2>에너지원별 발전량 영향 분석</h2>
-    <canvas id="powerChart"></canvas>
-    <div class="btn-container">
-      <button class="btn">기존 현황 보기</button>
-      <button class="btn">태양광 발전량 추가</button>
-    </div>
-  </div>
 
-    <div class="card">
-    <h2>인천시 2030년 목표 대비 감축 기여도</h2>
-    <canvas id="contributionChart"></canvas>
-    <div class="summary">
-      <strong>목표 감축량 (2018년 대비 31.0%):</strong>
-      <span>4,927.36 ktCO2e</span><br>
-      태양광 예상 감축량: <span>957.36 ktCO2e</span>
-    </div>
-  </div>
+<div class="main-container">
+    <div id="doughnut-chart-area" class="chart-box">
+        <h2>에너지원별 발전량 영향 분석</h2>
+        <canvas id="powerChart"></canvas>
+        <div class="button-group">
+            <button id="show-before">기존 현황 보기</button>
+            <button id="show-after">태양광 발전량 추가</button>
+        </div>
+    </div>
 
-  <script>
-    // Chart.js 중앙 텍스트 플러그인 정의
-    const centerTextPlugin = {
-      id: 'centerText',
-      beforeDraw: (chart) => {
-        if (chart.canvas.id === 'powerChart' && chart.options.plugins.centerText.enabled) {
-          const increaseValue = 2002.43; // JS 코드 상단에 정의된 값 사용
-          const { ctx, chartArea: { width, height } } = chart;
-          const centerX = width / 2;
-          const centerY = height / 2 + 10;
-          ctx.save();
-          ctx.font = '700 18px Pretendard';
-          ctx.fillStyle = '#2e7d32';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, centerX, centerY);
-          ctx.restore();
-        }
-      }
-    };
-  
-    // -------------------- 상단 도넛 --------------------
-    const dataInitial = [1200, 1900, 3000, 2500, 400, 300, 200];
-    const dataAfter = [1200, 1900, 3000, 2500 + 2002.43, 400, 300, 200]; // 신재생만 증가
-    const increaseValue = 2002.43; // 증가량
+    <div id="contribution-chart-area" class="chart-box">
+        <h2>인천시 2030년 목표 대비 감축 기여도</h2>
+        <canvas id="contributionChart"></canvas>
+        
+        <div class="reduction-info">
+            목표 감축량 (2018년 대비 31.0%): 
+            <span id="target-reduction-amount" class="info-value">0</span> ktCO2e ｜ 
+            태양광 예상 감축량: 
+            <span id="reduction-amount" class="info-value">0</span> ktCO2e
+        </div>
+    </div>
+</div>
 
-    const powerCtx = document.getElementById('powerChart').getContext('2d');
-    const powerChart = new Chart(powerCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['원자력', '석탄', 'LNG', '신재생', '유류', '양수', '기타'],
-        datasets: [{
-          data: dataAfter, // 초기 상태를 '추가' 상태로 설정
-          backgroundColor: ['#a5d6a7', '#ffcc80', '#ffb74d', '#66bb6a', '#f48fb1', '#90caf9', '#cfd8dc'],
-          borderWidth: 1,
-        }]
-      },
-      plugins: [centerTextPlugin],
-      options: {
-        responsive: true,
-        maintainAspectRatio: true, // ✅ 종횡비 유지 (정원)
-        cutout: '65%',
-        plugins: {
-          legend: { position: 'top', labels: { font: { size: 12 } } },
-          tooltip: { enabled: true },
-          centerText: { enabled: true } // 중앙 텍스트 플러그인 활성화
-        }
-      },
-    });
-    
-    // 버튼 이벤트 리스너
-    const powerButtons = document.querySelector('.card:first-child .btn-container').querySelectorAll('.btn');
-    powerButtons[0].addEventListener('click', () => { // 기존 현황
-        powerChart.data.datasets[0].data = dataInitial;
-        powerChart.options.plugins.centerText.enabled = false;
-        powerChart.update();
-    });
-    powerButtons[1].addEventListener('click', () => { // 태양광 추가
-        powerChart.data.datasets[0].data = dataAfter;
-        powerChart.options.plugins.centerText.enabled = true;
-        powerChart.update();
-    });
+<script>
+Chart.register();
 
-  
-    // -------------------- 하단 도넛 --------------------
-    const contributionCtx = document.getElementById('contributionChart').getContext('2d');
-    new Chart(contributionCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['태양광 감축 기여', '추가 감축 목표량'],
-        datasets: [{
-          data: [957.36, 4927.36 - 957.36],
-          backgroundColor: ['#66bb6a', '#f2c879'],
-          borderWidth: 1,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true, // ✅ 종횡비 유지 (정원)
-        cutout: '60%',
-        plugins: {
-          legend: { position: 'top', labels: { font: { size: 12 } } },
-          tooltip: {
-            callbacks: {
-              label(context) {
-                const label = context.label || '';
-                const value = context.parsed;
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const percent = (value / total * 100).toFixed(1);
-                return `${label}: ${value.toLocaleString()} ktCO2e (${percent}%)`;
-              }
-            }
-          }
-        }
-      }
-    });
-  </script>
+const emission2018 = 15894.70;
+const INCHEON_TARGET_RATE = 0.31;
+const reductionTarget_kt = emission2018 * INCHEON_TARGET_RATE;
+
+const solarGenerationKWh = 1930712676 + 55172575 + 16546822;
+const REDUCTION_FACTOR_KWH = 0.4781;
+const KILOGRAMS_TO_KILOTONNES = 1000000;
+const totalReduction_kt = (solarGenerationKWh * REDUCTION_FACTOR_KWH) / KILOGRAMS_TO_KILOTONNES;
+const remainingReductionNeeded = reductionTarget_kt - totalReduction_kt;
+
+const dataBefore = {원자력: 188754, 석탄: 167160, LNG: 167205, 신재생: 63155, 유류: 1204, 양수: 4677, 기타: 3413};
+const newRenewableEnergy = 65157.432073;
+const increaseValue = newRenewableEnergy - dataBefore.신재생;
+const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
+
+const labels = Object.keys(dataBefore);
+const initialData = Object.values(dataBefore);
+const finalData = Object.values(dataAfter);
+const backgroundColors = ['#2a9d8f', '#e9c46a', '#f4a261', '#264653', '#e76f51', '#50a0d0', '#cccccc'];
+const renewableIndex = labels.indexOf('신재생');
+
+const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
+
+// ✅ 도넛 중앙에 텍스트 표시
+const centerTextPlugin = {
+  id: 'centerTextPlugin',
+  afterDraw(chart) {
+    const { ctx, chartArea } = chart;
+    const centerX = (chartArea.left + chartArea.right) / 2;
+    const centerY = (chartArea.top + chartArea.bottom) / 2;
+    const dataSet = chart.data.datasets[0].data;
+
+    if (dataSet === finalData) {
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '700 20px Pretendard';
+      ctx.fillStyle = '#4caf50';
+      ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, centerX, centerY);
+      ctx.restore();
+    }
+  }
+};
+
+let powerChart = new Chart(ctx_doughnut, {
+  type: 'doughnut',
+  data: {
+    labels,
+    datasets: [{
+      data: initialData,
+      backgroundColor: backgroundColors,
+      borderWidth: 1,
+      offset: labels.map((_, i) => i === renewableIndex ? 5 : 0)
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false, // ✅ 도넛 비율 유지
+    cutout: '65%',
+    animation: { duration: 1000, easing: 'easeInOutQuint' },
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 12 } } },
+      tooltip: {
+        callbacks: {
+          label(context) {
+            let label = context.label || '';
+            if (label) label += ': ';
+            const value = context.parsed;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(2) + '%';
+            let tooltipText = `${label}${value.toLocaleString()} GWh (${percentage})`;
+            if (context.label === '신재생' && powerChart.data.datasets[0].data === finalData) {
+              tooltipText += ` (증가량: +${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 2})} GWh)`;
+            }
+            return tooltipText;
+          }
+        }
+      }
+    }
+  },
+  plugins: [centerTextPlugin]
+});
+
+function updateChart(state) {
+  const dataSet = powerChart.data.datasets[0];
+  if (state === 'after') {
+    dataSet.data = finalData;
+    dataSet.offset = labels.map((_, i) => i === renewableIndex ? 20 : 0);
+    const newColors = [...backgroundColors];
+    newColors[renewableIndex] = '#4caf50';
+    dataSet.backgroundColor = newColors;
+  } else {
+    dataSet.data = initialData;
+    dataSet.offset = labels.map((_, i) => i === renewableIndex ? 5 : 0);
+    dataSet.backgroundColor = backgroundColors;
+  }
+  powerChart.update();
+}
+
+document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
+document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
+updateChart('after');
+
+// ================================
+// 감축 기여도 차트
+// ================================
+const contributionCtx = document.getElementById('contributionChart').getContext('2d');
+new Chart(contributionCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['태양광 감축 기여', '추가 감축 목표량'],
+    datasets: [{
+      data: [totalReduction_kt, remainingReductionNeeded],
+      backgroundColor: ['#4caf50', '#e9c46a'], 
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false, // ✅ 원형 유지
+    cutout: '0%',
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 12 } } },
+      tooltip: {
+        callbacks: {
+          label(context) {
+            let label = context.label || '';
+            if (label) label += ': ';
+            const value = context.parsed;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = (value / total * 100).toFixed(2) + '%';
+            return `${label}${value.toLocaleString(undefined, {maximumFractionDigits: 2})} ktCO2e (${percentage})`;
+          }
+        }
+      }
+    }
+  }
+});
+
+// 하단 텍스트 업데이트
+document.getElementById('target-reduction-amount').textContent = reductionTarget_kt.toLocaleString(undefined, {maximumFractionDigits: 2});
+document.getElementById('reduction-amount').textContent = totalReduction_kt.toLocaleString(undefined, {maximumFractionDigits: 2});
+</script>
 </body>
 </html>
