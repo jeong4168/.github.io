@@ -11,16 +11,16 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 50px 20px; /* ✅ 상단 패딩 증가로 내용의 수직 위치 조정 */
+    padding: 20px; 
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* 상단 시작 */
+    align-items: flex-start;
   }
   .main-container {
     display: flex;
-    flex-direction: row; 
-    gap: 20px; 
-    max-width: 700px; 
+    flex-direction: column; /* ✅ 세로 배치로 강제 */
+    gap: 20px; /* 그래프 간 간격 */
+    max-width: 450px; /* ✅ 최대 너비 450px로 설정 (세로 배치 최적화) */
     width: 100%;
   }
   .chart-box {
@@ -28,16 +28,9 @@
     border-radius: 12px; 
     padding: 20px; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex-shrink: 1; 
-    flex-grow: 1;
-    min-width: 300px; 
-  }
-  /* 왼쪽 도넛 차트 영역 크기 */
-  #doughnut-chart-area {
-    position: relative;
-  }
-  /* 오른쪽 기여도 차트 영역 크기 */
-  #contribution-chart-area { 
+    flex-shrink: 0;
+    width: 100%; /* 너비를 컨테이너에 맞춤 */
+    min-width: auto; /* 최소 너비 제약 해제 */
   }
 
   h2 {
@@ -101,17 +94,8 @@
       height: 300px !important; 
   }
 
-  /* 좁은 화면에서 세로 배치로 전환 (모바일 최적화) */
-  @media (max-width: 700px) { 
-    .main-container {
-      flex-direction: column;
-      align-items: center;
-      max-width: 400px; 
-    }
-    .chart-box {
-        min-width: 100%;
-        width: 100%;
-    }
+  /* 좁은 화면에서 크기가 더 커지지 않도록 캔버스 높이 제약 유지 */
+  @media (max-width: 500px) {
     #powerChart, #contributionChart {
       height: 350px !important; 
     }
@@ -229,7 +213,7 @@ function updateChart(state) {
       dataSet.backgroundColor = newColors;
       
       centerTextElement.innerHTML = `
-          <span class="title">태양광 발전량 추가 </span><br>
+          <span class="title">태양광 발전 효과</span><br>
           <span class="value-gwh">+${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 4})} GWh</span>
       `;
       centerTextElement.classList.add('visible');
@@ -272,7 +256,7 @@ new Chart(document.getElementById('contributionChart'), {
         plugins: {
             legend: {
                 position: 'top',
-                labels: { font: { size: 14 } } /* 폰트 크기 복구 */
+                labels: { font: { size: 14 } } 
             },
             tooltip: {
                 callbacks: {
@@ -311,4 +295,3 @@ document.getElementById('contribution-percentage').textContent = (totalReduction
 
 </body>
 </html>
-
