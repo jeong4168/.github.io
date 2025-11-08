@@ -18,9 +18,9 @@
   }
   .main-container {
     display: flex;
-    flex-direction: row; /* ✅ 가로 배치 유지 */
+    flex-direction: row; /* ✅ 기본 가로 배치 */
     gap: 20px; 
-    max-width: 650px; /* ✅ 최종 최대 너비 650px로 설정 (작지만 가로 배치 가능) */
+    max-width: 700px; /* ✅ 최종 최대 너비 700px로 축소 */
     width: 100%;
   }
   .chart-box {
@@ -28,16 +28,18 @@
     border-radius: 12px; 
     padding: 20px; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex-shrink: 1; /* 축소 허용 */
-    flex-grow: 1; /* 확장 허용 */
-    min-width: 300px; /* ✅ 각 박스의 최소 너비 확보 */
+    flex-shrink: 1; 
+    flex-grow: 1;
+    min-width: 300px; /* ✅ 각 박스의 최소 너비 */
   }
   /* 왼쪽 도넛 차트 영역 크기 */
   #doughnut-chart-area {
+    width: 48%; 
     position: relative;
   }
   /* 오른쪽 기여도 차트 영역 크기 */
   #contribution-chart-area { 
+    width: 48%; 
   }
 
   h2 {
@@ -98,10 +100,10 @@
   }
   /* 캔버스 높이 고정 (사이즈 축소) */
   #powerChart, #contributionChart {
-      height: 280px !important; /* ✅ 높이 280px로 고정하여 안정적인 비율 확보 */
+      height: 300px !important; /* 높이 300px 유지 */
   }
 
-  /* 좁은 화면에서 세로 배치로 전환하는 반응형 (필수 유지) */
+  /* 좁은 화면에서 세로 배치로 전환 (모바일 최적화) */
   @media (max-width: 700px) { 
     .main-container {
       flex-direction: column;
@@ -110,9 +112,10 @@
     }
     .chart-box {
         min-width: 100%;
+        width: 100%;
     }
     #powerChart, #contributionChart {
-      height: 300px !important; 
+      height: 350px !important; 
     }
   }
 </style>
