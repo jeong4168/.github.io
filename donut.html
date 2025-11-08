@@ -11,23 +11,26 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px; 
+    padding: 0; /* ✅ body padding 제거 */
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* ✅ 수직 중앙 정렬 */
+    min-height: 100vh; /* ✅ body가 전체 화면 높이를 차지하도록 */
   }
   .main-container {
     display: flex;
     flex-direction: column; 
-    gap: 15px; 
-    max-width: 480px; /* ✅ 최종 최대 너비 480px로 축소 */
+    gap: 30px; /* ✅ 그래프 간 간격 증가 */
+    max-width: 480px; 
     width: 100%;
     align-items: center;
+    padding: 30px 20px; /* ✅ main-container 전체 패딩 추가 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
   }
   .chart-box {
     background: white;
     border-radius: 12px; 
-    padding: 15px; /* 내부 패딩 축소 */
+    padding: 25px; /* ✅ 내부 패딩 증가 */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
     width: 100%; 
@@ -37,24 +40,24 @@
   h2 {
     text-align: center;
     color: #1d3557;
-    margin-bottom: 15px; 
-    font-size: 1.2em; 
+    margin-bottom: 20px; /* 제목 하단 마진 증가 */
+    font-size: 1.3em; /* 제목 크기 약간 증가 */
     font-weight: 700;
   }
   .button-group {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 20px; /* 버튼 그룹 상단 마진 증가 */
   }
   button {
-    padding: 6px 12px; 
-    margin: 0 4px;
+    padding: 8px 15px; /* 버튼 패딩 증가 */
+    margin: 0 5px; /* 버튼 간 마진 증가 */
     background: #457b9d;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.8em; 
+    font-size: 0.9em; 
     transition: background 0.3s;
   }
   button:hover { background: #1d3557; }
@@ -75,30 +78,33 @@
       width: 80%; 
   }
   #center-text.visible { opacity: 1; }
-  .value-gwh { font-size: 1.2em; color: #4caf50; display: block; margin-top: 3px; } 
+  .value-gwh { font-size: 1.3em; color: #4caf50; display: block; margin-top: 5px; } /* 폰트 크기 및 마진 조정 */
 
   /* 기여도 차트 하단 정보 */
   .reduction-info {
       text-align: center;
-      font-size: 0.9em; 
+      font-size: 1em; /* 폰트 크기 약간 증가 */
       font-weight: 700;
       color: #1d3557;
-      margin-top: 10px; 
+      margin-top: 15px; /* 마진 증가 */
   }
   .info-value {
       color: #e76f51; 
-      font-size: 1.1em; 
-      margin-left: 5px;
+      font-size: 1.2em; /* 폰트 크기 약간 증가 */
+      margin-left: 8px; /* 마진 증가 */
   }
-  /* 캔버스 높이 고정 (사이즈 축소) */
+  /* 캔버스 높이 고정 */
   #powerChart, #contributionChart {
-      height: 280px !important; /* ✅ 높이 280px로 축소 */
+      height: 300px !important; /* ✅ 높이 300px로 복구 */
   }
 
   /* 좁은 화면에서의 높이 유지 */
   @media (max-width: 500px) {
     #powerChart, #contributionChart {
-      height: 300px !important; 
+      height: 320px !important; /* 모바일에서 약간 더 높게 */
+    }
+    .main-container {
+      padding: 20px 10px; /* 모바일 패딩 조정 */
     }
   }
 </style>
