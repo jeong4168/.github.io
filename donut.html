@@ -54,21 +54,14 @@
       background: #457b9d;
     }
 
+    /* ✅ 두 그래프 동일 비율 유지 */
     canvas {
       width: 100% !important;
-    }
-
-    /* ✅ 그래프별 세로 비율 조정 */
-    #powerChart {
       height: 270px !important;
     }
 
-    #contributionChart {
-      height: 310px !important; /* 🔹 눌림 해소 */
-    }
-
     .summary {
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 14px;
       line-height: 1.6;
       color: #1d3557;
@@ -156,7 +149,7 @@
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // ✅ 원형 유지
+        maintainAspectRatio: false, // ✅ 위와 동일하게
         cutout: '60%',
         plugins: {
           legend: { position: 'top', labels: { font: { size: 12 } } },
