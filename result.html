@@ -10,14 +10,14 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px;
+    padding: 20px; 
   }
   .container {
-    max-width: 400px; /* ✅ 최종 전체 너비 400px로 대폭 조정 */
+    max-width: 350px; /* ✅ 최종 전체 너비 350px로 조정 */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* 요소 간격도 소폭 줄임 */
+    gap: 15px;
   }
 
   /* 요약표 */
@@ -25,11 +25,11 @@
     background:#f5f7ff;
     border:1px solid #d6dbff;
     border-radius:10px;
-    padding:10px 15px; /* ✅ 요약표 내부 여백 줄임 */
+    padding:10px 15px;
     margin:0;
     max-width: 100%;
     width: 100%;
-    font-size: 13px; /* ✅ 요약표 본문 글꼴 크기 줄임 */
+    font-size: 13px;
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
     flex-grow: 0;
     flex-shrink: 0;
@@ -37,7 +37,7 @@
   .summary-box h2 {
     text-align:center;
     color:#1d3557;
-    font-size:16px; /* ✅ 요약표 제목 크기 줄임 */
+    font-size:16px;
     margin-bottom: 5px;
   }
   .summary-box table { width:100%; border-collapse:collapse; }
@@ -45,14 +45,14 @@
     background:#e8ecff;
     color:#1d3557;
     text-align:left;
-    padding:4px 8px; /* ✅ 요약표 셀 여백 줄임 */
+    padding:4px 8px;
     border-bottom:1px solid #dce2ff;
     font-weight:600;
     width:55%;
   }
   .summary-box td {
     text-align:right;
-    padding:4px 8px; /* ✅ 요약표 셀 여백 줄임 */
+    padding:4px 8px;
     border-bottom:1px solid #edf0ff;
     color:#333;
     font-weight:500;
@@ -64,43 +64,43 @@
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* 그래프 간격 추가 감소 */
+    gap: 8px;
     flex-grow: 1;
     min-width: 100%;
   }
   .chart-card {
     background: white;
     border-radius: 14px;
-    padding: 10px; /* ✅ 내부 패딩 추가 감소 */
+    padding: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
   .chart-card h3 {
     text-align:center;
     color:#1d3557;
-    font-size:14px; /* ✅ 그래프 제목 크기 줄임 */
+    font-size:14px;
     margin-bottom: 3px;
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 17vh !important; /* ✅ 최종 세로 길이 17vh로 조정 */
+    height: 16vh !important; /* ✅ 최종 세로 길이 16vh로 조정 */
     max-height: 900px !important;
     width: 100% !important;
   }
 
   /* 모바일 대응: 전체 너비 감소에 따라 분기점 조정 */
-  @media (max-width: 420px) { /* 분기점을 420px로 조정 */
+  @media (max-width: 420px) {
     .container {
       flex-direction: column;
       gap: 15px;
     }
-    .chart-card canvas { height: 20vh !important; } /* 모바일 세로 길이 조정 */
+    .chart-card canvas { height: 20vh !important; }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="summary-box">
-    <h2>계산 요약</h2>
+    <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
   </div>
 
@@ -215,10 +215,10 @@ const commonOpts = {
     x: {
       ticks: { 
         autoSkip: true, 
-        maxRotation: 0, 
-        minRotation: 0,
+        maxRotation: 45, /* ✅ X축 라벨 회전 각도 45도로 설정 (찌그러짐 방지) */
+        minRotation: 45, /* 찌그러짐 방지를 위해 minRotation도 동일하게 설정 */
         font: { 
-          size: 13, /* X축 라벨 폰트 크기 유지 */
+          size: 13, 
           weight: 'normal'
         }
       }
@@ -228,7 +228,7 @@ const commonOpts = {
       ticks: { 
         callback: v => v.toLocaleString(),
         font: {
-          size: 11 /* ✅ Y축 라벨 폰트 크기 조정 */
+          size: 11
         }
       }
     }
