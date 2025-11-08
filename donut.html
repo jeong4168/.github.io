@@ -229,7 +229,7 @@ function updateChart(state) {
       dataSet.backgroundColor = newColors;
       
       centerTextElement.innerHTML = `
-          <span class="title">태양광 발전량 추가 효과</span><br>
+          <span class="title">태양광 발전량 추가 </span><br>
           <span class="value-gwh">+${increaseValue.toLocaleString(undefined, {maximumFractionDigits: 4})} GWh</span>
       `;
       centerTextElement.classList.add('visible');
@@ -311,3 +311,4 @@ document.getElementById('contribution-percentage').textContent = (totalReduction
 
 </body>
 </html>
+
