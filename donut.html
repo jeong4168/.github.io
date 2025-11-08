@@ -35,7 +35,7 @@
     flex-shrink: 0;
     width: 100%; 
     min-width: auto; 
-    position: relative; /* ✅ 캔버스와 텍스트를 감싸는 부모 요소에 relative 설정 */
+    position: relative; /* ✅ 차트 박스가 중앙 텍스트의 기준점이 됨 */
   }
 
   h2 {
@@ -66,8 +66,8 @@
   /* 중앙 강조 정보 스타일 (도넛 차트 전용) */
   #center-text {
       position: absolute;
-      /* ✅ 캔버스 중앙에 위치시키기 위해 top/left 조정 */
-      top: 45%; /* 캔버스 중앙보다 약간 위로 조정 */
+      /* ✅ 정확히 차트 캔버스가 있는 영역의 중앙을 맞추도록 조정 */
+      top: calc(50% + 20px); /* H2의 마진(12px)과 차트박스의 패딩(15px)만큼 보정 */
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none; 
@@ -78,6 +78,7 @@
       opacity: 0; 
       transition: opacity 0.5s ease-in-out;
       width: 80%; 
+      /* 배경 투명화 및 z-index 설정은 Chart.js 기본 동작에 맡김 */
   }
   #center-text.visible { opacity: 1; }
   .value-gwh { font-size: 1.1em; color: #4caf50; display: block; margin-top: 3px; } 
@@ -113,8 +114,10 @@
 <div class="main-container">
     <div id="doughnut-chart-area" class="chart-box">
         <h2>에너지원별 발전량 영향 분석</h2>
-        <canvas id="powerChart"></canvas>
-        <div id="center-text"></div> <div class="button-group">
+        <div style="position: relative;">
+            <canvas id="powerChart"></canvas>
+            <div id="center-text"></div> </div>
+        <div class="button-group">
             <button id="show-before">기존 현황 보기</button>
             <button id="show-after">태양광 발전량 추가</button>
         </div>
@@ -235,7 +238,7 @@ function updateChart(state) {
 
 document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
 document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
-updateChart('after'); 
+updateChart('after'); // 초기 상태를 'after'로 설정하여 태양광 발전 효과가 보이도록
 
 
 // ========================================================
