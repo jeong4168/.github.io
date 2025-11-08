@@ -7,68 +7,100 @@
 <style>
 body {
 	font-family: 'Pretendard','Noto Sans KR',sans-serif;
-	background:#f8fafc;
+	background:#f0f3f5; 
 	margin:0;
-	padding:50px; /* ✅ body 여백 확장 */
+	padding:20px; 
+	display: flex; 
+	justify-content: center;
+	align-items: flex-start;
+	min-height: 100vh;
 }
 .container {
-	max-width:800px; /* ✅ 컨테이너 최대 너비 확장: 550px -> 800px */
+	max-width:90%; /* ✅ 최대 너비를 90%로 설정하여 가로 확장 */
+	width: 100%;
 	margin:auto;
 	background:white;
-	border-radius:14px;
-	padding:50px 60px; /* ✅ 컨테이너 내부 여백 확장 */
-	box-shadow:0 4px 18px rgba(0,0,0,0.08);
+	border-radius:18px; 
+	padding:40px; 
+	box-shadow:0 8px 30px rgba(0,0,0,0.1); 
+	border: 1px solid #e0e0e0;
 }
 h2 {
 	text-align:center;
 	color:#1d3557;
-	margin-bottom:30px;
+	margin: -40px -40px 30px -40px; 
+	padding: 25px 40px;
+	background: #e8f0fe;
+	border-radius: 18px 18px 0 0;
+	font-size: 1.5em;
+	font-weight: 700;
 }
+/* 이모지 제거: h2::before 선택자 제거 */
 label {
 	font-weight:600;
 	display:block;
-	margin-top:15px; /* 마진 소폭 조정 */
+	margin-top:15px; 
 	color:#333;
-	font-size:16px; /* 폰트 크기 소폭 조정 */
+	font-size: 1em;
 }
 input, select {
 	width:100%;
-	padding:12px; /* ✅ 입력 필드 패딩 확장 */
-	margin-top:6px; /* 마진 소폭 조정 */
-	border-radius:6px;
-	border:1px solid #ccc;
-	font-size:17px; /* 폰트 크기 소폭 조정 */
+	padding:12px;
+	margin-top:6px; 
+	border-radius:8px; 
+	border:1px solid #a8b3c3; 
+	font-size:1em;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
+	transition: border-color 0.2s;
+}
+input:focus, select:focus {
+	border-color: #457b9d;
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.2);
 }
 .panel-size {
 	display:flex;
 	align-items:center;
-	gap:15px; /* 간격 소폭 확장 */
+	gap:10px;
 }
 .panel-size input { flex:1; text-align:center; }
-.panel-size span { font-weight:bold; color:#333; font-size:18px; }
+.panel-size span { font-weight:bold; color:#1d3557; font-size:1.2em; }
 .result-box {
-	background:#eef3ff;
-	padding:20px; /* ✅ 결과 박스 패딩 확장 */
-	border-radius:10px;
-	margin-top:30px; /* 마진 소폭 조정 */
-	color:#333;
-	line-height:1.7;
-	font-size:16px; /* 폰트 크기 소폭 조정 */
+	background:#f2f7ff; 
+	padding:18px; 
+	border-radius:12px;
+	margin-top:30px; 
+	color:#1d3557; 
+	line-height:1.6;
+	font-size:1em;
+	border-left: 5px solid #457b9d; 
 }
 button {
-	margin-top:30px; /* 마진 소폭 조정 */
+	margin-top:30px; 
 	width:100%;
 	background:#457b9d;
 	color:white;
-	font-size:18px; /* ✅ 버튼 폰트 크기 확장 */
-	padding:15px; /* ✅ 버튼 패딩 확장 */
+	font-size:1.1em; 
+	padding:14px; 
 	border:none;
 	border-radius:8px;
 	cursor:pointer;
 	font-weight:bold;
-	transition:0.2s;
+	box-shadow: 0 4px #1d3557; 
+	transition: all 0.1s ease;
+}
+button:active {
+	box-shadow: 0 2px #1d3557;
+	transform: translateY(2px);
 }
 button:hover { background:#1d3557; }
+
+/* 반응형을 위한 조정 */
+@media (max-width: 650px) {
+	body { padding: 20px; }
+	.container { padding: 25px; border-radius: 12px; }
+	h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
+}
 </style>
 </head>
 <body>
@@ -144,9 +176,14 @@ function updateCalculation() {
 	`;
 }
 
-["site","width","height","power"].forEach(id=>{
-	document.getElementById(id).addEventListener('input',updateCalculation);
+["site","width","height","power","invest","support"].forEach(id=>{
+	const element = document.getElementById(id);
+	if (element) {
+		element.addEventListener('input', updateCalculation);
+	}
 });
+
+updateCalculation();
 
 function goToResult() {
 	const site=document.getElementById('site').value;
