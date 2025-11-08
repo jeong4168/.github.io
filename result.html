@@ -13,7 +13,7 @@
     padding: 20px; 
   }
   .container {
-    max-width: 450px; /* 최종 전체 너비 450px 유지 */
+    max-width: 420px; /* ✅ 최종 전체 너비 420px로 재조정 (안정화) */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -82,7 +82,7 @@
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 17vh !important;
+    height: 17vh !important; /* 세로 길이 17vh 유지 */
     max-height: 900px !important;
     width: 100% !important;
   }
@@ -214,11 +214,11 @@ const commonOpts = {
   scales: {
     x: {
       ticks: { 
-        autoSkip: false, /* ✅ 모든 월 라벨 표시 (autoSkip 비활성화) */
+        autoSkip: false, /* 모든 월 라벨 표시 유지 */
         maxRotation: 0, 
         minRotation: 0, 
         font: { 
-          size: 10, /* ✅ X축 라벨 폰트 크기 10px로 다시 조정 */
+          size: 9, /* ✅ X축 라벨 폰트 크기 9px로 조정 (겹침 방지) */
           weight: 'normal'
         }
       }
