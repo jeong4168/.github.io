@@ -10,14 +10,14 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px; /* 여백도 약간 줄임 */
+    padding: 20px;
   }
   .container {
-    max-width: 500px; /* 최종 전체 너비 500px로 대폭 조정 */
+    max-width: 500px; /* 최종 전체 너비 500px 유지 */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* 요소 간격도 소폭 조정 */
+    gap: 20px;
   }
 
   /* 요약표 */
@@ -27,7 +27,7 @@
     border-radius:10px;
     padding:14px 20px;
     margin:0;
-    max-width: 100%; /* 작은 화면에서 요약표가 꽉 차도록 설정 */
+    max-width: 100%;
     width: 100%;
     font-size:14px;
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
@@ -63,36 +63,36 @@
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* 그래프 간격 추가 감소 */
+    gap: 10px;
     flex-grow: 1;
     min-width: 100%;
   }
   .chart-card {
     background: white;
     border-radius: 14px;
-    padding: 15px; /* 내부 패딩도 소폭 줄임 */
+    padding: 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
   .chart-card h3 {
     text-align:center;
     color:#1d3557;
-    font-size:15px; /* 제목 폰트 크기 소폭 줄임 */
+    font-size:15px;
     margin-bottom: 5px;
   }
   /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 18vh !important; /* 최종 세로 길이 18vh로 설정 */
+    height: 19vh !important; /* ✅ 최종 세로 길이 19vh로 소폭 조정 */
     max-height: 900px !important;
     width: 100% !important;
   }
 
-  /* 모바일 대응: 전체 너비 감소에 따라 플렉스 레이아웃 제거 */
-  @media (max-width: 550px) { /* 분기점 최종 조정 */
+  /* 모바일 대응 */
+  @media (max-width: 550px) {
     .container {
       flex-direction: column;
       gap: 20px;
     }
-    .chart-card canvas { height: 25vh !important; } /* 모바일 세로 길이 조정 */
+    .chart-card canvas { height: 25vh !important; }
   }
 </style>
 </head>
@@ -217,7 +217,7 @@ const commonOpts = {
         maxRotation: 0, 
         minRotation: 0,
         font: { 
-          size: 10, /* ✅ X축 라벨 폰트 크기 명시 */
+          size: 13, /* ✅ 폰트 크기 13px */
           weight: 'normal'
         }
       }
