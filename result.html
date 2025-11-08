@@ -13,7 +13,7 @@
     padding: 30px;
   }
   .container {
-    max-width: 1400px;
+    max-width: 900px; /* ✅ 결과 화면 전체 너비 조정: 1400px -> 900px */
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -37,7 +37,6 @@
   .summary-box h2 {
     text-align:center;
     color:#1d3557;
-    margin-bottom:10px;
     font-size:18px;
   }
   .summary-box table { width:100%; border-collapse:collapse; }
@@ -64,9 +63,9 @@
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* 그래프 간격 */
+    gap: 15px;
     flex-grow: 1;
-    min-width: 500px;
+    min-width: 400px; /* 컨테이너 너비 감소에 맞춰 최소 너비도 조정 */
   }
   .chart-card {
     background: white;
@@ -80,15 +79,15 @@
     font-size:16px;
     margin-bottom:10px;
   }
-  /* 캔버스를 뷰포트 높이 기준으로 설정 — 최종 세로 길이 25vh */
+  /* 캔버스 세로 길이 */
   .chart-card canvas {
-    height: 25vh !important; /* ✅ 최종 세로 길이 25vh로 설정 */
+    height: 25vh !important;
     max-height: 900px !important;
     width: 100% !important;
   }
 
-  /* 모바일 대응: 세로 높이 조정 */
-  @media (max-width: 850px) {
+  /* 모바일 대응: 전체 너비가 줄었으므로 반응형 분기점 조정 */
+  @media (max-width: 700px) { /* 분기점을 850px에서 700px로 조정 */
     .container {
       flex-direction: column;
       gap: 20px;
@@ -97,7 +96,7 @@
       max-width: 100%;
       margin: 0 auto;
     }
-    .chart-card canvas { height: 35vh !important; } /* 모바일에서는 35vh */
+    .chart-card canvas { height: 35vh !important; }
   }
 </style>
 </head>
