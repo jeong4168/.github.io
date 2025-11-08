@@ -13,20 +13,28 @@
     padding: 30px;
   }
   .container {
-    max-width: 1200px;
+    max-width: 1400px; /* 전체 컨테이너 너비 확장 */
     margin: auto;
+    /* ✅ 핵심 변경: 플렉스 컨테이너로 설정 */
+    display: flex;
+    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
+    gap: 30px; /* 요소 간 간격 */
   }
 
-  /* ✅ 요약표 (변경 없음) */
+  /* ✅ 요약표 (너비 조정 및 위치 변경) */
   .summary-box {
     background:#f5f7ff;
     border:1px solid #d6dbff;
     border-radius:10px;
     padding:14px 20px;
-    margin:0 auto 35px;
-    max-width:750px;
+    margin:0; /* 기존 margin 제거 */
+    max-width: 400px; /* 너비 감소 (그래프 대비 좁게) */
+    width: 100%; /* 유연한 너비 설정 */
     font-size:14px;
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
+    /* ✅ 핵심 변경: 그래프 컨테이너와 나란히 배치될 때 공간 차지 비율 */
+    flex-grow: 0; /* 커지는 것을 방지 */
+    flex-shrink: 0; /* 줄어드는 것을 방지 */
   }
   .summary-box h2 {
     text-align:center;
@@ -54,11 +62,13 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
-  /* 그래프 영역 — 반응형 높이 (뷰포트 기반) */
+  /* ✅ 그래프 영역 — 남은 공간 전체 사용 */
   .chart-container {
     display: flex;
     flex-direction: column;
     gap: 25px;
+    flex-grow: 1; /* ✅ 핵심 변경: 남은 공간 전체를 차지하도록 설정 */
+    min-width: 500px; /* 그래프가 너무 작아지는 것을 방지 */
   }
   .chart-card {
     background: white;
@@ -73,16 +83,23 @@
     font-size:16px;
     margin-bottom:10px;
   }
-  /* 캔버스를 뷰포트 높이 기준으로 설정 — 반응형 */
+  /* 캔버스를 뷰포트 높이 기준으로 설정 — 반응형 (기존 유지) */
   .chart-card canvas {
-    height: 60vh !important;       /* 뷰포트 높이의 60% */
-    max-height: 900px !important;  /* 너무 큰 화면에서 최대값 제한 */
+    height: 60vh !important;
+    max-height: 900px !important;
     width: 100% !important;
   }
 
-  /* 모바일에서 라벨 여유 주기 (선택적) */
-  @media (max-width: 600px) {
-    .summary-box { padding:12px 14px; font-size:13px; }
+  /* ✅ 모바일 대응: 요약표와 그래프를 세로로 배열 */
+  @media (max-width: 850px) {
+    .container {
+      flex-direction: column;
+      gap: 20px;
+    }
+    .summary-box {
+      max-width: 100%; /* 모바일에서는 전체 너비 사용 */
+      margin: 0 auto;
+    }
     .chart-card canvas { height: 50vh !important; }
   }
 </style>
@@ -113,132 +130,7 @@
 </div>
 
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const site = urlParams.get('site');
-const width = parseFloat(urlParams.get('width'));
-const height = parseFloat(urlParams.get('height'));
-const power = parseFloat(urlParams.get('power'));
-const invest = parseFloat(urlParams.get('invest')) || 0;
-const support = parseFloat(urlParams.get('support')) || 0;
-
-const siteData = {
-  "산업단지": {
-    area: 7718419,
-    irradiance: {
-      "1월": 36.1167916632637, "2월": 55.6968144538703, "3월": 94.7830864448928,
-      "4월": 126.11394913181, "5월": 155.100681490681, "6월": 159.89038530079,
-      "7월": 160.292749896046, "8월": 140.231920433173, "9월": 104.527127375401,
-      "10월": 71.3669316620513, "11월": 41.0833948879698, "12월": 30.136668760777
-    }
-  },
-  "주차장": {
-    area: 241197,
-    irradiance: {
-      "1월": 28.6013706281546, "2월": 45.5446010734928, "3월": 81.5032748909017,
-      "4월": 113.351159004195, "5월": 143.143665420168, "6월": 148.730656177913,
-      "7월": 148.929582549517, "8월": 116.426167318056, "9월": 92.3191337237899,
-      "10월": 60.2785524922634, "11월": 33.2715624798212, "12월": 23.7878350927661
-    }
-  },
-  "철도 유휴부지": {
-    area: 72040,
-    irradiance: {
-      "1월": 29.0993114732458, "2월": 48.1443882406552, "3월": 86.1475051850494,
-      "4월": 117.571860513444, "5월": 146.572228430643, "6월": 151.802754562315,
-      "7월": 151.850941097544, "8월": 131.468678784622, "9월": 96.0437754841264,
-      "10월": 63.032589902433, "11월": 33.9140067853013, "12월": 23.6004359046563
-    }
-  }
-};
-
-// 단가 정보
-const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
-const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
-const pricePerKwh = 163;
-
-const siteObj = siteData[site] || {};
-const area = siteObj.area || 0;
-const irradiance = siteObj.irradiance || {};
-const panelArea = (width/1000)*(height/1000) || 0;
-const moduleCount = panelArea > 0 ? Math.floor(area / panelArea) : 0;
-const totalKW = moduleCount * (power/1000) || 0;
-
-const months = Object.keys(irradiance);
-const irradianceVals = Object.values(irradiance);
-
-// 월별 발전량 (kWh) — 정수
-const monthlyEnergy = irradianceVals.map(val => Math.round(totalKW * val));
-
-// 월별 매출액 계산
-const monthlyRevenue = monthlyEnergy.map((val, i) => 
-  Math.round(val * (SMP[i] + (REC[i]/1000)))
-);
-
-// 절감액 및 손익분기점
-const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
-const saving = Math.round(annualEnergy * pricePerKwh);
-const breakeven = invest - support;
-
-// 누적 수익 (20년)
-const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-const accumRevenue = Array.from({length:20},(_,i)=> (yearlyRevenue*(i+1)));
-
-document.getElementById("summaryTable").innerHTML = `
-  <tr><th>선택된 부지</th><td>${site || '-'}</td></tr>
-  <tr><th>발전 가능 면적</th><td>${area ? area.toLocaleString() + ' ㎡' : '-'}</td></tr>
-  <tr><th>모듈 수</th><td>${moduleCount ? moduleCount.toLocaleString() + ' 개' : '-'}</td></tr>
-  <tr><th>총 발전용량</th><td>${totalKW ? totalKW.toLocaleString(undefined,{maximumFractionDigits:1}) + ' kW' : '-'}</td></tr>
-  <tr><th>예상 연간 발전량</th><td>${annualEnergy ? annualEnergy.toLocaleString() + ' kWh' : '-'}</td></tr>
-  <tr><th>절감 전기요금</th><td>${saving ? saving.toLocaleString() + ' 원/년' : '-'}</td></tr>
-  <tr><th>손익분기점</th><td>${breakeven ? breakeven.toLocaleString() + ' 원' : '-'}</td></tr>
-`;
-
-// 공통 차트 옵션
-const commonOpts = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() } },
-    legend: { display: false }
-  },
-  scales: {
-    x: {
-      ticks: { autoSkip: true, maxRotation: 0, minRotation: 0 }
-    },
-    y: {
-      beginAtZero: true,
-      ticks: { callback: v => v.toLocaleString() }
-    }
-  }
-};
-
-// 차트 생성 (바 너비 적당)
-new Chart(document.getElementById("monthlyChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.5, categoryPercentage:0.5 }] },
-  options: { ...commonOpts }
-});
-
-new Chart(document.getElementById("revenueChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c', barPercentage:0.5, categoryPercentage:0.5 }] },
-  options: { ...commonOpts }
-});
-
-new Chart(document.getElementById("accumChart"), {
-  type: 'bar',
-  data: { 
-    labels: Array.from({length:20},(_,i)=>`${i+1}년`),
-    datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor:'#90be6d', order: 1, barPercentage:0.6, categoryPercentage:0.6 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0, order: 0 }
-    ]
-  },
-  options: {
-    ...commonOpts,
-    plugins: { tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } }, legend: { display: false } }
-  }
-});
+// ... (기존 스크립트 내용)
 </script>
 </body>
 </html>
