@@ -61,10 +61,12 @@
   button:hover { background: #1d3557; }
 
   #powerChart {
-    height: 340px !important; /* ✅ 도넛 크기 키움 */
+    height: 340px !important; /* 상단 도넛 그대로 */
   }
+  /* ▼ 하단 차트만 축소 */
   #contributionChart {
-    height: 340px !important; /* ✅ 위 도넛과 같은 비율로 조정 */
+    height: 260px !important;
+    max-height: 260px;
   }
 
   .reduction-info {
@@ -144,12 +146,11 @@ const ctx_doughnut = document.getElementById('powerChart').getContext('2d');
 
 const centerTextPlugin = {
   id: 'centerTextPlugin',
-  beforeDraw(chart) { // ✅ 툴팁 정상 작동용
+  beforeDraw(chart) {
     const { ctx, chartArea } = chart;
     const centerX = (chartArea.left + chartArea.right) / 2;
     const centerY = (chartArea.top + chartArea.bottom) / 2;
     const dataSet = chart.data.datasets[0].data;
-
     if (dataSet === finalData) {
       ctx.save();
       ctx.textAlign = 'center';
@@ -222,7 +223,7 @@ document.getElementById('show-after').addEventListener('click', () => updateChar
 updateChart('after');
 
 // -------------------------------
-// 감축 기여도 도넛 차트
+// 감축 기여도 도넛 차트 (크기/가독성 개선)
 // -------------------------------
 const contributionCtx = document.getElementById('contributionChart').getContext('2d');
 new Chart(contributionCtx, {
@@ -238,9 +239,13 @@ new Chart(contributionCtx, {
   options: {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '0%',
+    cutout: '55%',                 // ▼ 도넛 중심을 비워 시각적 크기 축소
+    layout: { padding: { top: 0, bottom: 0 } },
     plugins: {
-      legend: { position: 'top', labels: { font: { size: 12 } } },
+      legend: {
+        position: 'bottom',        // ▼ 범례를 아래로 이동해 세로 공간 확보
+        labels: { font: { size: 11 }, boxWidth: 10 }
+      },
       tooltip: {
         callbacks: {
           label(context) {
@@ -249,21 +254,3 @@ new Chart(contributionCtx, {
             const value = context.parsed;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = (value / total * 100).toFixed(2) + '%';
-            return `${label}${value.toLocaleString(undefined, {maximumFractionDigits: 2})} ktCO2e (${percentage})`;
-          }
-        }
-      }
-    }
-  }
-});
-
-// -------------------------------
-// 하단 수치 표시
-// -------------------------------
-document.getElementById('target-reduction-amount').textContent =
-  reductionTarget_kt.toLocaleString(undefined, { maximumFractionDigits: 2 });
-document.getElementById('reduction-amount').textContent =
-  totalReduction_kt.toLocaleString(undefined, { maximumFractionDigits: 2 });
-</script>
-</body>
-</html>
