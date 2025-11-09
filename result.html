@@ -23,34 +23,34 @@
 
   /* 요약표 */
   .summary-box {
-    background:#f5f7ff;
-    border:1px solid #d6dbff;
+    background:#f5f8ff;
+    border:1px solid #cdd8f0;
     border-radius:10px;
     padding:10px 15px;
     max-width: 100%;
     width: 100%;
     font-size: 13px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
   }
   .summary-box h2 {
     text-align:center;
     color:#1d3557;
     font-size:16px;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
   .summary-box table { width:100%; border-collapse:collapse; }
   .summary-box th {
-    background:#e8ecff;
+    background:#e8f0fe;
     color:#1d3557;
     text-align:left;
-    padding:4px 8px;
+    padding:5px 8px;
     border-bottom:1px solid #dce2ff;
     font-weight:600;
     width:55%;
   }
   .summary-box td {
     text-align:right;
-    padding:4px 8px;
+    padding:5px 8px;
     border-bottom:1px solid #edf0ff;
     color:#333;
     font-weight:500;
@@ -58,28 +58,28 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
-  /* 돌아가기 버튼 */
+  /* ✅ 돌아가기 버튼 (GeoMedrix 톤) */
   .back-btn {
     display:block;
     margin: 15px auto 0 auto;
-    background:#457b9d;
+    background:#1d3557;
     color:white;
     border:none;
     border-radius:6px;
-    padding:8px 18px;
+    padding:9px 20px;
     font-size:13px;
     font-weight:600;
     cursor:pointer;
     transition:0.3s;
-    box-shadow: 0 3px #1d3557;
+    box-shadow: 0 3px #163049;
   }
-  .back-btn:hover { background:#1d3557; }
+  .back-btn:hover { background:#0f223a; }
 
   /* 그래프 영역 */
   .chart-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     flex-grow: 1;
     min-width: 100%;
   }
@@ -87,16 +87,16 @@
     background: white;
     border-radius: 14px;
     padding: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
   }
   .chart-card h3 {
     text-align:center;
     color:#1d3557;
     font-size:14px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .chart-card canvas {
-    height: 17vh !important; 
+    height: 18vh !important; 
     max-height: 900px !important;
     width: 100% !important;
   }
@@ -117,7 +117,7 @@
     <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
 
-    <!-- ✅ 계산기로 돌아가기 버튼 추가 -->
+    <!-- ✅ 계산기로 돌아가기 버튼 -->
     <button class="back-btn" onclick="location.href='calc.html'">← 계산기로 돌아가기</button>
   </div>
 
@@ -152,28 +152,28 @@ const siteData = {
   "산업단지": {
     area: 7718419,
     irradiance: {
-      "1월": 36.1167916632637, "2월": 55.6968144538703, "3월": 94.7830864448928,
-      "4월": 126.11394913181, "5월": 155.100681490681, "6월": 159.89038530079,
-      "7월": 160.292749896046, "8월": 140.231920433173, "9월": 104.527127375401,
-      "10월": 71.3669316620513, "11월": 41.0833948879698, "12월": 30.136668760777
+      "1월": 36.1168, "2월": 55.6968, "3월": 94.7830,
+      "4월": 126.1139, "5월": 155.1006, "6월": 159.8903,
+      "7월": 160.2927, "8월": 140.2319, "9월": 104.5271,
+      "10월": 71.3669, "11월": 41.0833, "12월": 30.1366
     }
   },
   "주차장": {
     area: 241197,
     irradiance: {
-      "1월": 28.6013706281546, "2월": 45.5446010734928, "3월": 81.5032748909017,
-      "4월": 113.351159004195, "5월": 143.143665420168, "6월": 148.730656177913,
-      "7월": 148.929582549517, "8월": 116.426167318056, "9월": 92.3191337237899,
-      "10월": 60.2785524922634, "11월": 33.2715624798212, "12월": 23.7878350927661
+      "1월": 28.6013, "2월": 45.5446, "3월": 81.5032,
+      "4월": 113.3511, "5월": 143.1436, "6월": 148.7306,
+      "7월": 148.9295, "8월": 116.4261, "9월": 92.3191,
+      "10월": 60.2785, "11월": 33.2715, "12월": 23.7878
     }
   },
   "철도 유휴부지": {
     area: 72040,
     irradiance: {
-      "1월": 29.0993114732458, "2월": 48.1443882406552, "3월": 86.1475051850494,
-      "4월": 117.571860513444, "5월": 146.572228430643, "6월": 151.802754562315,
-      "7월": 151.850941097544, "8월": 131.468678784622, "9월": 96.0437754841264,
-      "10월": 63.032589902433, "11월": 33.9140067853013, "12월": 23.6004359046563
+      "1월": 29.0993, "2월": 48.1443, "3월": 86.1475,
+      "4월": 117.5718, "5월": 146.5722, "6월": 151.8027,
+      "7월": 151.8509, "8월": 131.4686, "9월": 96.0437,
+      "10월": 63.0325, "11월": 33.9140, "12월": 23.6004
     }
   }
 };
@@ -222,25 +222,50 @@ const commonOpts = {
   }
 };
 
+/* ✅ GeoMedrix 컬러 팔레트 */
+const navy = "#1d3557";
+const green = "#4caf50";
+const sky = "#e8f0fe";
+const orange = "#f4a261";
+
+/* 월별 발전량 */
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6, categoryPercentage:0.7 }] },
+  data: { 
+    labels: months, 
+    datasets: [{
+      data: monthlyEnergy,
+      backgroundColor: navy,
+      barPercentage:0.6,
+      categoryPercentage:0.7
+    }]
+  },
   options: { ...commonOpts }
 });
 
+/* 월별 매출액 */
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c', barPercentage:0.6, categoryPercentage:0.7 }] },
+  data: { 
+    labels: months, 
+    datasets: [{
+      data: monthlyRevenue,
+      backgroundColor: orange,
+      barPercentage:0.6,
+      categoryPercentage:0.7
+    }]
+  },
   options: { ...commonOpts }
 });
 
+/* 20년 누적 수익 */
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
     labels: Array.from({length:20},(_,i)=>`${i+1}년`), 
     datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor:'#90be6d', barPercentage:0.6, categoryPercentage:0.7 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0 }
+      { label:'누적 수익', data: accumRevenue, backgroundColor: green, barPercentage:0.6, categoryPercentage:0.7 },
+      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:2, pointRadius:0 }
     ]
   },
   options: {
