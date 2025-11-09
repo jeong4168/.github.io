@@ -104,10 +104,10 @@
     </div>
     <div class="reduction-info">
       목표 감축량 (2018년 대비 31.0%):
-      <span id="target-reduction-amount" class="info-value">0</span> ktCO2e
+      <span id="target-reduction-amount" class="info-value">0</span> ktCO2eq
       <br/>
       태양광 예상 감축량:
-      <span id="reduction-amount" class="info-value">0</span> ktCO2e
+      <span id="reduction-amount" class="info-value">0</span> ktCO2eq
     </div>
   </div>
 </div>
@@ -249,7 +249,7 @@ new Chart(
               const value = ctx.parsed;
               const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
               const pct = (value / total * 100).toFixed(2) + '%';
-              return `${label}: ${value.toLocaleString(undefined,{maximumFractionDigits:2})} ktCO2e (${pct})`;
+              return `${label}: ${value.toLocaleString(undefined,{maximumFractionDigits:2})} ktCO2eq (${pct})`;
             }
           }
         }
@@ -266,4 +266,5 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
+
 
