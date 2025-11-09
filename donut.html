@@ -16,6 +16,7 @@
     align-items: center;
     min-height: 100vh;
   }
+
   .main-container {
     display: flex;
     flex-direction: column;
@@ -26,6 +27,7 @@
     padding: 15px 10px;
     box-sizing: border-box;
   }
+
   .chart-box {
     background: white;
     border-radius: 10px;
@@ -46,6 +48,7 @@
     text-align: center;
     margin-top: 10px;
   }
+
   button {
     padding: 6px 10px;
     margin: 0 3px;
@@ -58,15 +61,15 @@
     font-size: 0.8em;
     transition: background 0.3s;
   }
+
   button:hover { background: #1d3557; }
 
-  #powerChart {
-    height: 340px !important; /* 상단 도넛 그대로 */
-  }
-  /* ▼ 하단 차트만 축소 */
-  #contributionChart {
-    height: 260px !important;
-    max-height: 260px;
+  /* ✅ 눌림 방지 및 반응형 정비율 설정 */
+  #powerChart, #contributionChart {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;  /* 정사각 비율 유지 (사이드바 폭에 따라 자동 크기 조정) */
+    display: block;
   }
 
   .reduction-info {
@@ -77,6 +80,7 @@
     margin-top: 6px;
     line-height: 1.4em;
   }
+
   .info-value {
     color: #e76f51;
     font-size: 1em;
@@ -155,7 +159,7 @@ const centerTextPlugin = {
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = '700 20px Pretendard';
+      ctx.font = '700 18px Pretendard';
       ctx.fillStyle = '#4caf50';
       ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, centerX, centerY);
       ctx.restore();
@@ -176,7 +180,8 @@ let powerChart = new Chart(ctx_doughnut, {
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,  // ✅ 비율 유지
+    aspectRatio: 1,             // ✅ 정사각형
     cutout: '65%',
     animation: { duration: 1000, easing: 'easeInOutQuint' },
     plugins: {
@@ -208,49 +213,4 @@ function updateChart(state) {
     dataSet.data = finalData;
     dataSet.offset = labels.map((_, i) => i === renewableIndex ? 20 : 0);
     const newColors = [...backgroundColors];
-    newColors[renewableIndex] = '#4caf50';
-    dataSet.backgroundColor = newColors;
-  } else {
-    dataSet.data = initialData;
-    dataSet.offset = labels.map((_, i) => i === renewableIndex ? 5 : 0);
-    dataSet.backgroundColor = backgroundColors;
-  }
-  powerChart.update();
-}
-
-document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
-document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
-updateChart('after');
-
-// -------------------------------
-// 감축 기여도 도넛 차트 (크기/가독성 개선)
-// -------------------------------
-const contributionCtx = document.getElementById('contributionChart').getContext('2d');
-new Chart(contributionCtx, {
-  type: 'doughnut',
-  data: {
-    labels: ['태양광 감축 기여', '추가 감축 목표량'],
-    datasets: [{
-      data: [totalReduction_kt, remainingReductionNeeded],
-      backgroundColor: ['#4caf50', '#e9c46a'],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '55%',                 // ▼ 도넛 중심을 비워 시각적 크기 축소
-    layout: { padding: { top: 0, bottom: 0 } },
-    plugins: {
-      legend: {
-        position: 'bottom',        // ▼ 범례를 아래로 이동해 세로 공간 확보
-        labels: { font: { size: 11 }, boxWidth: 10 }
-      },
-      tooltip: {
-        callbacks: {
-          label(context) {
-            let label = context.label || '';
-            if (label) label += ': ';
-            const value = context.parsed;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = (value / total * 100).toFixed(2) + '%';
+    newColors[renewa]()
