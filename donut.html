@@ -20,7 +20,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 400px;   /* ✅ 사이드바 위젯처럼 좁은 폭에서도 동작 */
+    max-width: 400px;
     width: 100%;
     align-items: center;
     padding: 15px 10px;
@@ -44,7 +44,7 @@
   button {
     padding: 6px 10px;
     margin: 0 3px;
-    background: #457b9d;
+    background: #1d3557;
     color: white;
     border: none;
     border-radius: 5px;
@@ -53,15 +53,13 @@
     font-size: 0.8em;
     transition: background 0.3s;
   }
-  button:hover { background: #1d3557; }
+  button:hover { background: #0f223a; }
 
-  /* ✅ 비율 박스: 부모가 정사각형 비율을 보장 */
   .chart-wrap {
     width: 100%;
-    aspect-ratio: 1 / 1;   /* ← 여기서 반드시 비율 고정 */
+    aspect-ratio: 1 / 1;
     position: relative;
   }
-  /* ✅ 캔버스는 비율 박스를 100% 채움 (왜곡/눌림 방지) */
   .chart-wrap > canvas {
     position: absolute;
     inset: 0;
@@ -78,7 +76,7 @@
     margin-top: 6px;
     line-height: 1.4em;
   }
-  .info-value { color: #e76f51; font-size: 1em; margin-left: 4px; }
+  .info-value { color: #4caf50; font-size: 1em; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -91,8 +89,8 @@
       <canvas id="powerChart"></canvas>
     </div>
     <div class="button-group">
-      <button id="show-before">기존 현황 </button>
-      <button id="show-after"> 감축 적용 </button>
+      <button id="show-before">기존 현황</button>
+      <button id="show-after">감축 적용</button>
     </div>
   </div>
 
@@ -104,10 +102,9 @@
     </div>
     <div class="reduction-info">
       목표 감축량 (2018년 대비 31.0%):
-      <span id="target-reduction-amount" class="info-value">0</span> ktCO2eq
-      <br/>
+      <span id="target-reduction-amount" class="info-value">0</span> ktCO₂eq<br/>
       태양광 예상 감축량:
-      <span id="reduction-amount" class="info-value">0</span> ktCO2eq
+      <span id="reduction-amount" class="info-value">0</span> ktCO₂eq
     </div>
   </div>
 </div>
@@ -126,7 +123,15 @@ const KILOGRAMS_TO_KILOTONNES = 1000000;
 const totalReduction_kt = (solarGenerationKWh * REDUCTION_FACTOR_KWH) / KILOGRAMS_TO_KILOTONNES;
 const remainingReductionNeeded = reductionTarget_kt - totalReduction_kt;
 
-const dataBefore = {원자력: 188754, 석탄: 167160, LNG: 167205, 신재생: 63155, 유류: 1204, 양수: 4677, 기타: 3413};
+const dataBefore = {
+  원자력: 188754,
+  석탄: 167160,
+  LNG: 167205,
+  신재생: 63155,
+  유류: 1204,
+  양수: 4677,
+  기타: 3413
+};
 const newRenewableEnergy = 65157.432073;
 const increaseValue = newRenewableEnergy - dataBefore.신재생;
 const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
@@ -134,8 +139,19 @@ const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
 const labels = Object.keys(dataBefore);
 const initialData = Object.values(dataBefore);
 const finalData = Object.values(dataAfter);
-const colors = ['#2a9d8f', '#e9c46a', '#f4a261', '#264653', '#e76f51', '#50a0d0', '#cccccc'];
 const renewableIndex = labels.indexOf('신재생');
+
+/* ---------------- GeoMedrix 색상 팔레트 ---------------- */
+const geoPalette = [
+  '#8FA9C6', // 원자력
+  '#91A0B3', // 석탄
+  '#A3B1C9', // LNG
+  '#4CAF50', // 신재생 (강조)
+  '#C3CEDC', // 유류
+  '#B0BDC9', // 양수
+  '#D7E0E9'  // 기타
+];
+const accentGreen = '#4CAF50';
 
 /* ---------------- 중앙 텍스트 플러그인 ---------------- */
 const centerTextPlugin = {
@@ -149,7 +165,7 @@ const centerTextPlugin = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '700 16px Pretendard';
-    ctx.fillStyle = '#4caf50';
+    ctx.fillStyle = accentGreen;
     ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, cx, cy);
     ctx.restore();
   }
@@ -165,8 +181,8 @@ const powerChart = new Chart(
     data: {
       labels,
       datasets: [{
-        data: finalData,  // 시작은 after 상태
-        backgroundColor: colors.map((c, i) => i===renewableIndex ? '#4caf50' : c),
+        data: finalData,
+        backgroundColor: geoPalette,
         borderWidth: 1,
         offset: labels.map((_, i) => i === renewableIndex ? 18 : 0),
         hoverOffset: 10
@@ -174,12 +190,11 @@ const powerChart = new Chart(
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,   // ← 부모(.chart-wrap)의 정사각 크기를 그대로 사용
+      maintainAspectRatio: false,
       cutout: '65%',
       animation: { duration: 700, easing: 'easeInOutQuad' },
-      interaction: { mode: 'nearest', intersect: false }, // 작은 조각도 툴팁 표시
       plugins: {
-        legend: { position: 'top', labels: { font: { size: 12 } } },
+        legend: { position: 'top', labels: { font: { size: 12, weight: 500 } } },
         tooltip: {
           callbacks: {
             label(ctx) {
@@ -206,13 +221,13 @@ function updateChart(state) {
     isAfter = true;
     ds.data = finalData;
     ds.offset = labels.map((_, i) => i === renewableIndex ? 18 : 0);
-    ds.backgroundColor = colors.map((c, i) => i===renewableIndex ? '#4caf50' : c);
+    ds.backgroundColor = geoPalette;
     powerChart.options.plugins.centerTextPlugin.isAfter = true;
   } else {
     isAfter = false;
     ds.data = initialData;
     ds.offset = labels.map((_, i) => i === renewableIndex ? 6 : 0);
-    ds.backgroundColor = colors;
+    ds.backgroundColor = geoPalette.map((c, i) => i === renewableIndex ? '#7EBF87' : c);
     powerChart.options.plugins.centerTextPlugin.isAfter = false;
   }
   powerChart.update();
@@ -230,16 +245,15 @@ new Chart(
       labels: ['태양광 감축 기여', '추가 감축 목표량'],
       datasets: [{
         data: [totalReduction_kt, remainingReductionNeeded],
-        backgroundColor: ['#4caf50', '#e9c46a'],
+        backgroundColor: ['#4CAF50', '#8FA9C6'],
         borderWidth: 1,
         hoverOffset: 10
       }]
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,  // ← 부모 정사각 박스 채우기
+      maintainAspectRatio: false,
       cutout: '55%',
-      interaction: { mode: 'nearest', intersect: false },
       plugins: {
         legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 10 } },
         tooltip: {
@@ -249,7 +263,7 @@ new Chart(
               const value = ctx.parsed;
               const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
               const pct = (value / total * 100).toFixed(2) + '%';
-              return `${label}: ${value.toLocaleString(undefined,{maximumFractionDigits:2})} ktCO2eq (${pct})`;
+              return `${label}: ${value.toLocaleString(undefined,{maximumFractionDigits:2})} ktCO₂eq (${pct})`;
             }
           }
         }
@@ -266,5 +280,3 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
-
-
