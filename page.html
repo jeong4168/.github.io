@@ -298,11 +298,11 @@ footer {
   <p>추가 태양광 발전으로 인한 
   <b>신재생 에너지 발전량 증가율</b>과 
   <b>온실가스 감축 기여도</b>를 그래프로 나타냅니다.<br>
-  약 <b>956 ktCO₂e</b>의 감축 효과를 통해 인천시의 
+  약 <b>956 ktCO₂eq</b>의 감축 효과를 통해 인천시의 
   <b>2030 온실가스 감축 목표</b> (2018 대비 31%) 달성 기여도를 확인할 수 있습니다.</p>
 </div>
 
-<!-- 🏙 분석 대상지 -->
+<!--  분석 대상지 -->
 <h3 class="section-title">분석 대상지</h3>
 <div class="desc">
   <p>지오메드릭스는 <b>도심 내 유휴공간의 재활용</b>에 초점을 맞추었습니다.<br>
@@ -369,7 +369,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const co2El = document.getElementById('kpi-co2');
   
   animateValue(genEl, 0, Math.round(totalGWh), 4000, " GWh");
-  animateValue(co2El, 0, Math.round(totalCO2kt), 4000, " ktCO₂e");
+  animateValue(co2El, 0, Math.round(totalCO2kt), 4000, " ktCO₂eq");
 });
 
 // ----- 카드 토글 -----
@@ -379,6 +379,7 @@ function toggleDesc(card){card.classList.toggle('active');}
 
 </body>
 </html>
+
 
 
 
