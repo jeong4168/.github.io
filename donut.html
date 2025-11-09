@@ -134,6 +134,7 @@ const dataBefore = {
 };
 const newRenewableEnergy = 65157.432073;
 const increaseValue = newRenewableEnergy - dataBefore.신재생;
+const increasePercent = (increaseValue / dataBefore.신재생) * 100;
 const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
 
 const labels = Object.keys(dataBefore);
@@ -164,9 +165,7 @@ const centerTextPlugin = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '700 18px Pretendard';
-    ctx.fillStyle = '#00B37A';
-    ctx.shadowColor = 'rgba(0, 179, 122, 0.6)';
-    ctx.shadowBlur = 12;
+    ctx.fillStyle = '#1E5631';
     ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, cx, cy);
     ctx.restore();
   }
@@ -184,16 +183,16 @@ const powerChart = new Chart(ctx1, {
       data: finalData,
       backgroundColor: geoPalette,
       borderWidth: 2,
-      borderColor: geoPalette.map((c, i) => i === renewableIndex ? '#00B37A' : '#fff'),
-      offset: labels.map((_, i) => i === renewableIndex ? 20 : 0),
-      hoverOffset: 14
+      borderColor: geoPalette.map((c, i) => i === renewableIndex ? '#1E5631' : '#fff'),
+      offset: labels.map((_, i) => i === renewableIndex ? 18 : 0),
+      hoverOffset: 18 /* ✅ 살짝 확대 효과 (돋보기 느낌) */
     }]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
     cutout: '65%',
-    animation: { duration: 900, easing: 'easeOutElastic' },
+    animation: { duration: 900, easing: 'easeOutCubic' },
     plugins: {
       legend: { position: 'top', labels: { font: { size: 12, weight: 500 } } },
       tooltip: {
@@ -203,9 +202,12 @@ const powerChart = new Chart(ctx1, {
             const value = ctx.parsed;
             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
             const pct = ((value / total) * 100).toFixed(2) + '%';
-            const inc = (ctx.label === '신재생' && isAfter)
-              ? ` (증가량: +${increaseValue.toLocaleString(undefined,{maximumFractionDigits:2})} GWh)` : '';
-            return `${label}: ${value.toLocaleString()} GWh (${pct})${inc}`;
+            let extra = '';
+            // ✅ 신재생일 때 증가율 표시
+            if (ctx.label === '신재생' && isAfter) {
+              extra = ` (+${increasePercent.toFixed(2)}%)`;
+            }
+            return `${label}: ${value.toLocaleString()} GWh (${pct})${extra}`;
           }
         }
       },
@@ -215,13 +217,14 @@ const powerChart = new Chart(ctx1, {
   plugins: [centerTextPlugin]
 });
 
+/* ---------------- 버튼 동작 ---------------- */
 function updateChart(state) {
   const ds = powerChart.data.datasets[0];
   if (state === 'after') {
     isAfter = true;
     ds.data = finalData;
-    ds.backgroundColor = geoPalette.map((c, i) => i === renewableIndex ? '#00B37A' : c);
-    ds.borderColor = geoPalette.map((c, i) => i === renewableIndex ? '#00B37A' : '#fff');
+    ds.backgroundColor = geoPalette.map((c, i) => i === renewableIndex ? '#1E5631' : c);
+    ds.borderColor = geoPalette.map((c, i) => i === renewableIndex ? '#1E5631' : '#fff');
     ds.offset = labels.map((_, i) => i === renewableIndex ? 25 : 0);
     powerChart.options.plugins.centerTextPlugin.isAfter = true;
   } else {
