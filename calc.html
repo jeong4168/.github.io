@@ -6,196 +6,199 @@
 <title>태양광 발전량 계산기</title>
 <style>
 body {
-	font-family: 'Pretendard','Noto Sans KR',sans-serif;
-	background:#f0f3f5; 
-	margin:0;
-	padding:20px; 
-	display: flex; 
-	justify-content: center;
-	align-items: flex-start;
-	min-height: 100vh;
+  font-family: 'Pretendard','Noto Sans KR',sans-serif;
+  background:#f0f3f5; 
+  margin:0;
+  padding:20px; 
+  display: flex; 
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
 }
 .container {
-	max-width:90%;
-	width: 100%;
-	margin:auto;
-	background:white;
-	border-radius:18px; 
-	padding:40px; 
-	box-shadow:0 8px 30px rgba(0,0,0,0.1); 
-	border: 1px solid #e0e0e0;
+  max-width:90%;
+  width: 100%;
+  margin:auto;
+  background:white;
+  border-radius:18px; 
+  padding:40px; 
+  box-shadow:0 8px 30px rgba(0,0,0,0.1); 
+  border: 1px solid #e0e0e0;
 }
 h2 {
-	text-align:center;
-	color:#1d3557;
-	margin: -40px -40px 30px -40px; 
-	padding: 25px 40px;
-	background: #e8f0fe;
-	border-radius: 18px 18px 0 0;
-	font-size: 1.5em;
-	font-weight: 700;
+  text-align:center;
+  color:#1d3557;
+  margin: -40px -40px 30px -40px; 
+  padding: 25px 40px;
+  background: #e8f0fe;
+  border-radius: 18px 18px 0 0;
+  font-size: 1.5em;
+  font-weight: 700;
 }
 label {
-	font-weight:600;
-	display:block;
-	margin-top:15px; 
-	color:#333;
-	font-size: 1em;
+  font-weight:600;
+  display:block;
+  margin-top:15px; 
+  color:#333;
+  font-size: 1em;
 }
 input, select {
-	width:100%;
-	padding:12px;
-	margin-top:6px; 
-	border-radius:8px; 
-	border:1px solid #a8b3c3; 
-	font-size:1em;
-	box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
-	transition: border-color 0.2s;
+  width:100%;
+  padding:12px;
+  margin-top:6px; 
+  border-radius:8px; 
+  border:1px solid #a8b3c3; 
+  font-size:1em;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
+  transition: border-color 0.2s;
 }
 input:focus, select:focus {
-	border-color: #1d3557;
-	outline: none;
-	box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
+  border-color: #1d3557;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
 }
 .panel-size {
-	display:flex;
-	align-items:center;
-	gap:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 .panel-size input { flex:1; text-align:center; }
 .panel-size span { font-weight:bold; color:#1d3557; font-size:1.2em; }
 .result-box {
-	background:#f2f7ff; 
-	padding:18px; 
-	border-radius:12px;
-	margin-top:30px; 
-	color:#1d3557; 
-	line-height:1.6;
-	font-size:1em;
-	border-left: 5px solid #1d3557; 
+  background:#f2f7ff; 
+  padding:18px; 
+  border-radius:12px;
+  margin-top:30px; 
+  color:#1d3557; 
+  line-height:1.6;
+  font-size:1em;
+  border-left: 5px solid #1d3557; 
 }
 
-/* ✅ 버튼 색상 통일 (진한 남색) */
+/* ✅ 버튼 스타일 (GeoMedrix 진남색 톤) */
 button {
-	margin-top:30px; 
-	width:100%;
-	background:#1d3557; /* 진한 남색 */
-	color:white;
-	font-size:1.1em; 
-	padding:14px; 
-	border:none;
-	border-radius:8px;
-	cursor:pointer;
-	font-weight:bold;
-	transition: all 0.1s ease;
+  margin-top:30px; 
+  width:100%;
+  background:#1d3557;
+  color:white;
+  font-size:1.1em; 
+  padding:14px; 
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  box-shadow: 0 4px #163049; 
+  transition: all 0.15s ease;
 }
+button:hover { background:#0f223a; }
 button:active {
-	box-shadow: 0 2px #163049;
-	transform: translateY(2px);
+  box-shadow: 0 2px #163049;
+  transform: translateY(2px);
 }
-button:hover { background:#0f223a; } /* hover 시 더 어두운 남색 */
 
 /* 반응형 */
 @media (max-width: 650px) {
-	body { padding: 20px; }
-	.container { padding: 25px; border-radius: 12px; }
-	h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
+  body { padding: 20px; }
+  .container { padding: 25px; border-radius: 12px; }
+  h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
 }
 </style>
 </head>
 <body>
 <div class="container">
-	<h2>태양광 발전량 계산기</h2>
+  <h2>태양광 발전량 계산기</h2>
 
-	<label for="site">부지 선택</label>
-	<select id="site">
-		<option value="">-- 선택하세요 --</option>
-		<option value="산업단지">산업단지</option>
-		<option value="주차장">주차장</option>
-		<option value="철도 유휴부지">철도 유휴부지</option>
-	</select>
+  <label for="site">부지 선택</label>
+  <select id="site">
+    <option value="">-- 선택하세요 --</option>
+    <option value="산업단지">산업단지</option>
+    <option value="주차장">주차장</option>
+    <option value="철도 유휴부지">철도 유휴부지</option>
+  </select>
 
-	<label>패널 크기 (mm)</label>
-	<div class="panel-size">
-		<input type="number" id="width" placeholder="가로(mm)">
-		<span>×</span>
-		<input type="number" id="height" placeholder="세로(mm)">
-	</div>
+  <label>패널 크기 (mm)</label>
+  <div class="panel-size">
+    <input type="number" id="width" placeholder="가로(mm)">
+    <span>×</span>
+    <input type="number" id="height" placeholder="세로(mm)">
+  </div>
 
-	<label for="power">모듈 최대출력 (W)</label>
-	<input type="number" id="power" placeholder="예: 600">
+  <label for="power">모듈 최대출력 (W)</label>
+  <input type="number" id="power" placeholder="예: 600">
 
-	<label for="invest">투자 금액 (원)</label>
-	<input type="number" id="invest" placeholder="예: 500000000">
+  <label for="invest">투자 금액 (원)</label>
+  <input type="number" id="invest" placeholder="예: 500000000">
 
-	<label for="support">지원 금액 (원)</label>
-	<input type="number" id="support" placeholder="예: 100000000">
+  <label for="support">지원 금액 (원)</label>
+  <input type="number" id="support" placeholder="예: 100000000">
 
-	<div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
+  <div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
 
-	<button onclick="goToResult()">그래프 보기</button>
+  <button onclick="goToResult()">그래프 보기</button>
 </div>
 
 <script>
 const siteData = {
-	"산업단지": { area: 7718419, irradiance: 1175.34050058504 },
-	"주차장": { area: 241197, irradiance: 1074.80274452513 },
-	"철도 유휴부지": { area: 72040, irradiance: 1079.24847564316 }
+  "산업단지": { area: 7718419, irradiance: 1175.34050058504 },
+  "주차장": { area: 241197, irradiance: 1074.80274452513 },
+  "철도 유휴부지": { area: 72040, irradiance: 1079.24847564316 }
 };
 
 function updateCalculation() {
-	const site = document.getElementById('site').value;
-	const width = parseFloat(document.getElementById('width').value);
-	const height = parseFloat(document.getElementById('height').value);
-	const power = parseFloat(document.getElementById('power').value);
-	const resultDiv = document.getElementById('calcResult');
+  const site = document.getElementById('site').value;
+  const width = parseFloat(document.getElementById('width').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const power = parseFloat(document.getElementById('power').value);
+  const resultDiv = document.getElementById('calcResult');
 
-	if (!site) {
-		resultDiv.innerHTML = "부지를 선택하세요.";
-		return;
-	}
+  if (!site) {
+    resultDiv.innerHTML = "부지를 선택하세요.";
+    return;
+  }
 
-	const { area, irradiance } = siteData[site];
-	if (!width || !height || !power) {
-		resultDiv.innerHTML = `선택된 부지: <b>${site}</b><br>면적: ${area.toLocaleString()}㎡<br>패널 크기와 출력값을 입력해주세요.`;
-		return;
-	}
+  const { area, irradiance } = siteData[site];
+  if (!width || !height || !power) {
+    resultDiv.innerHTML = `선택된 부지: <b>${site}</b><br>면적: ${area.toLocaleString()}㎡<br>패널 크기와 출력값을 입력해주세요.`;
+    return;
+  }
 
-	const panelArea = (width / 1000) * (height / 1000);
-	const moduleCount = Math.floor(area / panelArea);
-	const totalKW = moduleCount * (power / 1000);
-	const annualEnergy = totalKW * irradiance;
+  const panelArea = (width / 1000) * (height / 1000);
+  const moduleCount = Math.floor(area / panelArea);
+  const totalKW = moduleCount * (power / 1000);
+  const annualEnergy = totalKW * irradiance;
 
-	resultDiv.innerHTML = `
-		선택된 부지: <b>${site}</b><br>
-		발전면적: ${area.toLocaleString()} ㎡<br>
-		패널 크기: ${panelArea.toFixed(2)} ㎡<br>
-		모듈 수: ${moduleCount.toLocaleString()}개<br>
-		총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
-		예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
-	`;
+  resultDiv.innerHTML = `
+    선택된 부지: <b>${site}</b><br>
+    발전면적: ${area.toLocaleString()} ㎡<br>
+    패널 크기: ${panelArea.toFixed(2)} ㎡<br>
+    모듈 수: ${moduleCount.toLocaleString()}개<br>
+    총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
+    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
+  `;
 }
 
 ["site","width","height","power","invest","support"].forEach(id=>{
-	const element = document.getElementById(id);
-	if (element) element.addEventListener('input', updateCalculation);
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateCalculation);
 });
 
 updateCalculation();
 
 function goToResult() {
-	const site=document.getElementById('site').value;
-	const width=document.getElementById('width').value;
-	const height=document.getElementById('height').value;
-	const power=document.getElementById('power').value;
-	const invest=document.getElementById('invest').value;
-	const support=document.getElementById('support').value;
+  const site=document.getElementById('site').value;
+  const width=document.getElementById('width').value;
+  const height=document.getElementById('height').value;
+  const power=document.getElementById('power').value;
+  const invest=document.getElementById('invest').value;
+  const support=document.getElementById('support').value;
 
-	if(!site||!width||!height||!power){alert("모든 값을 입력하세요!");return;}
+  if(!site||!width||!height||!power){
+    alert("모든 값을 입력하세요!");
+    return;
+  }
 
-	window.location.href=`result.html?site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
+  window.location.href=`result.html?site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
 }
 </script>
 </body>
 </html>
-
