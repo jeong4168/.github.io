@@ -91,8 +91,8 @@
       <canvas id="powerChart"></canvas>
     </div>
     <div class="button-group">
-      <button id="show-before">기존 현황 보기</button>
-      <button id="show-after">태양광 발전량 추가</button>
+      <button id="show-before">기존 현황 </button>
+      <button id="show-after"> 감축 적용 </button>
     </div>
   </div>
 
@@ -219,6 +219,7 @@ function updateChart(state) {
 }
 document.getElementById('show-before').addEventListener('click', () => updateChart('before'));
 document.getElementById('show-after').addEventListener('click', () => updateChart('after'));
+updateChart('before');
 
 /* ---------------- 하단 도넛 ---------------- */
 new Chart(
@@ -265,3 +266,4 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
+
