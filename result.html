@@ -263,20 +263,52 @@ new Chart(document.getElementById("accumChart"), {
   data: { 
     labels: Array.from({length:20},(_,i)=>`${i+1}년`), 
     datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor: green, barPercentage:0.6, categoryPercentage:0.7 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:2, pointRadius:0 }
+      { 
+        label:'누적 수익',
+        data: accumRevenue,
+        backgroundColor: '#4caf50',
+        barPercentage:0.6,
+        categoryPercentage:0.7,
+        order: 1 // ✅ 뒤에 그려지도록 지정
+      },
+      { 
+        label:'손익분기점',
+        data: Array(20).fill(breakeven),
+        type: 'line',
+        borderColor: '#1d3557',
+        borderDash: [6,4],
+        borderWidth: 2,
+        pointRadius: 0,
+        order: 2 // ✅ 막대보다 "앞"에 오도록 설정
+      }
     ]
   },
   options: {
     ...commonOpts,
     scales: {
-      x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 }, callback: (v,i)=> i%2===0 ? v+1+'년':'' } },
+      x: { 
+        ticks: { 
+          autoSkip: false, 
+          maxRotation: 0, 
+          minRotation: 0, 
+          font: { size: 10 }, 
+          callback: (v,i)=> i%2===0 ? v+1+'년':'' 
+        } 
+      },
       y: commonOpts.scales.y
     },
-    plugins: { tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } }, legend: { display: false } }
+    plugins: { 
+      tooltip: { 
+        enabled: true, 
+        callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } 
+      },
+      legend: { display: false }
+    }
   }
 });
+
 </script>
 </body>
 </html>
+
 
