@@ -76,7 +76,7 @@
     margin-top: 6px;
     line-height: 1.4em;
   }
-  .info-value { color: #4caf50; font-size: 1em; margin-left: 4px; }
+  .info-value { color: #1E5631; font-size: 1em; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -141,17 +141,16 @@ const initialData = Object.values(dataBefore);
 const finalData = Object.values(dataAfter);
 const renewableIndex = labels.indexOf('신재생');
 
-/* ---------------- GeoMedrix 색상 팔레트 ---------------- */
+/* ---------------- 🎨 GeoMedrix 트리그린 팔레트 ---------------- */
 const geoPalette = [
-  '#8FA9C6', // 원자력
-  '#91A0B3', // 석탄
-  '#A3B1C9', // LNG
-  '#4CAF50', // 신재생 (강조)
-  '#C3CEDC', // 유류
-  '#B0BDC9', // 양수
-  '#D7E0E9'  // 기타
+  '#264653', // 원자력 - 진네이비
+  '#457B9D', // 석탄 - 중간 블루
+  '#6BAED6', // LNG - 밝은 블루
+  '#1E5631', // 신재생 - 트리그린 🎄
+  '#A7C7E7', // 유류 - 파스텔 블루그레이
+  '#D1E3F8', // 양수 - 아주 연한 블루
+  '#9A8C98'  // 기타 - 보라빛 그레이
 ];
-const accentGreen = '#4CAF50';
 
 /* ---------------- 중앙 텍스트 플러그인 ---------------- */
 const centerTextPlugin = {
@@ -165,7 +164,7 @@ const centerTextPlugin = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '700 16px Pretendard';
-    ctx.fillStyle = accentGreen;
+    ctx.fillStyle = '#1E5631';
     ctx.fillText(`+${increaseValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} GWh`, cx, cy);
     ctx.restore();
   }
@@ -227,7 +226,7 @@ function updateChart(state) {
     isAfter = false;
     ds.data = initialData;
     ds.offset = labels.map((_, i) => i === renewableIndex ? 6 : 0);
-    ds.backgroundColor = geoPalette.map((c, i) => i === renewableIndex ? '#7EBF87' : c);
+    ds.backgroundColor = geoPalette.map((c, i) => i === renewableIndex ? '#4B775A' : c);
     powerChart.options.plugins.centerTextPlugin.isAfter = false;
   }
   powerChart.update();
@@ -245,7 +244,7 @@ new Chart(
       labels: ['태양광 감축 기여', '추가 감축 목표량'],
       datasets: [{
         data: [totalReduction_kt, remainingReductionNeeded],
-        backgroundColor: ['#4CAF50', '#8FA9C6'],
+        backgroundColor: ['#1E5631', '#6BAED6'],
         borderWidth: 1,
         hoverOffset: 10
       }]
