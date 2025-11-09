@@ -13,7 +13,7 @@
     padding: 20px; 
   }
   .container {
-    max-width: 90%; /* 유동적 확장 유지 */
+    max-width: 90%;
     width: 100%;
     margin: auto;
     display: flex;
@@ -27,13 +27,10 @@
     border:1px solid #d6dbff;
     border-radius:10px;
     padding:10px 15px;
-    margin:0;
     max-width: 100%;
     width: 100%;
     font-size: 13px;
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
-    flex-grow: 0;
-    flex-shrink: 0;
   }
   .summary-box h2 {
     text-align:center;
@@ -61,6 +58,23 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
+  /* 돌아가기 버튼 */
+  .back-btn {
+    display:block;
+    margin: 15px auto 0 auto;
+    background:#457b9d;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:8px 18px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow: 0 3px #1d3557;
+  }
+  .back-btn:hover { background:#1d3557; }
+
   /* 그래프 영역 */
   .chart-container {
     display: flex;
@@ -81,7 +95,6 @@
     font-size:14px;
     margin-bottom: 3px;
   }
-  /* 캔버스 세로 길이 */
   .chart-card canvas {
     height: 17vh !important; 
     max-height: 900px !important;
@@ -103,6 +116,9 @@
   <div class="summary-box">
     <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
+
+    <!-- ✅ 계산기로 돌아가기 버튼 추가 -->
+    <button class="back-btn" onclick="location.href='calc.html'">← 계산기로 돌아가기</button>
   </div>
 
   <div class="chart-container">
@@ -162,7 +178,6 @@ const siteData = {
   }
 };
 
-// 단가 정보
 const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
 const pricePerKwh = 163;
@@ -176,21 +191,11 @@ const totalKW = moduleCount * (power/1000) || 0;
 
 const months = Object.keys(irradiance);
 const irradianceVals = Object.values(irradiance);
-
-// 월별 발전량 (kWh) — 정수
 const monthlyEnergy = irradianceVals.map(val => Math.round(totalKW * val));
-
-// 월별 매출액 계산
-const monthlyRevenue = monthlyEnergy.map((val, i) => 
-  Math.round(val * (SMP[i] + (REC[i]/1000)))
-);
-
-// 절감액 및 손익분기점
+const monthlyRevenue = monthlyEnergy.map((val, i) => Math.round(val * (SMP[i] + (REC[i]/1000))));
 const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
 const saving = Math.round(annualEnergy * pricePerKwh);
 const breakeven = invest - support;
-
-// 누적 수익 (20년)
 const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
 const accumRevenue = Array.from({length:20},(_,i)=> (yearlyRevenue*(i+1)));
 
@@ -204,7 +209,6 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>손익분기점</th><td>${breakeven ? breakeven.toLocaleString() + ' 원' : '-'}</td></tr>
 `;
 
-// 공통 차트 옵션
 const commonOpts = {
   responsive: true,
   maintainAspectRatio: false,
@@ -213,88 +217,36 @@ const commonOpts = {
     legend: { display: false }
   },
   scales: {
-    x: {
-      ticks: { 
-        autoSkip: false, 
-        maxRotation: 0, 
-        minRotation: 0, 
-        font: { 
-          size: 10, 
-          weight: 'normal'
-        }
-      }
-    },
-    y: {
-      beginAtZero: true,
-      ticks: { 
-        callback: v => v.toLocaleString(),
-        font: {
-          size: 10
-        }
-      }
-    }
+    x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } },
+    y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString(), font: { size: 10 } } }
   }
 };
 
-// 1. 월별 발전량 차트
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{
-    data: monthlyEnergy,
-    backgroundColor: '#1d3557',
-    barPercentage:0.6, /* ✅ 통일 */
-    categoryPercentage:0.7 /* ✅ 통일 */
-  }] },
+  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6, categoryPercentage:0.7 }] },
   options: { ...commonOpts }
 });
 
-// 2. 월별 매출액 차트
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
-  data: { labels: months, datasets: [{
-    data: monthlyRevenue,
-    backgroundColor: '#ff9f1c',
-    barPercentage:0.6, /* ✅ 통일 */
-    categoryPercentage:0.7 /* ✅ 통일 */
-  }] },
+  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#ff9f1c', barPercentage:0.6, categoryPercentage:0.7 }] },
   options: { ...commonOpts }
 });
 
-// 3. 20년 누적 수익 차트 (라벨 간격 조정)
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
     labels: Array.from({length:20},(_,i)=>`${i+1}년`), 
     datasets: [
-      {
-        label:'누적 수익',
-        data: accumRevenue,
-        backgroundColor:'#90be6d',
-        order: 1,
-        barPercentage:0.6, /* ✅ 통일 (0.7 -> 0.6) */
-        categoryPercentage:0.7 /* ✅ 통일 (0.8 -> 0.7) */
-      },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0, order: 0 }
+      { label:'누적 수익', data: accumRevenue, backgroundColor:'#90be6d', barPercentage:0.6, categoryPercentage:0.7 },
+      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'red', borderDash:[6,4], borderWidth:2, pointRadius:0 }
     ]
   },
   options: {
     ...commonOpts,
     scales: {
-      x: {
-        ticks: { 
-          autoSkip: false,
-          maxRotation: 0, 
-          minRotation: 0,
-          font: { size: 10 }, 
-          callback: function(value, index, values) {
-            // 1년, 3년, 5년... 홀수 연도만 표시 (0, 2, 4...)
-            if (index % 2 === 0) { 
-              return this.getLabelForValue(value);
-            }
-            return '';
-          }
-        }
-      },
+      x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 }, callback: (v,i)=> i%2===0 ? v+1+'년':'' } },
       y: commonOpts.scales.y
     },
     plugins: { tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } }, legend: { display: false } }
