@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GeoMedrix | 인천 유휴공간 태양광 지도</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: #1d3557;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  line-height: 1.7;
+}
+
+/* 헤더 */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+header h1 {
+  margin: 0;
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #1d3557;
+}
+nav a {
+  margin-left: 24px;
+  text-decoration: none;
+  color: #1d3557;
+  font-weight: 500;
+  font-size: 0.95em;
+}
+nav a:hover {
+  color: #4caf50;
+}
+
+/* 히어로 섹션 */
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+  padding: 80px 8%;
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
+                url('https://raw.githubusercontent.com/jeong4168/.github.io/main/송도센트럴파크.jpg') center/cover no-repeat;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.hero h2 {
+  font-size: 2.6em;
+  margin-bottom: 18px;
+}
+.hero p {
+  font-size: 1.1em;
+  max-width: 680px;
+  line-height: 1.7em;
+  margin-bottom: 28px;
+}
+.btn-group button {
+  padding: 11px 24px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: 0.3s;
+}
+.btn-primary {
+  background: #4caf50;
+  color: white;
+}
+.btn-primary:hover { background: #3c9442; }
+.btn-secondary {
+  background: #1d3557;
+  color: white;
+}
+.btn-secondary:hover { background: #163049; }
+
+/* KPI */
+.kpi-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 8%;
+  background: white;
+}
+.kpi-box {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 20px 25px;
+  min-width: 230px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+.kpi-value {
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #4caf50;
+  margin-bottom: 6px;
+}
+.section-title {
+  text-align: center;
+  font-size: 1.7em;
+  margin: 70px 0 30px;
+  font-weight: 700;
+  color: #1d3557;
+}
+.desc {
+  max-width: 900px;
+  margin: 0 auto 40px auto;
+  font-size: 1em;
+  color: #333;
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* 지도 이미지 배너 */
+.map-banner {
+  width: 70%;             /* 💡 전체 폭의 70%만 사용 (절반~70% 느낌) */
+  max-width: 800px;       /* 최대 폭 제한 */
+  height: 300px;          /* 세로 높이 */
+  margin: 0 auto 35px;    /* 중앙 정렬 */
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.map-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 꽉 차게 표시 */
+  object-position: center; /* 중앙 기준 */
+  display: block;
+}
+
+.targets {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;     /* 높이 맞춰줌 */
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 0 8% 80px;
+}
+
+/* 카드 박스 */
+.target-card {
+  flex: 0 0 320px;          /* 가로 크기 고정 */
+  max-width: 320px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 상단부터 배치 */
+  align-items: center;
+}
+
+.target-card:hover { 
+  transform: translateY(-5px); 
+}
+
+/* 카드 이미지 */
+.target-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.25s ease;
+}
+.target-card:hover img {
+  transform: scale(1.03);
+}
+
+/* 제목 */
+.target-card h3 {
+  margin: 10px 0;
+  font-size: 1.2em;
+  color: #1d3557;
+}
+
+/* 설명문 (클릭 시 열림) */
+.target-card p {
+  font-size: 0.95em;
+  line-height: 1.6em;
+  color: #333;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.target-card.active p {
+  opacity: 1;
+  height: 120px; /* 펼쳤을 때 높이 */
+}
+
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* 푸터 */
+footer {
+  background: #1d3557;
+  color: #e5e5e5;
+  text-align: center;
+  padding: 30px 10px;
+  font-size: 0.85em;
+  margin-top: 60px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GeoMedrix</h1>
+  <nav>
+    <a href="#solar">일사량 분포도</a>
+    <a href="#carbon">탄소 배출 저감도</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>인천의 유휴공간을 에너지로 바꾸다</h2>
+  <p>철도, 산업단지, 공영주차장 등 활용되지 않은 도시공간을 분석하여<br>
+    태양광 발전 잠재력과 경제성, 탄소감축 효과를 시각화한<br>
+    <b style="color:#b7f5b4;">데이터 기반 에너지 전환 지도</b>입니다.
+  </p>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="location.href='page1.html'">일사량분포도 · 경제성 분석</button>
+    <button class="btn-secondary" onclick="location.href='page2.html'">탄소저감지도 · 환경적 효과</button>
+  </div>
+</section>
+
+<section class="kpi-section">
+  <div class="kpi-box"><div id="kpi-gen" class="kpi-value">로딩중...</div><div>연간 잠재 발전량</div></div>
+  <div class="kpi-box"><div id="kpi-co2" class="kpi-value">로딩중...</div><div>연간 탄소 감축 효과</div></div>
+  <div class="kpi-box"><div class="kpi-value">3</div><div>분석 대상지 유형</div></div>
+</section>
+
+<!-- 🌞 일사량 분포도 -->
+<h3 class="section-title" id="solar">일사량 분포도</h3>
+<div class="map-banner">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="산업단지">
+</div>
+<div class="desc">
+  <p><b>공간정보 안심구역의 1 m DEM</b>과 <b>건물높이 DB</b>를 결합하여 <br>
+  실제 건물 높이를 반영한 <b>DBEM(Digital Building Elevation Model)</b>을 구축했습니다.<br>
+  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 공영주차장, 산업단지 등 
+  각 공간유형별 <b>태양광 잠재 일사량</b>을 산출하고, 
+  이를 통해 발전량 계산이 가능한 <b>발전량 계산기 위젯</b>을 제작했습니다.</p>
+</div>
+
+<h3 class="section-title">발전량 계산기</h3>
+<div class="desc">
+  <p><b>발전량 계산기 위젯</b>은 사용자가 부지를 선택하고 
+  모듈 크기·출력값을 입력하면 예상 발전용량과 연간·월간 발전량을 실시간으로 산출합니다.<br>
+  이 결과는 경제적 효과 및 환경적 효과 분석의 기초 데이터로 활용됩니다.</p>
+</div>
+
+<h3 class="section-title">경제적 효과 분석</h3>
+<div class="desc">
+  <p><b>경제성 분석</b>은 예상 발전량과 사용자가 입력한 설치비용, 정부지원금을 기반으로 
+  <b>투자회수기간 및 수익성</b>을 계산합니다.<br>
+  2024년 월별 평균 <b>SMP·REC 단가</b> 변동을 반영하여 
+  실제 발전소 운영 시 경제성을 예측하고 시각화합니다.</p>
+</div>
+
+<!-- 🌍 탄소배출 저감도 -->
+<h3 class="section-title" id="carbon">탄소 배출 저감도</h3>
+<div class="map-banner">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/탄소2.jpeg" alt="탄소배출저감도">
+</div>
+<div class="desc">
+  <p><b>탄소배출저감도</b>는 발전량 데이터를 기반으로 도시 내 활동으로 발생하는 
+  <b>탄소배출량</b>을 격자로 표현한 지도입니다.<br>
+  태양광 발전을 추가 설치했을 때의 <b>온실가스 감축량</b>을 반영하여 
+  도시 전체의 환경적 변화를 시각화했습니다.</p>
+</div>
+
+<h3 class="section-title">환경적 효과 분석</h3>
+<div class="desc">
+  <p>추가 태양광 발전으로 인한 
+  <b>신재생 에너지 발전량 증가율</b>과 
+  <b>온실가스 감축 기여도</b>를 그래프로 나타냅니다.<br>
+  약 <b>956 ktCO₂e</b>의 감축 효과를 통해 인천시의 
+  <b>2030 탄소중립 목표</b> (2018 대비 31%) 달성 가능성을 확인할 수 있습니다.</p>
+</div>
+
+<!-- 🏙 분석 대상지 -->
+<h3 class="section-title">분석 대상지</h3>
+<div class="desc">
+  <p>지오메드릭스는 <b>도심 내 유휴공간의 재활용</b>에 초점을 맞추었습니다.<br>
+  이미 도심에 있는 공간을 활용하면 토지 훼손을 줄일 수 있으며, 
+  전력소비 밀집 지역에 가까운 생산 거점을 확보할 수 있습니다.<br>
+  이러한 이유로, 접근성과 설치 효율이 높은 <b>세 가지 유형의 부지</b>를 선정하였습니다.</p>
+</div>
+
+<div class="targets">
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/철도.jpg" alt="철도">
+    <h3>철도 유휴부지</h3>
+    <p>도심을 관통하는 철도 주변과 폐선부지는 <br>
+       미활용 부지와 개발 제약으로 방치된 경우가 많습니다.<br>  
+      따라서 위 부지에 발전시설을 설치하기에 적합합니다.</p>
+  </div>
+
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/태양광설비.png" alt="주차장">
+    <h3>주차장</h3>
+    <p>도심형 주차장은 대부분 노후 개방형 구조로, <br>
+       주차면 위 상부를 활용하여 캐노피형으로 설치한다면<br> 
+       별도의 토지 없이 태양광 모듈을 설치할 수 있습니다.</p>
+  </div>
+
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/산단.jpg" alt="산업단지">
+    <h3>산업단지</h3>
+    <p>산업단지는 대규모 지붕 면적의 제조시설이 밀집해<br> 
+       자가소비형 태양광 환경을 갖추고 있습니다.<br>
+       전력 사용량이 많아 전력자급률 향상 효과가 크고,  <br>
+       옥상 구조가 단일화되어 설치 효율이 뛰어납니다.</p>
+  </div>
+</div>
+
+<footer>
+  <div>© 2025 GeoMedrix Team | 인하대학교 공간정보공학과</div>
+  <div>문의: geomedrix@gmail.com</div>
+</footer>
+
+<script>
+// ----- KPI 수치 (도넛그래프 동일) -----
+const solarGenerationKWh = 1930712676 + 55172575 + 16546822;
+const totalGWh = solarGenerationKWh / 1e6;
+const reductionFactor = 0.4781;
+const totalCO2kt = (solarGenerationKWh * reductionFactor) / 1e6;
+
+// ----- 숫자 애니메이션 함수 -----
+function animateValue(element, start, end, duration, suffix="") {
+  let startTime = null;
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const current = Math.floor(progress * (end - start) + start);
+    element.textContent = current.toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ----- 페이지 로드시 실행 -----
+window.addEventListener('DOMContentLoaded', () => {
+  const genEl = document.getElementById('kpi-gen');
+  const co2El = document.getElementById('kpi-co2');
+  
+  animateValue(genEl, 0, Math.round(totalGWh), 1000, " GWh");
+  animateValue(co2El, 0, Math.round(totalCO2kt), 1000, " ktCO₂e");
+});
+
+// ----- 카드 토글 -----
+function toggleDesc(card){card.classList.toggle('active');}
+</script>
+
+
+</body>
+</html>
