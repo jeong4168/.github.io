@@ -367,8 +367,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const genEl = document.getElementById('kpi-gen');
   const co2El = document.getElementById('kpi-co2');
   
-  animateValue(genEl, 0, Math.round(totalGWh), 1000, " GWh");
-  animateValue(co2El, 0, Math.round(totalCO2kt), 1000, " ktCO₂e");
+  animateValue(genEl, 0, Math.round(totalGWh), 2000, " GWh");
+  animateValue(co2El, 0, Math.round(totalCO2kt), 2000, " ktCO₂e");
 });
 
 // ----- 카드 토글 -----
@@ -378,5 +378,6 @@ function toggleDesc(card){card.classList.toggle('active');}
 
 </body>
 </html>
+
 
 
