@@ -58,7 +58,7 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
-  /* ✅ 돌아가기 버튼 (GeoMedrix 톤) */
+  /*  돌아가기 버튼 (GeoMedrix 톤) */
   .back-btn {
     display:block;
     margin: 15px auto 0 auto;
@@ -116,7 +116,7 @@
     <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
 
-    <!-- ✅ 계산기로 돌아가기 버튼 -->
+    <!-- 계산기로 돌아가기 버튼 -->
     <button class="back-btn" onclick="location.href='calc.html'">← 계산기로 돌아가기</button>
   </div>
 
@@ -218,17 +218,16 @@ const commonOpts = {
   scales: {
     x: { 
       ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } },
-      grid: { display: false }   // ✅ X축 그리드 제거
+      grid: { display: false }   
     },
     y: { 
       beginAtZero: true,
       ticks: { callback: v => v.toLocaleString(), font: { size: 10 } },
-      grid: { display: false }   // ✅ Y축 그리드 제거
+      grid: { display: false }   
     }
   }
 };
 
-/* ✅ GeoMedrix 컬러 팔레트 */
 const navy = "#1d3557";
 const green = "#4caf50";
 const sky = "#e8f0fe";
@@ -276,7 +275,7 @@ new Chart(document.getElementById("accumChart"), {
         backgroundColor: '#4caf50',
         barPercentage:0.6,
         categoryPercentage:0.7,
-        order: 1 // ✅ 뒤에 그려지도록 지정
+        order: 1 //
       },
       { 
         label:'손익분기점',
@@ -286,7 +285,7 @@ new Chart(document.getElementById("accumChart"), {
         borderDash: [6,4],
         borderWidth: 2,
         pointRadius: 0,
-        order: 2 // ✅ 막대보다 "앞"에 오도록 설정
+        order: 2 // 
       }
     ]
   },
@@ -317,6 +316,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
