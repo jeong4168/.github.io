@@ -19,17 +19,18 @@ body {
 
 /* 헤더 */
 header {
-  position: relative;
+  position: relative;  
   top: 0;
   z-index: 10;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 100%;
+  width: 885px;
   height: 69px;
-  background: white;
+  margin: 0 auto;
   padding: 0 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 /* 히어로 섹션 */
@@ -190,7 +191,11 @@ footer {
 </head>
 <body>
 
-<header></header>
+<header>
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/logo.png"
+       alt="해봄지도 로고"
+       style="width:173.34px; height:165.59px; object-fit:contain; margin-left:20px;">
+</header>
 
 <section class="hero">
   <h1><span style="color:#FF7A00;">해</span><span style="color:#FFFFFF;">봄지도</span></h1>
@@ -198,8 +203,8 @@ footer {
   <p style="max-width:700px; margin-top:12px;">
     <b style="color:#4caf50;">‘해봄지도’</b>는 인천시의 유휴공간을 대상으로 일사량 분포도와 탄소 배출 저감도를 눈으로 확인하고,<br>
     발전량을 자유롭게 계산하여, 경제적·환경적 효과를 직접 <b style="color:#4caf50;">시뮬레이션</b>해볼 수 있는 플랫폼입니다.<br>
-    <b style="color:#4caf50;">‘해봄’</b>은 일사량을 본다(View)와 해보다(Try it)의 의미를 담아,<br>
-    사용자가 데이터를 통해 도시의 에너지 잠재력을 직접 탐색하고 체험할 수 있습니다.
+    <b style="color:#4caf50;">‘해봄’</b>은 일사량을 보다(View)와 해보다(Try it)의 의미를 담아,<br>
+    사용자가 데이터를 통해 도시의 에너지 잠재력을 직접 확인할 수 있습니다.
   </p>
 </section>
 
@@ -209,7 +214,7 @@ footer {
   <div class="kpi-box"><div class="kpi-value">3</div><div>분석 대상지 유형</div></div>
 </section>
 
-<!-- 🌞 일사량 분포도 -->
+<!-- 일사량 분포도 -->
 <h3 class="section-title" id="solar">일사량 분포도</h3>
 <div class="map-banner">
   <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="일사량 분포도">
@@ -320,6 +325,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
