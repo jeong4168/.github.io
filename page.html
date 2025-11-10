@@ -226,11 +226,10 @@ footer {
   <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="일사량 분포도">
 </div>
 <div class="desc">
-  <p><b>공간정보 안심구역의 DEM(1M)</b>과 <b>건물높이 DB</b>를 결합하여<br>
+  <p><b>공간정보 안심구역의 DEM(1m)</b>과 <b>건물높이 DB</b>를 결합하여<br>
 실제 건물 높이를 반영한 <b>DBEM(Digital Building Elevation Model)</b>을 구축했습니다.<br>
-  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 주차장, 산업단지 등
-  각 유휴 공간별 <b>태양광 잠재 일사량</b>을 산출하고, 
-  이를 통해 발전량 계산이 가능한 <b>발전량 계산기</b>를 제작했습니다.</p>
+  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 주차장, 산업단지 등<br>
+  각 유휴 공간별 <b>태양광 잠재 일사량</b>을 산출하고, 이를 통해 발전량 계산이 가능한 <b>발전량 계산기</b>를 제작했습니다.</p>
 </div>
 
 <h3 class="section-title">발전량 계산기</h3>
@@ -252,10 +251,10 @@ footer {
   <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/탄소2.jpeg" alt="탄소 배출 저감도">
 </div>
 <div class="desc">
-  <p><b>탄소 배출 저감도</b>는 발전량 데이터를 기반으로 도시 내 활동으로 발생하는 
-  <b>온실가스 배출량</b>을 격자로 표현한 지도입니다.<br>
-  태양광 발전을 추가 설치했을 때의 <b>온실가스 감축량</b>을 반영하여 
-  도시 전체의 환경적 변화를 시각화했습니다.</p>
+  <<p><b>탄소 배출 저감도</b>는 국토교통부의 탄소공간지도를 바탕으로,<br>
+본 연구에서 산출한 <b>온실가스 감축량</b>을 기존 배출량에서 <b>차감</b>b>하여 재시각화 하였습니다.<br>
+이를 통해 태양광 도입에 따른 <b>온실가스 저감 효과</b>를 시각적으로 확인할 수 있습니다.</p>
+
 </div>
 
 <h3 class="section-title">환경적 효과 분석</h3>
@@ -271,7 +270,7 @@ footer {
 <div class="desc">
   <p>지오메드릭스는 <b>도심 내 유휴공간의 재활용</b>에 초점을 맞추었습니다.<br>
   이미 도심에 있는 공간을 활용하면 토지 훼손을 줄일 수 있으며, 
-  전력소비 밀집 지역에 가까운 생산 거점을 확보할 수 있습니다.<br>
+  전력 소비 밀집 지역에 가까운 생산 거점을 확보할 수 있습니다.<br>
   이러한 이유로, 접근성과 설치 효율이 높은 <b>세 가지 유형의 부지</b>를 선정하였습니다.</p>
 </div>
 
@@ -279,9 +278,10 @@ footer {
   <div class="target-card" onclick="toggleDesc(this)">
     <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/철도.jpg" alt="철도 유휴부지">
     <h3>철도 유휴부지</h3>
-    <p> 철도 주변과 폐선 부지는 활용되지 않고 있는 공간입니다.<br>
-       이러한 유휴부지를 태양광 발전시설로 재활용한다면 <br>
-      에너지 자립과 환경 보전에 기여할 수 있습니다.</p>
+    <p> 선로 옆 유휴공간과, 폐선 부지는 <br>
+      현재 활용되지 않고 있는 공간입니다.<br>
+       이러한 공간을 태양광 발전시설로 재활용한다면 <br>
+      에너지 자립과 환경 보전에 동시에 기여할 수 있습니다.</p>
   </div>
 
   <div class="target-card" onclick="toggleDesc(this)">
@@ -335,6 +335,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
