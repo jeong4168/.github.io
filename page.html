@@ -15,28 +15,21 @@ body {
   line-height: 1.7;
 }
 
-/* 헤더: 더 얇게 + 로고 크게 */
+/* 🔸 헤더 유지 but 로고 없음 */
 header {
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
-  justify-content: flex-start;   /* 좌측 정렬 (GeoMedrix 자리) */
+  justify-content: flex-start;
   align-items: center;
-  padding: 8px 40px;             /* 상하 여백 축소 */
-  height: 56px;                  /* ✅ 이전보다 얇게 */
+  width: 885px;
+  height: 69px;
+  margin: 0 auto;
+  padding: 0 40px;
   background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-header img {
-  height: 44px;                  /* ✅ 로고 더 크게 */
-  width: auto;
-  object-fit: contain;
-}
-@media (max-width: 480px) {
-  header { height: 52px; padding: 6px 20px; }
-  header img { height: 38px; }
-}
+  
 /* 히어로 섹션 */
 .hero {
   display: flex;
@@ -139,7 +132,7 @@ footer {
 
 <!-- 상단 흰색 헤더 -->
 <header>
-  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/logo.png" alt="해봄지도 로고">
+
 </header>
 
 <!-- 메인 히어로 -->
@@ -196,6 +189,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
