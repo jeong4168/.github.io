@@ -19,18 +19,22 @@ body {
 
 /* 헤더 */
 header {
-  position: relative;  
+  position: absolute;    
   top: 0;
-  z-index: 10;
+  left: 0;
+  width: 100%;
+  height: 85px;
+  background: white;      
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  width: 885px;
-  height: 69px;
-  margin: 0 auto;
-  padding: 0 40px;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding-left: 40px;
+  z-index: 10;            
+}
+  /* 로고 이미지 */
+header img {
+  width: 173.34px;
+  height: 165.59px;
+  object-fit: contain;
 }
 
 /* 히어로 섹션 */
@@ -191,10 +195,12 @@ footer {
 </head>
 <body>
 
+<!-- 상단 헤더 -->
 <header>
-  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/logo.png"
-       alt="해봄지도 로고"
-       style="width:173.34px; height:165.59px; object-fit:contain; margin-left:20px;">
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/remove_background.png" 
+         alt="해봄지도 로고">
+  </div>
 </header>
 
 <section class="hero">
@@ -325,6 +331,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
