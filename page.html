@@ -15,24 +15,28 @@ body {
   line-height: 1.7;
 }
 
-/* 헤더 */
+/* 헤더: 더 얇게 + 로고 크게 */
 header {
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start;   /* 좌측 정렬 (GeoMedrix 자리) */
   align-items: center;
-  padding: 12px 40px;
+  padding: 8px 40px;             /* 상하 여백 축소 */
+  height: 56px;                  /* ✅ 이전보다 얇게 */
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  height: 64px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 header img {
-  height: 40px;
+  height: 44px;                  /* ✅ 로고 더 크게 */
+  width: auto;
   object-fit: contain;
 }
-
+@media (max-width: 480px) {
+  header { height: 52px; padding: 6px 20px; }
+  header img { height: 38px; }
+}
 /* 히어로 섹션 */
 .hero {
   display: flex;
@@ -140,8 +144,9 @@ footer {
 
 <!-- 메인 히어로 -->
 <section class="hero">
-  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/logo.png" alt="해봄지도 중앙 로고">
-  style="height: 180px; max-width: 80%; object-fit: contain; margin-bottom: 15px;">
+<h1 style="font-size:4.5em; font-weight:700; margin-bottom:12px;">
+  <span style="color:#FF7A00;">해</span><span style="color:#FFFFFF;">봄지도</span>
+</h1>
   <h2>인천의 유휴공간을 에너지로 바꾸다</h2>
   <p style="max-width:700px; margin-top:12px;">
     <b style="color:#4caf50;">‘해봄지도’</b>는 인천시의 유휴공간을 대상으로 일사량 분포도와 탄소 배출 저감도를 눈으로 확인하고,<br>
@@ -191,5 +196,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
