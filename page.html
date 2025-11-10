@@ -155,7 +155,93 @@ footer {
   <div class="kpi-box"><div id="kpi-co2" class="kpi-value">로딩중...</div><div>연간 탄소 감축 효과</div></div>
   <div class="kpi-box"><div class="kpi-value">3</div><div>분석 대상지 유형</div></div>
 </section>
+<!-- KPI 섹션 아래에 복원할 부분 -->
+<!-- 🌞 일사량 분포도 -->
+<h3 class="section-title" id="solar">일사량 분포도</h3>
+<div class="map-banner">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="산업단지">
+</div>
+<div class="desc">
+  <p><b>공간정보 안심구역의 DEM(1M)</b>과 <b>건물높이 DB</b>를 결합하여 
+  실제 건물 높이를 반영한 <b>DBEM(Digital Building Elevation Model)</b>을 구축했습니다.<br>
+  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 주차장, 산업단지 등 
+  각 유휴 공간별 <b>태양광 잠재 일사량</b>을 산출하고, 
+  이를 통해 발전량 계산이 가능한 <b>발전량 계산기</b>를 제작했습니다.</p>
+</div>
 
+<h3 class="section-title">발전량 계산기</h3>
+<div class="desc">
+  <p><b>발전량 계산기</b>는 사용자가 부지를 선택하고 
+  모듈 크기·출력값을 입력하면 예상 발전용량과 연간·월간 발전량을 실시간으로 산출합니다.<br>
+  이 결과는 경제적 효과 및 환경적 효과 분석의 기초 데이터로 활용됩니다.</p>
+</div>
+
+<h3 class="section-title">경제적 효과 분석</h3>
+<div class="desc">
+  <p><b>경제성 분석</b>은 예상 발전량과 사용자가 입력한 설치비용, 정부지원금을 기반으로 
+  <b>투자회수기간 및 수익성</b>을 계산합니다.<br>
+  2024년 월별 평균 <b>SMP·REC 단가</b> 변동을 반영하여 
+  실제 발전소 운영 시 경제성을 예측하고 시각화합니다.</p>
+</div>
+
+<!--  탄소배출 저감도 -->
+<h3 class="section-title" id="carbon">탄소 배출 저감도</h3>
+<div class="map-banner">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/탄소2.jpeg" alt="탄소배출저감도">
+</div>
+<div class="desc">
+  <p><b>탄소 배출 저감도</b>는 발전량 데이터를 기반으로 도시 내 활동으로 발생하는 
+  <b>온실가스 배출량</b>을 격자로 표현한 지도입니다.<br>
+  태양광 발전을 추가 설치했을 때의 <b>온실가스 감축량</b>을 반영하여 
+  도시 전체의 환경적 변화를 시각화했습니다.</p>
+</div>
+
+<h3 class="section-title">환경적 효과 분석</h3>
+<div class="desc">
+  <p>추가 태양광 발전으로 인한 
+  <b>신재생 에너지 발전량 증가율</b>과 
+  <b>온실가스 감축 기여도</b>를 그래프로 나타냅니다.<br>
+  약 <b>956 ktCO₂eq</b>의 감축 효과를 통해 인천시의 
+  <b>2030 온실가스 감축 목표</b> (2018 대비 31%) 달성 기여도를 확인할 수 있습니다.</p>
+</div>
+
+<!--  분석 대상지 -->
+<h3 class="section-title">분석 대상지</h3>
+<div class="desc">
+  <p>지오메드릭스는 <b>도심 내 유휴공간의 재활용</b>에 초점을 맞추었습니다.<br>
+  이미 도심에 있는 공간을 활용하면 토지 훼손을 줄일 수 있으며, 
+  전력소비 밀집 지역에 가까운 생산 거점을 확보할 수 있습니다.<br>
+  이러한 이유로, 접근성과 설치 효율이 높은 <b>세 가지 유형의 부지</b>를 선정하였습니다.</p>
+</div>
+
+<div class="targets">
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/철도.jpg" alt="철도">
+    <h3>철도 유휴부지</h3>
+    <p>도심 철도 주변과 폐선 부지는 
+      오랫동안 활용되지 않은 잠재 공간입니다.<br>
+      이 부지를 태양광 발전시설로 재활용 한다면, 
+      에너지 자립과 환경 보전에 기여할 수 있습니다.</p>
+  </div>
+
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/태양광설비.png" alt="주차장">
+    <h3>주차장</h3>
+    <p>도심형 주차장은 대부분 개방형 구조로, 
+       주차면 위 상부를 활용하여 캐노피형으로 설치한다면 
+       별도의 토지 없이 태양광 모듈을 설치할 수 있습니다.</p>
+  </div>
+
+  <div class="target-card" onclick="toggleDesc(this)">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/산단.jpg" alt="산업단지">
+    <h3>산업단지</h3>
+    <p>산업단지는 대규모 면적의 제조시설이 밀집해 
+       자가소비형 태양광 환경을 갖추고 있습니다.<br>
+       전력 사용량이 많아 전력자급률 향상 효과가 크고,  
+       옥상 구조가 단일화되어 설치 효율이 뛰어납니다.</p>
+  </div>
+</div>
+  
 <footer>
   <div>© 2025 Team GeoMedrix</div>
 </footer>
@@ -189,6 +275,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
