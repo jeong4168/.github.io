@@ -56,10 +56,11 @@
   button:hover { background: #0f223a; }
 
   .chart-wrap {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    position: relative;
-  }
+  width: 100%;
+  height: 320px;          /* 🎯 두 그래프 모두 동일한 높이 고정 */
+  position: relative;
+}
+
   .chart-wrap > canvas {
     position: absolute;
     inset: 0;
@@ -282,3 +283,4 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
+
