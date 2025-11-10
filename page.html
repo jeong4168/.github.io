@@ -15,7 +15,7 @@ body {
   line-height: 1.7;
 }
 
-/* 🔸 헤더 유지 but 로고 없음 */
+/* 헤더 */
 header {
   position: relative;
   top: 0;
@@ -23,13 +23,13 @@ header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 885px;
+  width: 100%;
   height: 69px;
-  margin: 0 auto;
-  padding: 0 40px;
   background: white;
+  padding: 0 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
-  
+
 /* 히어로 섹션 */
 .hero {
   display: flex;
@@ -43,10 +43,10 @@ header {
   text-align: center;
   text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
-.hero img {
-  height: 140px;              /* 해봄지도 로고 크기 */
-  margin-bottom: 15px;
-  object-fit: contain;
+.hero h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 .hero h2 {
   font-size: 2em;
@@ -84,7 +84,7 @@ header {
   margin-bottom: 6px;
 }
 
-/* 기타 공통 섹션 */
+/* 섹션 공통 */
 .section-title {
   text-align: center;
   font-size: 1.7em;
@@ -100,6 +100,8 @@ header {
   text-align: center;
   line-height: 1.8;
 }
+
+/* 지도 이미지 */
 .map-banner {
   width: 70%;
   max-width: 800px;
@@ -117,6 +119,62 @@ header {
   display: block;
 }
 
+/* 대상지 카드 */
+.targets {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 0 8% 80px;
+}
+.target-card {
+  flex: 0 0 320px;
+  max-width: 320px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.target-card:hover { transform: translateY(-5px); }
+.target-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.25s ease;
+}
+.target-card:hover img { transform: scale(1.03); }
+.target-card h3 {
+  margin: 10px 0;
+  font-size: 1.2em;
+  color: #1d3557;
+}
+.target-card p {
+  font-size: 0.95em;
+  line-height: 1.6em;
+  color: #333;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.target-card.active p {
+  opacity: 1;
+  height: 120px;
+}
+
 /* 푸터 */
 footer {
   background: #1d3557;
@@ -130,49 +188,41 @@ footer {
 </head>
 <body>
 
-<!-- 상단 흰색 헤더 -->
-<header>
+<header></header>
 
-</header>
-
-<!-- 메인 히어로 -->
 <section class="hero">
-<h1 style="font-size:4.5em; font-weight:700; margin-bottom:12px;">
-  <span style="color:#FF7A00;">해</span><span style="color:#FFFFFF;">봄지도</span>
-</h1>
+  <h1><span style="color:#FF7A00;">해</span><span style="color:#FFFFFF;">봄지도</span></h1>
   <h2>인천의 유휴공간을 에너지로 바꾸다</h2>
   <p style="max-width:700px; margin-top:12px;">
     <b style="color:#4caf50;">‘해봄지도’</b>는 인천시의 유휴공간을 대상으로 일사량 분포도와 탄소 배출 저감도를 눈으로 확인하고,<br>
     발전량을 자유롭게 계산하여, 경제적·환경적 효과를 직접 <b style="color:#4caf50;">시뮬레이션</b>해볼 수 있는 플랫폼입니다.<br>
-    <b style="color:#4caf50;">‘해봄’</b>은 일사량을 본다(View)는 의미와 해보다(Try)라는 의미를 동시에 담아,<br>
+    <b style="color:#4caf50;">‘해봄’</b>은 일사량을 본다(View)와 해보다(Try it)의 의미를 담아,<br>
     사용자가 데이터를 통해 도시의 에너지 잠재력을 직접 탐색하고 체험할 수 있습니다.
   </p>
 </section>
 
-<!-- KPI -->
 <section class="kpi-section">
   <div class="kpi-box"><div id="kpi-gen" class="kpi-value">로딩중...</div><div>연간 잠재 발전량</div></div>
   <div class="kpi-box"><div id="kpi-co2" class="kpi-value">로딩중...</div><div>연간 탄소 감축 효과</div></div>
   <div class="kpi-box"><div class="kpi-value">3</div><div>분석 대상지 유형</div></div>
 </section>
-<!-- KPI 섹션 아래에 복원할 부분 -->
+
 <!-- 🌞 일사량 분포도 -->
 <h3 class="section-title" id="solar">일사량 분포도</h3>
 <div class="map-banner">
-  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="산업단지">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/일사량2.jpeg" alt="일사량 분포도">
 </div>
 <div class="desc">
-  <p><b>공간정보 안심구역의 DEM(1M)</b>과 <b>건물높이 DB</b>를 결합하여 
+  <p><b>공간정보 안심구역의 DEM(1 m)</b>과 <b>건물높이 DB</b>를 결합해
   실제 건물 높이를 반영한 <b>DBEM(Digital Building Elevation Model)</b>을 구축했습니다.<br>
-  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 주차장, 산업단지 등 
+  이를 기반으로 <b>ArcGIS Solar Radiation Tool</b>을 활용하여 철도 유휴부지, 주차장, 산업단지 등
   각 유휴 공간별 <b>태양광 잠재 일사량</b>을 산출하고, 
   이를 통해 발전량 계산이 가능한 <b>발전량 계산기</b>를 제작했습니다.</p>
 </div>
 
 <h3 class="section-title">발전량 계산기</h3>
 <div class="desc">
-  <p><b>발전량 계산기</b>는 사용자가 부지를 선택하고 
-  모듈 크기·출력값을 입력하면 예상 발전용량과 연간·월간 발전량을 실시간으로 산출합니다.<br>
+  <p><b>발전량 계산기</b>는 사용자가 부지를 선택하고 모듈 크기·출력값을 입력하면 예상 발전용량과 연간·월간 발전량을 실시간으로 산출합니다.<br>
   이 결과는 경제적 효과 및 환경적 효과 분석의 기초 데이터로 활용됩니다.</p>
 </div>
 
@@ -184,10 +234,9 @@ footer {
   실제 발전소 운영 시 경제성을 예측하고 시각화합니다.</p>
 </div>
 
-<!--  탄소배출 저감도 -->
 <h3 class="section-title" id="carbon">탄소 배출 저감도</h3>
 <div class="map-banner">
-  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/탄소2.jpeg" alt="탄소배출저감도">
+  <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/탄소2.jpeg" alt="탄소 배출 저감도">
 </div>
 <div class="desc">
   <p><b>탄소 배출 저감도</b>는 발전량 데이터를 기반으로 도시 내 활동으로 발생하는 
@@ -205,7 +254,6 @@ footer {
   <b>2030 온실가스 감축 목표</b> (2018 대비 31%) 달성 기여도를 확인할 수 있습니다.</p>
 </div>
 
-<!--  분석 대상지 -->
 <h3 class="section-title">분석 대상지</h3>
 <div class="desc">
   <p>지오메드릭스는 <b>도심 내 유휴공간의 재활용</b>에 초점을 맞추었습니다.<br>
@@ -216,37 +264,34 @@ footer {
 
 <div class="targets">
   <div class="target-card" onclick="toggleDesc(this)">
-    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/철도.jpg" alt="철도">
+    <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/철도.jpg" alt="철도 유휴부지">
     <h3>철도 유휴부지</h3>
-    <p>도심 철도 주변과 폐선 부지는 
-      오랫동안 활용되지 않은 잠재 공간입니다.<br>
-      이 부지를 태양광 발전시설로 재활용 한다면, 
-      에너지 자립과 환경 보전에 기여할 수 있습니다.</p>
+    <p>도심 철도 주변과 폐선 부지는 오랫동안 활용되지 않은 잠재 공간입니다.
+       태양광 발전시설로 재활용하면 에너지 자립과 환경 보전에 기여할 수 있습니다.</p>
   </div>
 
   <div class="target-card" onclick="toggleDesc(this)">
     <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/태양광설비.png" alt="주차장">
     <h3>주차장</h3>
-    <p>도심형 주차장은 대부분 개방형 구조로, 
-       주차면 위 상부를 활용하여 캐노피형으로 설치한다면 
+    <p>도심형 주차장은 대부분 개방형 구조로, 주차면 위 상부를 활용하여 캐노피형으로 설치한다면 
        별도의 토지 없이 태양광 모듈을 설치할 수 있습니다.</p>
   </div>
 
   <div class="target-card" onclick="toggleDesc(this)">
     <img src="https://raw.githubusercontent.com/jeong4168/.github.io/main/산단.jpg" alt="산업단지">
     <h3>산업단지</h3>
-    <p>산업단지는 대규모 면적의 제조시설이 밀집해 
-       자가소비형 태양광 환경을 갖추고 있습니다.<br>
-       전력 사용량이 많아 전력자급률 향상 효과가 크고,  
-       옥상 구조가 단일화되어 설치 효율이 뛰어납니다.</p>
+    <p>산업단지는 대규모 면적의 제조시설이 밀집해 자가소비형 태양광 환경을 갖추고 있습니다.
+       전력 사용량이 많아 전력자급률 향상 효과가 크고, 옥상 구조가 단일화되어 설치 효율이 뛰어납니다.</p>
   </div>
 </div>
-  
+
 <footer>
   <div>© 2025 Team GeoMedrix</div>
 </footer>
 
 <script>
+function toggleDesc(card){ card.classList.toggle('active'); }
+
 const solarGenerationKWh = 1930712676 + 55172575 + 16546822;
 const totalGWh = solarGenerationKWh / 1e6;
 const reductionFactor = 0.4781;
@@ -267,17 +312,9 @@ function animateValue(element, start, end, duration, suffix="") {
 window.addEventListener('DOMContentLoaded', () => {
   const genEl = document.getElementById('kpi-gen');
   const co2El = document.getElementById('kpi-co2');
-  
   animateValue(genEl, 0, Math.round(totalGWh), 4000, " GWh");
   animateValue(co2El, 0, Math.round(totalCO2kt), 4000, " ktCO₂eq");
 });
 </script>
-
 </body>
 </html>
-
-
-
-
-
-
