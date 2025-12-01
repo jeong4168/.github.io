@@ -75,7 +75,7 @@ input:focus, select:focus {
   border-left: 5px solid #1d3557; 
 }
 
-/* ✅ 버튼 스타일 (GeoMedrix 진남색 톤) */
+
 button {
   margin-top:30px; 
   width:100%;
@@ -162,15 +162,38 @@ function updateCalculation() {
     return;
   }
 
-  const panelArea = (width / 1000) * (height / 1000);
-  const moduleCount = Math.floor(area / panelArea);
+  let moduleCount = 0;
+  let effectiveArea = area;
+
+  if (site === "산업단지") {
+    const a = Math.max(width, height) / 1000; // 긴 변 (m)
+    const b = Math.min(width, height) / 1000; // 짧은 변 (m)
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
+    moduleCount = Math.floor(7719419 / panelWithSpacing);
+    effectiveArea = 7719419;
+
+  } else if (site === "주차장") {
+    const totalArea = 241197;
+    const slotArea = 2.5 * 5.0 + 6.0 * 2.5; // 구획 + 이격 포함
+    const totalSlots = Math.floor(totalArea / slotArea); // 칸 수
+    effectiveArea = 2.5 * 5.0 * 7455; // 실제 설치 가능 면적
+    const panelArea = (width / 1000) * (height / 1000);
+    moduleCount = Math.floor(effectiveArea / panelArea);
+
+  } else if (site === "철도 유휴부지") {
+    const panelArea = (width / 1000) * (height / 1000);
+    effectiveArea = 72040;
+    moduleCount = Math.floor(effectiveArea / panelArea);
+  }
+
+  // 발전용량 및 발전량 계산
   const totalKW = moduleCount * (power / 1000);
   const annualEnergy = totalKW * irradiance;
 
+  // 결과 출력
   resultDiv.innerHTML = `
     선택된 부지: <b>${site}</b><br>
-    발전면적: ${area.toLocaleString()} ㎡<br>
-    패널 크기: ${panelArea.toFixed(2)} ㎡<br>
+    발전면적: ${effectiveArea.toLocaleString()} ㎡<br>
     모듈 수: ${moduleCount.toLocaleString()}개<br>
     총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
     예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
@@ -202,4 +225,5 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
