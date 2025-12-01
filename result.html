@@ -197,7 +197,7 @@ const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
 const breakeven = invest - support;
 const saving = Math.round(annualEnergy * pricePerKwh);
 
-// ✅ 성능 저하 반영
+//  성능 저하 반영
 const degradationRate = 0.005;
 let accumRevenue = [];
 let total = 0;
@@ -207,7 +207,7 @@ for (let year = 1; year <= 20; year++) {
   accumRevenue.push(Math.round(total));
 }
 
-// ✅ 요약 표
+//  요약 표
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site}</td></tr>
   <tr><th>전체 부지 면적</th><td>${totalArea.toLocaleString()} ㎡</td></tr>
@@ -219,7 +219,7 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
 `;
 
-// ✅ 그래프 (기존 디자인 그대로)
+// 그래프 
 const commonOpts = {
   responsive: true,
   maintainAspectRatio: false,
@@ -254,9 +254,37 @@ new Chart(document.getElementById("accumChart"), {
       { label:'손익분기점', data: Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:2, pointRadius:0, order:2 }
     ]
   },
-  options: commonOpts
+  options: {
+    ...commonOpts,
+    scales: {
+      x: { 
+        // 
+        ticks: {
+          autoSkip: false,
+          callback: (v,i)=> i % 2 === 0 ? `${i+1}년` : '',
+          font: { size: 11 },
+          padding: 8
+        },
+        grid: { display: false }
+      },
+      y: { 
+        beginAtZero: true,
+        ticks: { callback: v => v.toLocaleString(), font: { size: 10 } },
+        grid: { display: false }  
+      }
+    },
+    plugins: { 
+      tooltip: { 
+        enabled: true, 
+        callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } 
+      },
+      legend: { display: false }
+    }
+  }
+});
 });
 </script>
 </body>
 </html>
+
 
