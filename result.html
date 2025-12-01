@@ -245,23 +245,40 @@ new Chart(document.getElementById("revenueChart"), {
   options: commonOpts
 });
 
+/* 20년 누적 수익 */
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: { 
     labels: Array.from({length:20},(_,i)=>`${i+1}년`),
     datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor: '#4caf50', barPercentage:0.6, categoryPercentage:0.7, order:1 },
-      { label:'손익분기점', data: Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:2, pointRadius:0, order:2 }
+      { 
+        label:'누적 수익',
+        data: accumRevenue,
+        backgroundColor: '#4caf50',
+        barPercentage:0.6,
+        categoryPercentage:0.7,
+        order: 1
+      },
+      { 
+        label:'손익분기점',
+        data: Array(20).fill(breakeven),
+        type:'line',
+        borderColor:'#1d3557',
+        borderDash:[6,4],
+        borderWidth: 3,
+        pointRadius: 0,
+        order: 0, 
+        drawTime: 'afterDatasetsDraw'
+      }
     ]
   },
   options: {
     ...commonOpts,
     scales: {
       x: { 
-        // 
         ticks: {
           autoSkip: false,
-          callback: (v,i)=> i % 2 === 0 ? `${i+1}년` : '',
+          callback: (v,i)=> `${i+1}년`, 
           font: { size: 11 },
           padding: 8
         },
@@ -282,9 +299,9 @@ new Chart(document.getElementById("accumChart"), {
     }
   }
 });
-});
 </script>
 </body>
 </html>
+
 
 
