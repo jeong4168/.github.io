@@ -190,18 +190,22 @@ function updateCalculation() {
     effectiveArea = 109625;
   }
 
-  // 발전용량 및 발전량 계산
-  const totalKW = moduleCount * (power / 1000);
-  const annualEnergy = totalKW * irradiance;
+ // 발전용량 및 발전량 계산
+const totalKW = moduleCount * (power / 1000);
+const annualEnergy = totalKW * irradiance;
 
-  // 결과 출력
-  resultDiv.innerHTML = `
-    선택된 부지: <b>${site}</b><br>
-    발전면적: ${effectiveArea.toLocaleString()} ㎡<br>
-    모듈 수: ${moduleCount.toLocaleString()}개<br>
-    총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
-    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
-  `;
+// 전체 대비 사용 비율 계산
+const usageRate = ((effectiveArea / siteData[site].area) * 100).toFixed(1);
+
+// 결과 출력
+resultDiv.innerHTML = `
+  선택된 부지: <b>${site}</b><br>
+  전체 부지 면적: ${siteData[site].area.toLocaleString()} ㎡<br>
+  사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
+  모듈 수: ${moduleCount.toLocaleString()}개<br>
+  총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
+  예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
+`;
 }
 
 // 입력값 변경 시 실시간 업데이트
@@ -230,6 +234,7 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
 
 
