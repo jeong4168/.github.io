@@ -188,13 +188,17 @@ let effectiveArea = area;
 
 // ---------------- 계산 로직 ----------------
 
+let totalArea = 0;
+let effectiveArea = 0;
+let moduleCount = 0;
+
 // 산업단지
 if (site === "산업단지") {
   const a = Math.max(width, height) / 1000;  // 긴 변 (m)
   const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
   const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a; // 이격 포함 면적
   moduleCount = Math.floor(7719419 / panelWithSpacing);
-  effectiveArea = 7719419;
+  effectiveArea = moduleCount * (a * b);
 
 // 철도 유휴부지
 } else if (site === "철도 유휴부지") {
@@ -202,15 +206,17 @@ if (site === "산업단지") {
   const b = Math.min(width, height) / 1000;
   const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
   moduleCount = Math.floor(72040 / panelWithSpacing);
-  effectiveArea = 72040;
-
+  effectiveArea = moduleCount * (a * b);
 // 주차장 (고정 면적)
 } else if (site === "주차장") {
   const a = Math.max(width, height) / 1000;
   const b = Math.min(width, height) / 1000;
+  totalArea = 241197;
+  const slotArea = 2.5 * 5.0 + 6.0 * 2.5;
+  const totalSlots = Math.floor(totalArea / slotArea);
+  effectiveArea = 2.5 * 5.0 * 7455; // 
   const panelArea = a * b;
-  moduleCount = Math.floor(109625 / panelArea);
-  effectiveArea = 109625;
+  moduleCount = Math.floor(effectiveArea / panelArea);
 }
 
 const totalKW = moduleCount * (power / 1000) || 0;
@@ -235,17 +241,17 @@ for (let year = 1; year <= 20; year++) {
 }
 
 // ---------------- 표 출력 ----------------
-document.getElementById("summaryTable").innerHTML = `
-  <tr><th>선택된 부지</th><td>${site || '-'}</td></tr>
-  <tr><th>전체 부지 면적</th><td>${area.toLocaleString()} ㎡</td></tr>
-  <tr><th>사용 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡</td></tr>
-  <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
-  <tr><th>총 발전용량</th><td>${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW</td></tr>
-  <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
-  <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년</td></tr>
-  <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
-`;
+const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
+resultDiv.innerHTML = `
+  선택된 부지: <b>${site}</b><br>
+  전체 부지 면적: ${totalArea.toLocaleString()} ㎡<br>
+  사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
+  모듈 수: ${moduleCount.toLocaleString()} 개<br>
+  총 발전용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
+  예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
+`;
+  
 // ---------------- 그래프 옵션 ----------------
 const commonOpts = {
   responsive: true,
@@ -294,6 +300,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
