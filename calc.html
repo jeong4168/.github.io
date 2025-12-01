@@ -158,23 +158,27 @@ function updateCalculation() {
     return;
   }
 
-  const a = Math.max(width, height) / 1000; // 긴 변 (m)
-  const b = Math.min(width, height) / 1000; // 짧은 변 (m)
-
+  const a = Math.max(width, height) / 1000;  // 긴 변 (m)
+  const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
   let totalArea = area;
   let effectiveArea = 0;
   let moduleCount = 0;
 
-  if (site === "산업단지" || site === "철도 유휴부지") {
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI/180) + b * 2.177812506) * a;
+  if (site === "산업단지") {
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
     moduleCount = Math.floor(totalArea / panelWithSpacing);
-    effectiveArea = moduleCount * (a * b); // 실제 설치된 패널 총 면적
-  } 
-  else if (site === "주차장") {
-    totalArea = 241197;
-    const usableArea = 109625; // 실제 설치가능면적
+    effectiveArea = moduleCount * (a * b); // 실제 패널 차지 면적
+
+  } else if (site === "철도 유휴부지") {
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
+    moduleCount = Math.floor(totalArea / panelWithSpacing);
+    effectiveArea = moduleCount * (a * b);
+
+  } else if (site === "주차장") {
+    const usableArea = 109625; // 실제 설치 가능 면적
     const panelArea = a * b;
     moduleCount = Math.floor(usableArea / panelArea);
+    totalArea = 241197;
     effectiveArea = usableArea;
   }
 
@@ -217,3 +221,4 @@ function goToResult() {
 </script>
 </body>
 </html>
+
