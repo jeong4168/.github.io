@@ -21,7 +21,6 @@
     gap: 15px;
   }
 
-  /* 요약표 */
   .summary-box {
     background:#f5f8ff;
     border:1px solid #cdd8f0;
@@ -58,7 +57,7 @@
   .summary-box tr:last-child th,
   .summary-box tr:last-child td { border-bottom:none; }
 
-  /*  돌아가기 버튼 (GeoMedrix 톤) */
+  /*  돌아가기 버튼 */
   .back-btn {
     display:block;
     margin: 15px auto 0 auto;
@@ -184,8 +183,32 @@ const pricePerKwh = 163;
 const siteObj = siteData[site] || {};
 const area = siteObj.area || 0;
 const irradiance = siteObj.irradiance || {};
-const panelArea = (width/1000)*(height/1000) || 0;
-const moduleCount = panelArea > 0 ? Math.floor(area / panelArea) : 0;
+let moduleCount = 0;
+let effectiveArea = area;
+
+// 산업단지
+if (site === "산업단지") {
+  const a = Math.max(width, height) / 1000;  // 긴 변 (m)
+  const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
+  const panelWithSpacing = (b * Math.cos(33 * Math.PI/180) + b * 2.177812506) * a; // 이격 포함 면적
+  moduleCount = Math.floor(7719419 / panelWithSpacing);
+  effectiveArea = 7719419;
+
+// 주차장
+} else if (site === "주차장") {
+  const totalArea = 241197;
+  const slotArea = 2.5*5.0 + 6.0*2.5; // 구획+이격 포함
+  const totalSlots = Math.floor(totalArea / slotArea); // 칸 수
+  effectiveArea = 2.5*5.0*7455; // 실제 설치 면적
+  const panelArea = (width/1000)*(height/1000);
+  moduleCount = Math.floor(effectiveArea / panelArea);
+
+// 철도 유휴부지
+} else if (site === "철도 유휴부지") {
+  const panelArea = (width/1000)*(height/1000);
+  effectiveArea = 72040;
+  moduleCount = Math.floor(effectiveArea / panelArea);
+}
 const totalKW = moduleCount * (power/1000) || 0;
 
 const months = Object.keys(irradiance);
@@ -196,7 +219,16 @@ const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
 const saving = Math.round(annualEnergy * pricePerKwh);
 const breakeven = invest - support;
 const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-const accumRevenue = Array.from({length:20},(_,i)=> (yearlyRevenue*(i+1)));
+const degradationRate = 0.005; // 연 0.5% 효율 저하
+
+let accumRevenue = [];
+let total = 0;
+for (let year = 1; year <= 20; year++) {
+  const efficiency = Math.pow(1 - degradationRate, year - 1); // 누적 효율
+  const yearly = yearlyRevenue * efficiency;
+  total += yearly;
+  accumRevenue.push(Math.round(total)); // 누적합
+}
 
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site || '-'}</td></tr>
@@ -321,6 +353,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
