@@ -74,8 +74,6 @@ input:focus, select:focus {
   font-size:1em;
   border-left: 5px solid #1d3557; 
 }
-
-
 button {
   margin-top:30px; 
   width:100%;
@@ -95,8 +93,6 @@ button:active {
   box-shadow: 0 2px #163049;
   transform: translateY(2px);
 }
-
-/* 반응형 */
 @media (max-width: 650px) {
   body { padding: 20px; }
   .container { padding: 25px; border-radius: 12px; }
@@ -140,7 +136,7 @@ button:active {
 <script>
 const siteData = {
   "산업단지": { area: 7719419, irradiance: 1175.34050058504 },
-  "주차장": { area: 109625, irradiance: 1074.80274452513 },
+  "주차장": { area: 241197, irradiance: 1074.80274452513 },
   "철도 유휴부지": { area: 72040, irradiance: 1079.24847564316 }
 };
 
@@ -162,53 +158,40 @@ function updateCalculation() {
     return;
   }
 
+  const a = Math.max(width, height) / 1000; // 긴 변 (m)
+  const b = Math.min(width, height) / 1000; // 짧은 변 (m)
+
+  let totalArea = area;
+  let effectiveArea = 0;
   let moduleCount = 0;
-  let effectiveArea = area;
 
-  // 산업단지
-  if (site === "산업단지") {
-    const a = Math.max(width, height) / 1000;  // 긴 변 (m)
-    const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
-    moduleCount = Math.floor(7719419 / panelWithSpacing);
-    effectiveArea = 7719419;
-
-  // 철도 유휴부지
-  } else if (site === "철도 유휴부지") {
-    const a = Math.max(width, height) / 1000;
-    const b = Math.min(width, height) / 1000;
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
-    moduleCount = Math.floor(72040 / panelWithSpacing);
-    effectiveArea = 72040;
-
-  // 주차장 (고정면적)
-  } else if (site === "주차장") {
-    const a = Math.max(width, height) / 1000;
-    const b = Math.min(width, height) / 1000;
+  if (site === "산업단지" || site === "철도 유휴부지") {
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI/180) + b * 2.177812506) * a;
+    moduleCount = Math.floor(totalArea / panelWithSpacing);
+    effectiveArea = moduleCount * (a * b); // 실제 설치된 패널 총 면적
+  } 
+  else if (site === "주차장") {
+    totalArea = 241197;
+    const usableArea = 109625; // 실제 설치가능면적
     const panelArea = a * b;
-    moduleCount = Math.floor(109625 / panelArea);
-    effectiveArea = 109625;
+    moduleCount = Math.floor(usableArea / panelArea);
+    effectiveArea = usableArea;
   }
 
- // 발전용량 및 발전량 계산
-const totalKW = moduleCount * (power / 1000);
-const annualEnergy = totalKW * irradiance;
+  const totalKW = moduleCount * (power / 1000);
+  const annualEnergy = totalKW * irradiance;
+  const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
-// 전체 대비 사용 비율 계산
-const usageRate = ((effectiveArea / siteData[site].area) * 100).toFixed(1);
-
-// 결과 출력
-resultDiv.innerHTML = `
-  선택된 부지: <b>${site}</b><br>
-  전체 부지 면적: ${siteData[site].area.toLocaleString()} ㎡<br>
-  사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
-  모듈 수: ${moduleCount.toLocaleString()}개<br>
-  총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
-  예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
-`;
+  resultDiv.innerHTML = `
+    선택된 부지: <b>${site}</b><br>
+    전체 부지 면적: ${totalArea.toLocaleString()} ㎡<br>
+    사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
+    모듈 수: ${moduleCount.toLocaleString()}개<br>
+    총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
+    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
+  `;
 }
 
-// 입력값 변경 시 실시간 업데이트
 ["site","width","height","power","invest","support"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updateCalculation);
@@ -234,7 +217,3 @@ function goToResult() {
 </script>
 </body>
 </html>
-
-
-
-
