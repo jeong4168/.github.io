@@ -237,7 +237,8 @@ for (let year = 1; year <= 20; year++) {
 // ---------------- 표 출력 ----------------
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site || '-'}</td></tr>
-  <tr><th>발전 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡</td></tr>
+  <tr><th>전체 부지 면적</th><td>${area.toLocaleString()} ㎡</td></tr>
+  <tr><th>사용 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡</td></tr>
   <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
   <tr><th>총 발전용량</th><td>${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW</td></tr>
   <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
@@ -293,6 +294,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
