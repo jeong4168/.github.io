@@ -139,8 +139,8 @@ button:active {
 
 <script>
 const siteData = {
-  "산업단지": { area: 7718419, irradiance: 1175.34050058504 },
-  "주차장": { area: 241197, irradiance: 1074.80274452513 },
+  "산업단지": { area: 7719419, irradiance: 1175.34050058504 },
+  "주차장": { area: 109625, irradiance: 1074.80274452513 },
   "철도 유휴부지": { area: 72040, irradiance: 1079.24847564316 }
 };
 
@@ -165,25 +165,29 @@ function updateCalculation() {
   let moduleCount = 0;
   let effectiveArea = area;
 
+  // 산업단지
   if (site === "산업단지") {
-    const a = Math.max(width, height) / 1000; // 긴 변 (m)
-    const b = Math.min(width, height) / 1000; // 짧은 변 (m)
+    const a = Math.max(width, height) / 1000;  // 긴 변 (m)
+    const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
     const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
     moduleCount = Math.floor(7719419 / panelWithSpacing);
     effectiveArea = 7719419;
 
-  } else if (site === "주차장") {
-    const totalArea = 241197;
-    const slotArea = 2.5 * 5.0 + 6.0 * 2.5; // 구획 + 이격 포함
-    const totalSlots = Math.floor(totalArea / slotArea); // 칸 수
-    effectiveArea = 2.5 * 5.0 * 7455; // 실제 설치 가능 면적
-    const panelArea = (width / 1000) * (height / 1000);
-    moduleCount = Math.floor(effectiveArea / panelArea);
-
+  // 철도 유휴부지
   } else if (site === "철도 유휴부지") {
-    const panelArea = (width / 1000) * (height / 1000);
+    const a = Math.max(width, height) / 1000;
+    const b = Math.min(width, height) / 1000;
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
+    moduleCount = Math.floor(72040 / panelWithSpacing);
     effectiveArea = 72040;
-    moduleCount = Math.floor(effectiveArea / panelArea);
+
+  // 주차장 (고정면적)
+  } else if (site === "주차장") {
+    const a = Math.max(width, height) / 1000;
+    const b = Math.min(width, height) / 1000;
+    const panelArea = a * b;
+    moduleCount = Math.floor(109625 / panelArea);
+    effectiveArea = 109625;
   }
 
   // 발전용량 및 발전량 계산
@@ -200,6 +204,7 @@ function updateCalculation() {
   `;
 }
 
+// 입력값 변경 시 실시간 업데이트
 ["site","width","height","power","invest","support"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updateCalculation);
@@ -225,5 +230,6 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
 
