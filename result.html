@@ -6,7 +6,7 @@
 <title>태양광 발전량 계산 결과</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  body { font-family: 'Pretendard','Noto Sans KR',sans-serif; background:#f8fafc; margin:0; padding:20px; }
+  body { font-family:'Pretendard','Noto Sans KR',sans-serif; background:#f8fafc; margin:0; padding:20px; }
   .container { max-width:90%; width:100%; margin:auto; display:flex; flex-wrap:wrap; gap:15px; }
   .summary-box { background:#f5f8ff; border:1px solid #cdd8f0; border-radius:10px; padding:10px 15px; width:100%; font-size:13px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
   .summary-box h2 { text-align:center; color:#1d3557; font-size:16px; margin-bottom:8px; }
@@ -25,7 +25,7 @@
     <button class="back-btn" onclick="location.href='calc.html'">← 계산기로 돌아가기</button>
   </div>
 
-  <div class="chart-container">
+  <div class="chart-container" style="width:100%;">
     <canvas id="monthlyChart"></canvas>
     <canvas id="revenueChart"></canvas>
     <canvas id="accumChart"></canvas>
@@ -43,7 +43,7 @@ const support = parseFloat(urlParams.get('support')) || 0;
 
 const siteData = {
   "산업단지": { area: 7719419, irradiance: { "1월":36.1168,"2월":55.6968,"3월":94.7830,"4월":126.1139,"5월":155.1006,"6월":159.8903,"7월":160.2927,"8월":140.2319,"9월":104.5271,"10월":71.3669,"11월":41.0833,"12월":30.1366 }},
-  "주차장": { area: 241197, irradiance: { "1월":28.6013,"2월":45.5446,"3월":81.5032,"4월":113.3511,"5월":143.1436,"6월":148.7306,"7월":148.9295,"8월":116.4261,"9월":92.3191,"10월":60.2785,"11월":33.2715,"12월":23.7878 }},
+  "주차장": { area: 109625, irradiance: { "1월":28.6013,"2월":45.5446,"3월":81.5032,"4월":113.3511,"5월":143.1436,"6월":148.7306,"7월":148.9295,"8월":116.4261,"9월":92.3191,"10월":60.2785,"11월":33.2715,"12월":23.7878 }},
   "철도 유휴부지": { area: 72040, irradiance: { "1월":29.0993,"2월":48.1443,"3월":86.1475,"4월":117.5718,"5월":146.5722,"6월":151.8027,"7월":151.8509,"8월":131.4686,"9월":96.0437,"10월":63.0325,"11월":33.9140,"12월":23.6004 }}
 };
 
@@ -51,49 +51,57 @@ const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
 const pricePerKwh = 163;
 
-const siteObj = siteData[site];
-if (!siteObj) { document.getElementById("summaryTable").innerHTML = "<tr><td>부지를 선택하세요.</td></tr>"; throw new Error("부지 선택 오류"); }
+if (!siteData[site]) {
+  document.getElementById("summaryTable").innerHTML = "<tr><td>부지를 선택하세요.</td></tr>";
+  throw new Error("부지 선택 오류");
+}
 
-const area = siteObj.area;
-const irradiance = siteObj.irradiance;
+const area = siteData[site].area;
+const irradiance = siteData[site].irradiance;
 
 const a = Math.max(width, height) / 1000;
 const b = Math.min(width, height) / 1000;
 let totalArea = area;
-let moduleCount = 0;
 let effectiveArea = 0;
+let moduleCount = 0;
 
-// === 부지별 계산 ===
+// 산업단지 & 철도
 if (site === "산업단지" || site === "철도 유휴부지") {
   const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
   moduleCount = Math.floor(totalArea / panelWithSpacing);
   effectiveArea = moduleCount * (a * b);
-} else if (site === "주차장") {
-  totalArea = 241197;
-  effectiveArea = 109625;
+} 
+// 주차장
+else if (site === "주차장") {
   const panelArea = a * b;
+  effectiveArea = 109625;
   moduleCount = Math.floor(effectiveArea / panelArea);
 }
 
-// === 발전량 계산 ===
+// 발전량 계산
 const totalKW = moduleCount * (power / 1000);
 const months = Object.keys(irradiance);
-const monthlyEnergy = Object.values(irradiance).map(v => Math.round(totalKW * v));
+const irradianceVals = Object.values(irradiance);
+const monthlyEnergy = irradianceVals.map(val => Math.round(totalKW * val));
+const monthlyRevenue = monthlyEnergy.map((val, i) => Math.round(val * (SMP[i] + REC[i]/1000)));
 const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
-const yearlyRevenue = monthlyEnergy.map((v,i)=>v*(SMP[i]+REC[i]/1000)).reduce((a,b)=>a+b,0);
-const degradationRate = 0.005;
-let accumRevenue = [], total=0;
-for(let y=1;y<=20;y++){ const eff=Math.pow(1-degradationRate,y-1); total+=yearlyRevenue*eff; accumRevenue.push(Math.round(total)); }
-
-const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
+const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
 const breakeven = invest - support;
 const saving = Math.round(annualEnergy * pricePerKwh);
 
-// === 표 출력 ===
+// 누적 수익 (효율저하 미적용)
+let accumRevenue = [];
+let total = 0;
+for (let i=0; i<20; i++) {
+  total += yearlyRevenue;
+  accumRevenue.push(total);
+}
+
+// 표 출력
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site}</td></tr>
   <tr><th>전체 부지 면적</th><td>${totalArea.toLocaleString()} ㎡</td></tr>
-  <tr><th>사용 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)</td></tr>
+  <tr><th>사용 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡</td></tr>
   <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
   <tr><th>총 발전용량</th><td>${totalKW.toFixed(1)} kW</td></tr>
   <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
@@ -101,11 +109,40 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
 `;
 
-// === 그래프 ===
-const commonOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString(),font:{size:10}}}}};
-new Chart(document.getElementById("monthlyChart"),{type:'bar',data:{labels:months,datasets:[{data:monthlyEnergy,backgroundColor:"#1d3557"}]},options:commonOpts});
-new Chart(document.getElementById("revenueChart"),{type:'bar',data:{labels:months,datasets:[{data:monthlyEnergy.map((v,i)=>Math.round(v*(SMP[i]+REC[i]/1000))),backgroundColor:"#f4a261"}]},options:commonOpts});
-new Chart(document.getElementById("accumChart"),{type:'bar',data:{labels:Array.from({length:20},(_,i)=>`${i+1}년`),datasets:[{data:accumRevenue,backgroundColor:"#4caf50"},{data:Array(20).fill(breakeven),type:'line',borderColor:"#1d3557",borderDash:[6,4],borderWidth:2,pointRadius:0}]},options:commonOpts});
+// Chart.js 공통옵션
+const commonOpts = {
+  responsive:true,
+  maintainAspectRatio:false,
+  plugins:{ legend:{display:false}},
+  scales:{ x:{ticks:{font:{size:10}}}, y:{beginAtZero:true, ticks:{callback:v=>v.toLocaleString(), font:{size:10}}}}
+};
+
+// 그래프1: 월별 발전량
+new Chart(document.getElementById("monthlyChart"), {
+  type:'bar',
+  data:{ labels:months, datasets:[{ data:monthlyEnergy, backgroundColor:'#1d3557'}] },
+  options:commonOpts
+});
+
+// 그래프2: 월별 매출
+new Chart(document.getElementById("revenueChart"), {
+  type:'bar',
+  data:{ labels:months, datasets:[{ data:monthlyRevenue, backgroundColor:'#f4a261'}] },
+  options:commonOpts
+});
+
+// 그래프3: 누적수익
+new Chart(document.getElementById("accumChart"), {
+  type:'bar',
+  data:{ 
+    labels:Array.from({length:20},(_,i)=>`${i+1}년`), 
+    datasets:[
+      { data:accumRevenue, backgroundColor:'#4caf50'},
+      { data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:2, pointRadius:0}
+    ]
+  },
+  options:commonOpts
+});
 </script>
 </body>
 </html>
