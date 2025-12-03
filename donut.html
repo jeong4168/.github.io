@@ -56,10 +56,10 @@
   button:hover { background: #0f223a; }
 
   .chart-wrap {
-  width: 100%;
-  height: 320px;          /* 🎯 두 그래프 모두 동일한 높이 고정 */
-  position: relative;
-}
+    width: 100%;
+    height: 320px;
+    position: relative;
+  }
 
   .chart-wrap > canvas {
     position: absolute;
@@ -113,17 +113,36 @@
 <script>
 Chart.register();
 
-/* ---------------- 계산 ---------------- */
+/* ---------------- 기본 설정 ---------------- */
 const emission2018 = 15894.70;
 const INCHEON_TARGET_RATE = 0.31;
 const reductionTarget_kt = emission2018 * INCHEON_TARGET_RATE;
 
-const solarGenerationKWh = 1930712676 + 55172575 + 16546822;
-const REDUCTION_FACTOR_KWH = 0.4781;
+/* ---------------- 성능비 & 보정계수 ---------------- */
+const performanceRatio = 0.86;          // 성능비 (Performance Ratio)
+const correctionFactor = 1.034947;      // 일사량 보정계수
+
+/* ---------------- 부지별 면적 및 발전량 (실제 값 반영) ---------------- */
+const siteData = {
+  산업단지: { area: 2558745.33, generation: 569682363 },
+  주차장: { area: 109625, generation: 21511082 },
+  철도: { area: 23880.111, generation: 4882023 }
+};
+
+/* 총 발전량 (보정 적용 전) */
+const rawTotalGeneration =
+  siteData.산업단지.generation + siteData.주차장.generation + siteData.철도.generation;
+
+/* 성능비 + 보정계수 적용 발전량 */
+const solarGenerationKWh = rawTotalGeneration * performanceRatio * correctionFactor;
+
+/* ---------------- 온실가스 감축량 계산 ---------------- */
+const REDUCTION_FACTOR_KWH = 0.4781; // kWh당 감축계수 (kgCO₂eq/kWh)
 const KILOGRAMS_TO_KILOTONNES = 1000000;
 const totalReduction_kt = (solarGenerationKWh * REDUCTION_FACTOR_KWH) / KILOGRAMS_TO_KILOTONNES;
 const remainingReductionNeeded = reductionTarget_kt - totalReduction_kt;
 
+/* ---------------- 발전량 비율 시각화용 ---------------- */
 const dataBefore = {
   원자력: 188754,
   석탄: 167160,
@@ -143,15 +162,10 @@ const initialData = Object.values(dataBefore);
 const finalData = Object.values(dataAfter);
 const renewableIndex = labels.indexOf('신재생');
 
-/* ---------------- 🎨 GeoMedrix 팔레트 ---------------- */
+/* ---------------- 색상 ---------------- */
 const geoPalette = [
-  '#264653', // 원자력
-  '#457B9D', // 석탄
-  '#6BAED6', // LNG
-  '#1E5631', // 신재생 (트리그린)
-  '#A7C7E7', // 유류
-  '#D1E3F8', // 양수
-  '#9A8C98'  // 기타
+  '#264653', '#457B9D', '#6BAED6', '#1E5631',
+  '#A7C7E7', '#D1E3F8', '#9A8C98'
 ];
 
 /* ---------------- 중앙 텍스트 ---------------- */
@@ -186,7 +200,7 @@ const powerChart = new Chart(ctx1, {
       borderWidth: 2,
       borderColor: geoPalette.map((c, i) => i === renewableIndex ? '#1E5631' : '#fff'),
       offset: labels.map((_, i) => i === renewableIndex ? 18 : 0),
-      hoverOffset: 18 /* ✅ 살짝 확대 효과 (돋보기 느낌) */
+      hoverOffset: 18
     }]
   },
   options: {
@@ -204,7 +218,6 @@ const powerChart = new Chart(ctx1, {
             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
             const pct = ((value / total) * 100).toFixed(2) + '%';
             let extra = '';
-            // ✅ 신재생일 때 증가율 표시
             if (ctx.label === '신재생' && isAfter) {
               extra = ` (+${increasePercent.toFixed(2)}%)`;
             }
@@ -218,7 +231,7 @@ const powerChart = new Chart(ctx1, {
   plugins: [centerTextPlugin]
 });
 
-/* ---------------- 버튼 동작 ---------------- */
+/* ---------------- 버튼 ---------------- */
 function updateChart(state) {
   const ds = powerChart.data.datasets[0];
   if (state === 'after') {
@@ -275,7 +288,7 @@ new Chart(document.getElementById('contributionChart').getContext('2d'), {
   }
 });
 
-/* ---------------- 하단 수치 ---------------- */
+/* ---------------- 결과 텍스트 ---------------- */
 document.getElementById('target-reduction-amount').textContent =
   reductionTarget_kt.toLocaleString(undefined, { maximumFractionDigits: 2 });
 document.getElementById('reduction-amount').textContent =
@@ -283,4 +296,3 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
-
