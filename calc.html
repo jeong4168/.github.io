@@ -185,9 +185,8 @@ function updateCalculation() {
   const performanceRatio = 0.86;           // 성능비 (Performance Ratio)
   const correctionFactor = 1.034947;       // 일사량 보정계수
 
-// 발전량 계산식 수정
-  const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const totalKW = moduleCount * (power / 1000);
+  const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
   resultDiv.innerHTML = `
@@ -225,5 +224,6 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
 
