@@ -118,23 +118,18 @@ const emission2018 = 15894.70;
 const INCHEON_TARGET_RATE = 0.31;
 const reductionTarget_kt = emission2018 * INCHEON_TARGET_RATE;
 
-/* ---------------- 성능비 & 보정계수 ---------------- */
-const performanceRatio = 0.86;          // 성능비 (Performance Ratio)
-const correctionFactor = 1.034947;      // 일사량 보정계수
-
-/* ---------------- 부지별 면적 및 발전량 (실제 값 반영) ---------------- */
+/* ---------------- 부지별 실제 발전량 (보정·성능비 적용된 값) ---------------- */
 const siteData = {
   산업단지: { area: 2558745.33, generation: 569682363 },
   주차장: { area: 109625, generation: 21511082 },
   철도: { area: 23880.111, generation: 4882023 }
 };
 
-/* 총 발전량 (보정 적용 전) */
-const rawTotalGeneration =
-  siteData.산업단지.generation + siteData.주차장.generation + siteData.철도.generation;
-
-/* 성능비 + 보정계수 적용 발전량 */
-const solarGenerationKWh = rawTotalGeneration * performanceRatio * correctionFactor;
+/* 총 발전량 (kWh) */
+const solarGenerationKWh =
+  siteData.산업단지.generation +
+  siteData.주차장.generation +
+  siteData.철도.generation;
 
 /* ---------------- 온실가스 감축량 계산 ---------------- */
 const REDUCTION_FACTOR_KWH = 0.4781; // kWh당 감축계수 (kgCO₂eq/kWh)
@@ -142,7 +137,7 @@ const KILOGRAMS_TO_KILOTONNES = 1000000;
 const totalReduction_kt = (solarGenerationKWh * REDUCTION_FACTOR_KWH) / KILOGRAMS_TO_KILOTONNES;
 const remainingReductionNeeded = reductionTarget_kt - totalReduction_kt;
 
-/* ---------------- 발전량 비율 시각화용 ---------------- */
+/* ---------------- 발전량 비율 시각화 ---------------- */
 const dataBefore = {
   원자력: 188754,
   석탄: 167160,
@@ -152,7 +147,9 @@ const dataBefore = {
   양수: 4677,
   기타: 3413
 };
-const newRenewableEnergy = 65157.432073;
+
+/* 신재생 발전량 증가 반영 (kWh → GWh 변환) */
+const newRenewableEnergy = 63155 + (solarGenerationKWh / 1_000_000);
 const increaseValue = newRenewableEnergy - dataBefore.신재생;
 const increasePercent = (increaseValue / dataBefore.신재생) * 100;
 const dataAfter = { ...dataBefore, 신재생: newRenewableEnergy };
