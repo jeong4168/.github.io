@@ -207,7 +207,6 @@ const monthlyRevenue = monthlyEnergy.map((val, i) =>
 // 연간 발전량 및 매출
 const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
 const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
 const breakeven = invest - support;
 const saving = Math.round(annualEnergy * pricePerKwh);
 
@@ -363,6 +362,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
