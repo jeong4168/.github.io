@@ -309,8 +309,8 @@ footer {
 <script>
 function toggleDesc(card){ card.classList.toggle('active'); }
 
-const solarGenerationKWh = 1930712676 + 55172575 + 16546822;
-const totalGWh = solarGenerationKWh / 1e6;
+const solarGenerationKWh = 569682363 + 21511082 + 4882023;  // = 596,075,468 kWh
+const totalGWh = solarGenerationKWh / 1e6;          
 const reductionFactor = 0.4781;
 const totalCO2kt = (solarGenerationKWh * reductionFactor) / 1e6;
 
@@ -335,6 +335,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
