@@ -287,8 +287,14 @@ return;
 }
 
 // GitHub Pages 절대 경로 대응
-window.location.href = `/result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
-}
+window.location.href = './result.html?mode=' + mode +
+  '&site=' + site +
+  '&width=' + width +
+  '&height=' + height +
+  '&power=' + power +
+  '&invest=' + invest +
+  '&support=' + support;
 </script>
 </body>
 </html>
+
