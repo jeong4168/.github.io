@@ -10,7 +10,7 @@
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     background: #f8fafc;
     margin: 0;
-    padding: 20px; 
+    padding: 20px;
   }
   .container {
     max-width: 90%;
@@ -21,51 +21,51 @@
     gap: 15px;
   }
   .summary-box {
-    background:#f5f8ff;
-    border:1px solid #cdd8f0;
-    border-radius:10px;
-    padding:10px 15px;
-    width:100%;
-    font-size:13px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    background: #f5f8ff;
+    border: 1px solid #cdd8f0;
+    border-radius: 10px;
+    padding: 10px 15px;
+    width: 100%;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
   .summary-box h2 {
-    text-align:center;
-    color:#1d3557;
-    font-size:16px;
-    margin-bottom:8px;
+    text-align: center;
+    color: #1d3557;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
-  .summary-box table { width:100%; border-collapse:collapse; }
+  .summary-box table { width: 100%; border-collapse: collapse; }
   .summary-box th {
-    background:#e8f0fe;
-    color:#1d3557;
-    text-align:left;
-    padding:5px 8px;
-    border-bottom:1px solid #dce2ff;
-    font-weight:600;
-    width:55%;
+    background: #e8f0fe;
+    color: #1d3557;
+    text-align: left;
+    padding: 5px 8px;
+    border-bottom: 1px solid #dce2ff;
+    font-weight: 600;
+    width: 55%;
   }
   .summary-box td {
-    text-align:right;
-    padding:5px 8px;
-    border-bottom:1px solid #edf0ff;
-    color:#333;
-    font-weight:500;
+    text-align: right;
+    padding: 5px 8px;
+    border-bottom: 1px solid #edf0ff;
+    color: #333;
+    font-weight: 500;
   }
   .back-btn {
-    display:block;
+    display: block;
     margin: 15px auto 0 auto;
-    background:#1d3557;
-    color:white;
-    border:none;
-    border-radius:6px;
-    padding:9px 20px;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
+    background: #1d3557;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
   }
-  .back-btn:hover { background:#0f223a; }
+  .back-btn:hover { background: #0f223a; }
   .chart-container {
     display: flex;
     flex-direction: column;
@@ -80,13 +80,13 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.05);
   }
   .chart-card h3 {
-    text-align:center;
-    color:#1d3557;
-    font-size:14px;
-    margin-bottom:4px;
+    text-align: center;
+    color: #1d3557;
+    font-size: 14px;
+    margin-bottom: 4px;
   }
   .chart-card canvas {
-    height: 22vh !important; 
+    height: 22vh !important;
     max-height: 900px !important;
     width: 100% !important;
   }
@@ -97,7 +97,8 @@
   <div class="summary-box">
     <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
-    <button class="back-btn" onclick="location.href='/calc.html'">← 계산기로 돌아가기</button>
+    <!-- ✅ 경로 수정: GitHub Pages 상대경로 -->
+    <button class="back-btn" onclick="location.href='./calc.html'">← 계산기로 돌아가기</button>
   </div>
 
   <div class="chart-container">
@@ -112,7 +113,7 @@
     </div>
 
     <div class="chart-card">
-      <h3>20년 누적 수익</h3>
+      <h3>20년 누적 수익 (0.5% 효율 저하율 반영)</h3>
       <canvas id="accumChart"></canvas>
     </div>
   </div>
@@ -280,10 +281,4 @@ new Chart(document.getElementById("accumChart"), {
     datasets: [
       { label:'누적 수익', data: accumRevenue, backgroundColor:'#4caf50', barPercentage:0.6 },
       { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:3, pointRadius:0 }
-    ]
-  },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
-});
-</script>
-</body>
-</html>
+   
