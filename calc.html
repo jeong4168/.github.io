@@ -97,29 +97,24 @@ button {
 button:hover { background:#0f223a; }
 button:active { box-shadow:0 2px #163049; transform:translateY(2px);}
 .mode-select {
-  background:#f7faff;
-  border:1px solid #cfd8ec;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:20px;
-  box-shadow:inset 0 1px 4px rgba(0,0,0,0.04);
-  display:flex;
-  justify-content:center;
-  gap:30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #1d3557;
+  font-size: 0.9em;
 }
 .mode-select label {
-  font-weight:600;
-  color:#1d3557;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  transition:all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-.mode-select input {
-  accent-color:#1d3557;
-  width:18px;
-  height:18px;
+.mode-select input[type="radio"] {
+  transform: scale(0.9);
+  accent-color: #1d3557;
 }
 .mode-select label:hover {
   color:#0f223a;
@@ -260,3 +255,4 @@ document.querySelectorAll('input[name="mode"]').forEach(el => el.addEventListene
 </script>
 </body>
 </html>
+
