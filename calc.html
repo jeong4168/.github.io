@@ -10,37 +10,37 @@ body {
   background:#f0f3f5; 
   margin:0;
   padding:20px; 
-  display: flex; 
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  display:flex; 
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
 }
 .container {
   max-width:90%;
-  width: 100%;
+  width:100%;
   margin:auto;
   background:white;
   border-radius:18px; 
   padding:40px; 
   box-shadow:0 8px 30px rgba(0,0,0,0.1); 
-  border: 1px solid #e0e0e0;
+  border:1px solid #e0e0e0;
 }
 h2 {
   text-align:center;
   color:#1d3557;
-  margin: -40px -40px 30px -40px; 
-  padding: 25px 40px;
-  background: #e8f0fe;
-  border-radius: 18px 18px 0 0;
-  font-size: 1.5em;
-  font-weight: 700;
+  margin:-40px -40px 30px -40px; 
+  padding:25px 40px;
+  background:#e8f0fe;
+  border-radius:18px 18px 0 0;
+  font-size:1.5em;
+  font-weight:700;
 }
 label {
   font-weight:600;
   display:block;
   margin-top:15px; 
   color:#333;
-  font-size: 1em;
+  font-size:1em;
 }
 input, select {
   width:100%;
@@ -49,13 +49,13 @@ input, select {
   border-radius:8px; 
   border:1px solid #a8b3c3; 
   font-size:1em;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
-  transition: border-color 0.2s;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.08); 
+  transition:border-color 0.2s;
 }
 input:focus, select:focus {
-  border-color: #1d3557;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
+  border-color:#1d3557;
+  outline:none;
+  box-shadow:0 0 0 3px rgba(29,53,87,0.2);
 }
 .panel-size {
   display:flex;
@@ -72,7 +72,7 @@ input:focus, select:focus {
   color:#1d3557; 
   line-height:1.6;
   font-size:1em;
-  border-left: 5px solid #1d3557; 
+  border-left:5px solid #1d3557; 
 }
 button {
   margin-top:30px; 
@@ -85,18 +85,24 @@ button {
   border-radius:8px;
   cursor:pointer;
   font-weight:bold;
-  box-shadow: 0 4px #163049; 
-  transition: all 0.15s ease;
+  box-shadow:0 4px #163049; 
+  transition:all 0.15s ease;
 }
 button:hover { background:#0f223a; }
 button:active {
-  box-shadow: 0 2px #163049;
-  transform: translateY(2px);
+  box-shadow:0 2px #163049;
+  transform:translateY(2px);
 }
-@media (max-width: 650px) {
-  body { padding: 20px; }
-  .container { padding: 25px; border-radius: 12px; }
-  h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
+.mode-select {
+  margin-top:15px;
+  display:flex;
+  gap:20px;
+  align-items:center;
+  color:#1d3557;
+}
+@media (max-width:650px){
+  .container{padding:25px;}
+  h2{margin:-25px -25px 20px -25px;padding:20px 25px;}
 }
 </style>
 </head>
@@ -122,11 +128,18 @@ button:active {
   <label for="power">모듈 최대출력 (W)</label>
   <input type="number" id="power" placeholder="예: 600">
 
-  <label for="invest">투자 금액 (원)</label>
-  <input type="number" id="invest" placeholder="예: 500000000">
+  <div class="mode-select">
+    <label><input type="radio" name="calcMode" value="auto" checked> 자동 계산 (정부지원 75%)</label>
+    <label><input type="radio" name="calcMode" value="manual"> 직접 입력</label>
+  </div>
 
-  <label for="support">지원 금액 (원)</label>
-  <input type="number" id="support" placeholder="예: 100000000">
+  <div id="manualInputs">
+    <label for="invest">투자 금액 (원)</label>
+    <input type="number" id="invest" placeholder="예: 500000000">
+
+    <label for="support">지원 금액 (원)</label>
+    <input type="number" id="support" placeholder="예: 100000000">
+  </div>
 
   <div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
 
@@ -135,9 +148,9 @@ button:active {
 
 <script>
 const siteData = {
-  "산업단지": { area: 7719419, irradiance: 1175.34050058504 },
-  "주차장": { area: 241197, irradiance: 1074.80274452513 },
-  "철도 유휴부지": { area: 72040, irradiance: 1079.24847564316 }
+  "산업단지": { area: 7719419, irradiance: 1175.34 },
+  "주차장": { area: 241197, irradiance: 1074.80 },
+  "철도 유휴부지": { area: 72040, irradiance: 1079.25 }
 };
 
 function updateCalculation() {
@@ -145,57 +158,70 @@ function updateCalculation() {
   const width = parseFloat(document.getElementById('width').value);
   const height = parseFloat(document.getElementById('height').value);
   const power = parseFloat(document.getElementById('power').value);
+  const mode = document.querySelector('input[name="calcMode"]:checked').value;
   const resultDiv = document.getElementById('calcResult');
 
   if (!site) {
     resultDiv.innerHTML = "부지를 선택하세요.";
     return;
   }
-
   const { area, irradiance } = siteData[site];
   if (!width || !height || !power) {
     resultDiv.innerHTML = `선택된 부지: <b>${site}</b><br>면적: ${area.toLocaleString()}㎡<br>패널 크기와 출력값을 입력해주세요.`;
     return;
   }
 
-  const a = Math.max(width, height) / 1000;  // 긴 변 (m)
-  const b = Math.min(width, height) / 1000;  // 짧은 변 (m)
+  const a = Math.max(width, height) / 1000;
+  const b = Math.min(width, height) / 1000;
   let totalArea = area;
   let effectiveArea = 0;
   let moduleCount = 0;
 
-  if (site === "산업단지") {
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
-    moduleCount = Math.floor(totalArea / panelWithSpacing);
-    effectiveArea = moduleCount * (a * b); // 실제 패널 차지 면적
-
-  } else if (site === "철도 유휴부지") {
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
+  if (site === "산업단지" || site === "철도 유휴부지") {
+    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.1778) * a;
     moduleCount = Math.floor(totalArea / panelWithSpacing);
     effectiveArea = moduleCount * (a * b);
-
   } else if (site === "주차장") {
-    const usableArea = 109625; // 실제 설치 가능 면적
+    const usableArea = 109625;
     const panelArea = a * b;
     moduleCount = Math.floor(usableArea / panelArea);
     totalArea = 241197;
     effectiveArea = usableArea;
   }
-// 보정 및 성능비 반영
-  const performanceRatio = 0.86;           // 성능비 (Performance Ratio)
-  const correctionFactor = 1.034947;       // 일사량 보정계수
 
+  const performanceRatio = 0.86;
+  const correctionFactor = 1.034947;
   const totalKW = moduleCount * (power / 1000);
   const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
+  // 투자·지원금 계산
+  const installCostPerKW = 1200000; // 120만원/kW
+  const supportRate = 0.75;
+  let totalCost = totalKW * installCostPerKW;
+  let investCost, supportCost;
+
+  if (mode === "auto") {
+    investCost = totalCost * (1 - supportRate);
+    supportCost = totalCost * supportRate;
+    document.getElementById('manualInputs').style.display = 'none';
+  } else {
+    document.getElementById('manualInputs').style.display = 'block';
+    investCost = parseFloat(document.getElementById('invest').value) || 0;
+    supportCost = parseFloat(document.getElementById('support').value) || 0;
+  }
+
   resultDiv.innerHTML = `
     선택된 부지: <b>${site}</b><br>
-    전체 부지 면적: ${totalArea.toLocaleString()} ㎡<br>
-    사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
+    전체 부지 면적: ${totalArea.toLocaleString()}㎡<br>
+    사용 가능 면적: ${effectiveArea.toLocaleString()}㎡ (${usageRate}%)<br>
     모듈 수: ${moduleCount.toLocaleString()}개<br>
     총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
-    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh
+    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh<br>
+    <hr>
+    ${mode === "auto" ? 
+      `자동 계산 (정부지원 75% 기준)<br>설치비: ${totalCost.toLocaleString()}원<br>정부지원금: ${supportCost.toLocaleString()}원<br>자기부담금: ${investCost.toLocaleString()}원`
+      : `직접 입력 모드<br>투자 금액: ${investCost.toLocaleString()}원<br>지원 금액: ${supportCost.toLocaleString()}원`}
   `;
 }
 
@@ -203,27 +229,25 @@ function updateCalculation() {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', updateCalculation);
 });
+document.querySelectorAll('input[name="calcMode"]').forEach(el=>{
+  el.addEventListener('change', updateCalculation);
+});
 
 updateCalculation();
 
-function goToResult() {
+function goToResult(){
   const site=document.getElementById('site').value;
   const width=document.getElementById('width').value;
   const height=document.getElementById('height').value;
   const power=document.getElementById('power').value;
   const invest=document.getElementById('invest').value;
   const support=document.getElementById('support').value;
-
   if(!site||!width||!height||!power){
     alert("모든 값을 입력하세요!");
     return;
   }
-
   window.location.href=`result.html?site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
 }
 </script>
 </body>
 </html>
-
-
-
