@@ -1,274 +1,163 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>태양광 발전량 계산 결과</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>태양광 발전량 계산기</title>
 <style>
-  body {
-    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-    background: #f8fafc;
-    margin: 0;
-    padding: 20px; 
-  }
-  .container {
-    max-width: 90%;
-    width: 100%;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  .summary-box {
-    background:#f5f8ff;
-    border:1px solid #cdd8f0;
-    border-radius:10px;
-    padding:10px 15px;
-    width:100%;
-    font-size:13px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  }
-  .summary-box h2 {
-    text-align:center;
-    color:#1d3557;
-    font-size:16px;
-    margin-bottom:8px;
-  }
-  .summary-box table { width:100%; border-collapse:collapse; }
-  .summary-box th {
-    background:#e8f0fe;
-    color:#1d3557;
-    text-align:left;
-    padding:5px 8px;
-    border-bottom:1px solid #dce2ff;
-    font-weight:600;
-    width:55%;
-  }
-  .summary-box td {
-    text-align:right;
-    padding:5px 8px;
-    border-bottom:1px solid #edf0ff;
-    color:#333;
-    font-weight:500;
-  }
-  .back-btn {
-    display:block;
-    margin: 15px auto 0 auto;
-    background:#1d3557;
-    color:white;
-    border:none;
-    border-radius:6px;
-    padding:9px 20px;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-  }
-  .back-btn:hover { background:#0f223a; }
-  .chart-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    flex-grow: 1;
-    min-width: 100%;
-  }
-  .chart-card {
-    background: white;
-    border-radius: 14px;
-    padding: 10px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-  }
-  .chart-card h3 {
-    text-align:center;
-    color:#1d3557;
-    font-size:14px;
-    margin-bottom:4px;
-  }
-  .chart-card canvas {
-    height: 22vh !important; 
-    max-height: 900px !important;
-    width: 100% !important;
-  }
+body {
+  font-family: 'Pretendard','Noto Sans KR',sans-serif;
+  background:#f0f3f5;
+  margin:0;
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+}
+.container {
+  max-width:90%;
+  width:100%;
+  background:white;
+  border-radius:18px;
+  padding:40px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.1);
+  border:1px solid #e0e0e0;
+}
+h2 {
+  text-align:center;
+  color:#1d3557;
+  margin:-40px -40px 25px -40px;
+  padding:20px 40px;
+  background:#e8f0fe;
+  border-radius:18px 18px 0 0;
+}
+.mode-select {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  margin:10px 0 20px 0;
+  font-weight:600;
+  color:#1d3557;
+  font-size:0.9em;
+}
+.mode-select label {
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+input, select {
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border-radius:8px;
+  border:1px solid #a8b3c3;
+  font-size:1em;
+}
+.result-box {
+  background:#f2f7ff;
+  padding:18px;
+  border-radius:12px;
+  margin-top:30px;
+  color:#1d3557;
+  border-left:5px solid #1d3557;
+}
+button {
+  margin-top:30px;
+  width:100%;
+  background:#1d3557;
+  color:white;
+  font-size:1.1em;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  box-shadow:0 4px #163049;
+}
+button:hover { background:#0f223a; }
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="summary-box">
-    <h2>발전량 시뮬레이션 결과</h2>
-    <table id="summaryTable"></table>
-    <button class="back-btn" onclick="location.href='calc.html'">← 계산기로 돌아가기</button>
+  <h2>태양광 발전량 계산기</h2>
+
+  <div class="mode-select">
+    <label><input type="radio" name="mode" value="auto" checked> 자동 계산</label>
+    <label><input type="radio" name="mode" value="manual"> 직접 입력</label>
   </div>
 
-  <div class="chart-container">
-    <div class="chart-card">
-      <h3>월별 발전량</h3>
-      <canvas id="monthlyChart"></canvas>
-    </div>
+  <label for="site">부지 선택</label>
+  <select id="site">
+    <option value="">-- 선택하세요 --</option>
+    <option value="산업단지">산업단지</option>
+    <option value="주차장">주차장</option>
+    <option value="철도 유휴부지">철도 유휴부지</option>
+  </select>
 
-    <div class="chart-card">
-      <h3>월별 매출액</h3>
-      <canvas id="revenueChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <h3>20년 누적 수익</h3>
-      <canvas id="accumChart"></canvas>
-    </div>
+  <label>패널 크기 (mm)</label>
+  <div style="display:flex;gap:8px;">
+    <input type="number" id="width" placeholder="가로(mm)">
+    <input type="number" id="height" placeholder="세로(mm)">
   </div>
+
+  <label for="power">모듈 최대출력 (W)</label>
+  <input type="number" id="power" placeholder="예: 600">
+
+  <label for="invest">투자 금액 (원)</label>
+  <input type="number" id="invest" placeholder="예: 500000000">
+
+  <label for="support">지원 금액 (원)</label>
+  <input type="number" id="support" placeholder="예: 0">
+
+  <div class="result-box" id="calcResult">입력값을 입력하면 계산 결과가 표시됩니다.</div>
+  <button onclick="goToResult()">계산결과 보기</button>
 </div>
 
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const mode = urlParams.get('mode');
-const site = urlParams.get('site');
-const width = parseFloat(urlParams.get('width'));
-const height = parseFloat(urlParams.get('height'));
-const power = parseFloat(urlParams.get('power'));
-const invest = parseFloat(urlParams.get('invest')) || 0;
-const support = parseFloat(urlParams.get('support')) || 0;
+function updateCalculation() {
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  const site = document.getElementById("site").value;
+  const width = parseFloat(document.getElementById("width").value);
+  const height = parseFloat(document.getElementById("height").value);
+  const power = parseFloat(document.getElementById("power").value);
+  const resultDiv = document.getElementById("calcResult");
 
-const siteData = {
-  "산업단지": {
-    area: 7718419,
-    irradiance: {
-      "1월": 36.1168, "2월": 55.6968, "3월": 94.7830,
-      "4월": 126.1139, "5월": 155.1006, "6월": 159.8903,
-      "7월": 160.2927, "8월": 140.2319, "9월": 104.5271,
-      "10월": 71.3669, "11월": 41.0833, "12월": 30.1366
-    }
-  },
-  "주차장": {
-    area: 241197,
-    irradiance: {
-      "1월": 28.6013, "2월": 45.5446, "3월": 81.5032,
-      "4월": 113.3511, "5월": 143.1436, "6월": 148.7306,
-      "7월": 148.9295, "8월": 116.4261, "9월": 92.3191,
-      "10월": 60.2785, "11월": 33.2715, "12월": 23.7878
-    }
-  },
-  "철도 유휴부지": {
-    area: 72040,
-    irradiance: {
-      "1월": 29.0993, "2월": 48.1443, "3월": 86.1475,
-      "4월": 117.5718, "5월": 146.5722, "6월": 151.8027,
-      "7월": 151.8509, "8월": 131.4686, "9월": 96.0437,
-      "10월": 63.0325, "11월": 33.9140, "12월": 23.6004
-    }
+  if (!site) { resultDiv.innerHTML = "부지를 선택하세요."; return; }
+  if (!width || !height || !power) { 
+    resultDiv.innerHTML = "패널 크기와 출력값을 입력하세요."; return; 
   }
-};
 
-// === 고정 상수 ===
-const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
-const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
-const pricePerKwh = 163;
-const performanceRatio = 0.86;
-const correctionFactor = 1.034947;
-const degradationRate = 0.005;
-
-// === 부지별 설정 ===
-const siteObj = siteData[site];
-if (!siteObj) {
-  document.getElementById("summaryTable").innerHTML = "<tr><td>부지를 선택하세요.</td></tr>";
-  throw new Error("부지 선택 오류");
+  resultDiv.innerHTML = `
+    <b>모드:</b> ${mode === "auto" ? "자동 계산" : "직접 입력"}<br>
+    <b>선택된 부지:</b> ${site}<br>
+    <b>패널 크기:</b> ${width}mm × ${height}mm<br>
+    <b>출력:</b> ${power}W
+  `;
 }
 
-const a = Math.max(width, height) / 1000;
-const b = Math.min(width, height) / 1000;
-let totalArea = siteObj.area;
-let effectiveArea = 0;
-let moduleCount = 0;
+["mode","site","width","height","power","invest","support"].forEach(id=>{
+  document.getElementById(id)?.addEventListener('input',updateCalculation);
+});
 
-if (site === "산업단지" || site === "철도 유휴부지") {
-  const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
-  moduleCount = Math.floor(totalArea / panelWithSpacing);
-  effectiveArea = moduleCount * (a * b);
-} else if (site === "주차장") {
-  const usableArea = 109625;
-  const panelArea = a * b;
-  moduleCount = Math.floor(usableArea / panelArea);
-  effectiveArea = usableArea;
-}
+function goToResult() {
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  const site = document.getElementById('site').value;
+  const width = document.getElementById('width').value;
+  const height = document.getElementById('height').value;
+  const power = document.getElementById('power').value;
+  const invest = document.getElementById('invest').value;
+  const support = document.getElementById('support').value;
 
-const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
-const totalKW = moduleCount * (power / 1000);
-
-// === 월별 발전량 계산 ===
-const irradiance = siteObj.irradiance;
-const months = Object.keys(irradiance);
-const monthlyEnergy = Object.values(irradiance).map(val =>
-  Math.round(totalKW * val * performanceRatio * correctionFactor)
-);
-
-// === 매출 계산 ===
-const monthlyRevenue = monthlyEnergy.map((val, i) =>
-  Math.round(val * (SMP[i] + (REC[i]/1000)))
-);
-
-const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
-const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-
-// === 누적 수익 계산 ===
-let accumRevenue = [];
-let total = 0;
-for (let year = 1; year <= 20; year++) {
-  const efficiency = Math.pow(1 - degradationRate, year - 1);
-  total += yearlyRevenue * efficiency;
-  accumRevenue.push(Math.round(total));
-}
-
-const breakeven = invest - support;
-const saving = Math.round(annualEnergy * pricePerKwh);
-
-// === 표 출력 ===
-document.getElementById("summaryTable").innerHTML = `
-  <tr><th>선택된 부지</th><td>${site}</td></tr>
-  <tr><th>전체 부지 면적</th><td>${totalArea.toLocaleString()} ㎡</td></tr>
-  <tr><th>사용 가능 면적</th><td>${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)</td></tr>
-  <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
-  <tr><th>총 발전용량</th><td>${totalKW.toFixed(1)} kW</td></tr>
-  <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
-  <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년</td></tr>
-  <tr><th>투자 금액</th><td>${invest.toLocaleString()} 원 (${mode === "auto" ? "자동 계산" : "직접 입력"})</td></tr>
-  <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
-`;
-
-// === Chart.js 공통 옵션 ===
-const commonOpts = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() } },
-    legend: { display: false }
+  if(!site || !width || !height || !power) {
+    alert("모든 값을 입력하세요!");
+    return;
   }
-};
 
-// === 월별 발전량 ===
-new Chart(document.getElementById("monthlyChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6 }] },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: kWh'} } } }
-});
-
-// === 월별 매출액 ===
-new Chart(document.getElementById("revenueChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#f4a261', barPercentage:0.6 }] },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
-});
-
-// === 20년 누적 수익 ===
-new Chart(document.getElementById("accumChart"), {
-  type: 'bar',
-  data: {
-    labels: Array.from({length:20},(_,i)=>`${i+1}년`),
-    datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor:'#4caf50', barPercentage:0.6 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:3, pointRadius:0 }
-    ]
-  },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
-});
+  window.location.href = 
+    `result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
+}
 </script>
 </body>
 </html>
