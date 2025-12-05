@@ -102,7 +102,7 @@
       <canvas id="contributionChart"></canvas>
     </div>
     <div class="reduction-info">
-      목표 감축량 (2018년 대비 31.0%):
+      잔여 감축 목표량 (2018년 대비 31.0%):
       <span id="target-reduction-amount" class="info-value">0</span> ktCO₂eq<br/>
       태양광 예상 감축량:
       <span id="reduction-amount" class="info-value">0</span> ktCO₂eq
@@ -256,7 +256,7 @@ updateChart('before');
 new Chart(document.getElementById('contributionChart').getContext('2d'), {
   type: 'doughnut',
   data: {
-    labels: ['태양광 감축 기여', '추가 감축 목표량'],
+    labels: ['태양광 감축 기여', '잔여 감축 목표량'],
     datasets: [{
       data: [totalReduction_kt, remainingReductionNeeded],
       backgroundColor: ['#1E5631', '#6BAED6'],
@@ -293,3 +293,4 @@ document.getElementById('reduction-amount').textContent =
 </script>
 </body>
 </html>
+
