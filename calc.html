@@ -6,259 +6,288 @@
 <title>태양광 발전량 계산기</title>
 <style>
 body {
-  font-family: 'Pretendard','Noto Sans KR',sans-serif;
-  background:#f0f3f5; 
-  margin:0;
-  padding:20px; 
-  display: flex; 
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+font-family: 'Pretendard','Noto Sans KR',sans-serif;
+background:#f0f3f5;
+margin:0;
+padding:20px;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+min-height: 100vh;
 }
 .container {
-  max-width:90%;
-  width: 100%;
-  margin:auto;
-  background:white;
-  border-radius:18px; 
-  padding:40px; 
-  box-shadow:0 8px 30px rgba(0,0,0,0.1); 
-  border: 1px solid #e0e0e0;
+max-width:90%;
+width: 100%;
+margin:auto;
+background:white;
+border-radius:18px;
+padding:40px;
+box-shadow:0 8px 30px rgba(0,0,0,0.1);
+border: 1px solid #e0e0e0;
 }
 h2 {
-  text-align:center;
-  color:#1d3557;
-  margin: -40px -40px 30px -40px; 
-  padding: 25px 40px;
-  background: #e8f0fe;
-  border-radius: 18px 18px 0 0;
-  font-size: 1.5em;
-  font-weight: 700;
+text-align:center;
+color:#1d3557;
+margin: -40px -40px 30px -40px;
+padding: 25px 40px;
+background: #e8f0fe;
+border-radius: 18px 18px 0 0;
+font-size: 1.5em;
+font-weight: 700;
 }
 label {
-  font-weight:600;
-  display:block;
-  margin-top:15px; 
-  color:#333;
-  font-size: 1em;
+font-weight:600;
+display:block;
+margin-top:15px;
+color:#333;
+font-size: 1em;
 }
 input, select {
-  width:100%;
-  padding:12px;
-  margin-top:6px; 
-  border-radius:8px; 
-  border:1px solid #a8b3c3; 
-  font-size:1em;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
-  transition: border-color 0.2s;
+width:100%;
+padding:12px;
+margin-top:6px;
+border-radius:8px;
+border:1px solid #a8b3c3;
+font-size:1em;
+box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+transition: border-color 0.2s;
 }
 input:focus, select:focus {
-  border-color: #1d3557;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
+border-color: #1d3557;
+outline: none;
+box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
 }
 .panel-size {
-  display:flex;
-  align-items:center;
-  gap:10px;
+display:flex;
+align-items:center;
+gap:10px;
 }
 .panel-size input { flex:1; text-align:center; }
 .panel-size span { font-weight:bold; color:#1d3557; font-size:1.2em; }
 .result-box {
-  background:#f2f7ff; 
-  padding:18px; 
-  border-radius:12px;
-  margin-top:30px; 
-  color:#1d3557; 
-  line-height:1.6;
-  font-size:1em;
-  border-left: 5px solid #1d3557; 
+background:#f2f7ff;
+padding:18px;
+border-radius:12px;
+margin-top:30px;
+color:#1d3557;
+line-height:1.6;
+font-size:1em;
+border-left: 5px solid #1d3557;
 }
 button {
-  margin-top:30px; 
-  width:100%;
-  background:#1d3557;
-  color:white;
-  font-size:1.1em; 
-  padding:14px; 
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-  box-shadow: 0 4px #163049; 
-  transition: all 0.15s ease;
+margin-top:30px;
+width:100%;
+background:#1d3557;
+color:white;
+font-size:1.1em;
+padding:14px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+box-shadow: 0 4px #163049;
+transition: all 0.15s ease;
 }
 button:hover { background:#0f223a; }
 button:active {
-  box-shadow: 0 2px #163049;
-  transform: translateY(2px);
+box-shadow: 0 2px #163049;
+transform: translateY(2px);
 }
 
 /* 자동/직접 입력 모드 */
 .mode-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  margin: 15px 0 25px 0;
+display: flex;
+justify-content: center;
+gap: 18px;
+margin: 15px 0 25px 0;
 }
 .mode-toggle label {
-  font-weight: 600;
-  color: #1d3557;
-  background: #e8f0fe;
-  border: 2px solid #cfd8e3;
-  border-radius: 6px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: 0.2s;
+font-weight: 600;
+color: #1d3557;
+background: #e8f0fe;
+border: 2px solid #cfd8e3;
+border-radius: 6px;
+padding: 8px 16px;
+cursor: pointer;
+transition: 0.2s;
+display: flex;
+align-items: center;
+justify-content: center;
 }
+/* 기본 라디오 버튼 숨김 */
 .mode-toggle input[type="radio"] {
-  appearance: none;
-  margin-right: 6px;
+appearance: none;
+-webkit-appearance: none;
+-moz-appearance: none;
+display: none;
 }
 .mode-toggle label:has(input[type="radio"]:checked) {
-  background: #1d3557;
-  color: white;
-  border-color: #1d3557;
+background: #1d3557;
+color: white;
+border-color: #1d3557;
 }
 .mode-toggle label:hover {
-  background: #d9e7ff;
+background: #d9e7ff;
 }
 
 @media (max-width: 650px) {
-  body { padding: 20px; }
-  .container { padding: 25px; border-radius: 12px; }
-  h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
+body { padding: 20px; }
+.container { padding: 25px; border-radius: 12px; }
+h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <h2>태양광 발전량 계산기</h2>
+<h2>태양광 발전량 계산기</h2>
 
-  <!-- 모드 선택 -->
-  <div class="mode-toggle">
-    <label><input type="radio" name="mode" value="auto" checked> 자동 계산 모드</label>
-    <label><input type="radio" name="mode" value="manual"> 직접 입력 모드</label>
-  </div>
+<!-- 모드 선택 -->
+<div class="mode-toggle">
+<label>
+<input type="radio" name="mode" value="auto" checked>
+자동 계산 모드
+</label>
+<label>
+<input type="radio" name="mode" value="manual">
+직접 입력 모드
+</label>
+</div>
 
-  <label for="site">부지 선택</label>
-  <select id="site">
-    <option value="">-- 선택하세요 --</option>
-    <option value="산업단지">산업단지</option>
-    <option value="주차장">주차장</option>
-    <option value="철도 유휴부지">철도 유휴부지</option>
-  </select>
+<label for="site">부지 선택</label>
+<select id="site">
+<option value="">-- 선택하세요 --</option>
+<option value="산업단지">산업단지</option>
+<option value="주차장">주차장</option>
+<option value="철도 유휴부지">철도 유휴부지</option>
+</select>
 
-  <label>패널 크기 (mm)</label>
-  <div class="panel-size">
-    <input type="number" id="width" placeholder="가로(mm)">
-    <span>×</span>
-    <input type="number" id="height" placeholder="세로(mm)">
-  </div>
+<label>패널 크기 (mm)</label>
+<div class="panel-size">
+<input type="number" id="width" placeholder="가로(mm)">
+<span>×</span>
+<input type="number" id="height" placeholder="세로(mm)">
+</div>
 
-  <label for="power">모듈 최대출력 (W)</label>
-  <input type="number" id="power" placeholder="예: 600">
+<label for="power">모듈 최대출력 (W)</label>
+<input type="number" id="power" placeholder="예: 600">
 
-  <label for="invest">투자 금액 (원)</label>
-  <input type="number" id="invest" placeholder="예: 500000000">
+<label for="invest">투자 금액 (원)</label>
+<input type="number" id="invest" placeholder="예: 500000000">
 
-  <label for="support">지원 금액 (원)</label>
-  <input type="number" id="support" placeholder="예: 0">
+<label for="support">지원 금액 (원)</label>
+<input type="number" id="support" placeholder="예: 100000000">
 
-  <div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
+<div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
 
-  <button onclick="goToResult()">계산결과 보기</button>
+<button onclick="goToResult()">계산결과 보기</button>
 </div>
 
 <script>
 const siteData = {
-  "산업단지": { area: 7719419, irradiance: 1175.34 },
-  "주차장": { area: 241197, irradiance: 1074.80 },
-  "철도 유휴부지": { area: 72040, irradiance: 1079.25 }
+"산업단지": { area: 7719419, irradiance: 1175.34 },
+"주차장": { area: 241197, irradiance: 1074.80 },
+"철도 유휴부지": { area: 72040, irradiance: 1079.25 }
 };
 
 function updateCalculation() {
-  const site = document.getElementById('site').value;
-  const width = parseFloat(document.getElementById('width').value);
-  const height = parseFloat(document.getElementById('height').value);
-  const power = parseFloat(document.getElementById('power').value);
-  const invest = parseFloat(document.getElementById('invest').value);
-  const support = parseFloat(document.getElementById('support').value);
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  const resultDiv = document.getElementById('calcResult');
+const site = document.getElementById('site').value;
+const width = parseFloat(document.getElementById('width').value);
+const height = parseFloat(document.getElementById('height').value);
+const power = parseFloat(document.getElementById('power').value);
+const invest = parseFloat(document.getElementById('invest').value);
+const support = parseFloat(document.getElementById('support').value);
+const mode = document.querySelector('input[name="mode"]:checked').value;
+const resultDiv = document.getElementById('calcResult');
 
-  if (!site) {
-    resultDiv.innerHTML = "부지를 선택하세요.";
-    return;
-  }
+if (!site) {
+resultDiv.innerHTML = "부지를 선택하세요.";
+return;
+}
 
-  const { area, irradiance } = siteData[site];
-  if (!width || !height || !power) {
-    resultDiv.innerHTML = `선택된 부지: <b>${site}</b><br>면적: ${area.toLocaleString()}㎡<br>패널 크기와 출력값을 입력해주세요.`;
-    return;
-  }
+const { area, irradiance } = siteData[site];
+if (!width || !height || !power) {
+resultDiv.innerHTML = `선택된 부지: <b>${site}</b><br>면적: ${area.toLocaleString()}㎡<br>패널 크기와 출력값을 입력해주세요.`;
+return;
+}
 
-  const a = Math.max(width, height) / 1000;
-  const b = Math.min(width, height) / 1000;
-  let totalArea = area;
-  let effectiveArea = 0;
-  let moduleCount = 0;
+const a = Math.max(width, height) / 1000;
+const b = Math.min(width, height) / 1000;
+let totalArea = area;
+let effectiveArea = 0;
+let moduleCount = 0;
 
-  if (site === "산업단지" || site === "철도 유휴부지") {
-    const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
-    moduleCount = Math.floor(totalArea / panelWithSpacing);
-    effectiveArea = moduleCount * (a * b);
-  } else if (site === "주차장") {
-    const usableArea = 109625;
-    const panelArea = a * b;
-    moduleCount = Math.floor(usableArea / panelArea);
-    totalArea = 241197;
-    effectiveArea = usableArea;
-  }
+if (site === "산업단지" || site === "철도 유휴부지") {
+const panelWithSpacing = (b * Math.cos(33 * Math.PI / 180) + b * 2.177812506) * a;
+moduleCount = Math.floor(totalArea / panelWithSpacing);
+effectiveArea = moduleCount * (a * b);
+} else if (site === "주차장") {
+const usableArea = 109625;
+const panelArea = a * b;
+moduleCount = Math.floor(usableArea / panelArea);
+totalArea = 241197;
+effectiveArea = usableArea;
+}
 
-  const performanceRatio = 0.86;
-  const correctionFactor = 1.034947;
-  const totalKW = moduleCount * (power / 1000);
-  const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
-  const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
+const performanceRatio = 0.86;
+const correctionFactor = 1.034947;
+const totalKW = moduleCount * (power / 1000);
+const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
+const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
-  let autoInvest = totalKW * 1200000;
-  const finalInvest = mode === "auto" ? autoInvest : invest;
+let autoInvest = totalKW * 1200000; // 자동 계산 모드일 때 1kW당 120만원
+const finalInvest = mode === "auto" ? autoInvest : invest;
 
-  resultDiv.innerHTML = `
-    선택된 부지: <b>${site}</b><br>
-    전체 부지 면적: ${totalArea.toLocaleString()} ㎡<br>
-    사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>
-    모듈 수: ${moduleCount.toLocaleString()}개<br>
-    총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
-    예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh<br>
-    투자 금액: ${finalInvest.toLocaleString()} 원 (${mode === "auto" ? "자동 계산" : "직접 입력"})
-  `;
+resultDiv.innerHTML =     `선택된 부지: <b>${site}</b><br>     전체 부지 면적: ${totalArea.toLocaleString()} ㎡<br>     사용 가능 면적: ${effectiveArea.toLocaleString()} ㎡ (${usageRate}%)<br>     모듈 수: ${moduleCount.toLocaleString()}개<br>     총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>     예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh<br>     투자 금액: ${finalInvest.toLocaleString()} 원 (${mode === "auto"})`  ;
+}
+
+function toggleInputs() {
+const mode = document.querySelector('input[name="mode"]:checked').value;
+const investInput = document.getElementById('invest');
+const supportInput = document.getElementById('support');
+
+if (mode === "auto") {
+investInput.disabled = true;
+supportInput.disabled = true;
+investInput.style.background = "#f1f3f6";
+supportInput.style.background = "#f1f3f6";
+} else {
+investInput.disabled = false;
+supportInput.disabled = false;
+investInput.style.background = "white";
+supportInput.style.background = "white";
+}
 }
 
 ["site","width","height","power","invest","support"].forEach(id=>{
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('input', updateCalculation);
+const el = document.getElementById(id);
+if (el) el.addEventListener('input', updateCalculation);
 });
-document.querySelectorAll('input[name="mode"]').forEach(el => el.addEventListener('change', updateCalculation));
+document.querySelectorAll('input[name="mode"]').forEach(el =>
+el.addEventListener('change', () => {
+toggleInputs();
+updateCalculation();
+})
+);
 
 updateCalculation();
+toggleInputs();
 
 function goToResult() {
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  const site=document.getElementById('site').value;
-  const width=document.getElementById('width').value;
-  const height=document.getElementById('height').value;
-  const power=document.getElementById('power').value;
-  const invest=document.getElementById('invest').value;
-  const support=document.getElementById('support').value;
+const mode = document.querySelector('input[name="mode"]:checked').value;
+const site=document.getElementById('site').value;
+const width=document.getElementById('width').value;
+const height=document.getElementById('height').value;
+const power=document.getElementById('power').value;
+const invest=document.getElementById('invest').value;
+const support=document.getElementById('support').value;
 
-  if(!site||!width||!height||!power){
-    alert("모든 값을 입력하세요!");
-    return;
-  }
+if(!site||!width||!height||!power){
+alert("모든 값을 입력하세요!");
+return;
+}
 
-  window.location.href = `/result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
+// GitHub Pages 절대 경로 대응
+window.location.href = `/result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}`;
 }
 </script>
 </body>
