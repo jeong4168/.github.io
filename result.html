@@ -102,17 +102,17 @@
 
   <div class="chart-container">
     <div class="chart-card">
-      <h3>월별 발전량 </h3>
+      <h3>월별 발전량</h3>
       <canvas id="monthlyChart"></canvas>
     </div>
 
     <div class="chart-card">
-      <h3>월별 매출액 </h3>
+      <h3>월별 매출액</h3>
       <canvas id="revenueChart"></canvas>
     </div>
 
     <div class="chart-card">
-      <h3>20년 누적 수익 </h3>
+      <h3>20년 누적 수익</h3>
       <canvas id="accumChart"></canvas>
     </div>
   </div>
@@ -120,6 +120,7 @@
 
 <script>
 const urlParams = new URLSearchParams(window.location.search);
+const mode = urlParams.get('mode');
 const site = urlParams.get('site');
 const width = parseFloat(urlParams.get('width'));
 const height = parseFloat(urlParams.get('height'));
@@ -157,10 +158,15 @@ const siteData = {
   }
 };
 
+// === 고정 상수 ===
 const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
 const pricePerKwh = 163;
+const performanceRatio = 0.86;
+const correctionFactor = 1.034947;
+const degradationRate = 0.005;
 
+// === 부지별 설정 ===
 const siteObj = siteData[site];
 if (!siteObj) {
   document.getElementById("summaryTable").innerHTML = "<tr><td>부지를 선택하세요.</td></tr>";
@@ -178,7 +184,6 @@ if (site === "산업단지" || site === "철도 유휴부지") {
   moduleCount = Math.floor(totalArea / panelWithSpacing);
   effectiveArea = moduleCount * (a * b);
 } else if (site === "주차장") {
-  totalArea = 241197;
   const usableArea = 109625;
   const panelArea = a * b;
   moduleCount = Math.floor(usableArea / panelArea);
@@ -187,31 +192,23 @@ if (site === "산업단지" || site === "철도 유휴부지") {
 
 const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 const totalKW = moduleCount * (power / 1000);
+
+// === 월별 발전량 계산 ===
 const irradiance = siteObj.irradiance;
 const months = Object.keys(irradiance);
-const irradianceVals = Object.values(irradiance);
-  
-const performanceRatio = 0.86;        // 성능비 (Performance Ratio)
-const correctionFactor = 1.034947;    // 일사량 보정계수
-
-// 월별 발전량 계산 (보정계수와 성능비 적용)
-const monthlyEnergy = irradianceVals.map(val => 
+const monthlyEnergy = Object.values(irradiance).map(val =>
   Math.round(totalKW * val * performanceRatio * correctionFactor)
 );
 
-// 월별 매출액 계산
-const monthlyRevenue = monthlyEnergy.map((val, i) => 
+// === 매출 계산 ===
+const monthlyRevenue = monthlyEnergy.map((val, i) =>
   Math.round(val * (SMP[i] + (REC[i]/1000)))
 );
 
-// 연간 발전량 및 매출
 const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
 const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
-const breakeven = invest - support;
-const saving = Math.round(annualEnergy * pricePerKwh);
 
-//  성능 저하 반영
-const degradationRate = 0.005;
+// === 누적 수익 계산 ===
 let accumRevenue = [];
 let total = 0;
 for (let year = 1; year <= 20; year++) {
@@ -220,7 +217,10 @@ for (let year = 1; year <= 20; year++) {
   accumRevenue.push(Math.round(total));
 }
 
-//  요약 표
+const breakeven = invest - support;
+const saving = Math.round(annualEnergy * pricePerKwh);
+
+// === 표 출력 ===
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site}</td></tr>
   <tr><th>전체 부지 면적</th><td>${totalArea.toLocaleString()} ㎡</td></tr>
@@ -229,145 +229,46 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>총 발전용량</th><td>${totalKW.toFixed(1)} kW</td></tr>
   <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
   <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년</td></tr>
+  <tr><th>투자 금액</th><td>${invest.toLocaleString()} 원 (${mode === "auto" ? "자동 계산" : "직접 입력"})</td></tr>
   <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
 `;
 
-// 공통 옵션
+// === Chart.js 공통 옵션 ===
 const commonOpts = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    tooltip: { 
-      enabled: true, 
-      callbacks: { label: ctx => ctx.raw.toLocaleString() } 
-    },
+    tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() } },
     legend: { display: false }
   }
 };
 
-// ====== [1] 월별 발전량 (단위: kWh) ======
+// === 월별 발전량 ===
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
-  data: { 
-    labels: months, 
-    datasets: [{
-      data: monthlyEnergy,
-      backgroundColor: '#1d3557',
-      barPercentage:0.6,
-      categoryPercentage:0.7
-    }]
-  },
-  options: {
-    ...commonOpts,
-    scales: {
-      x: { 
-        ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } },
-        grid: { display: false }
-      },
-      y: { 
-        beginAtZero: true,
-        ticks: { callback: v => v.toLocaleString(), font: { size: 10 } },
-        grid: { display: false },
-        title: { display: true, text: '단위: kWh', font: { size: 11, weight: 'bold' } }
-      }
-    }
-  }
+  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6 }] },
+  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: kWh'} } } }
 });
 
-
-// ====== [2] 월별 매출액 (단위: 원) ======
+// === 월별 매출액 ===
 new Chart(document.getElementById("revenueChart"), {
   type: 'bar',
-  data: { 
-    labels: months, 
-    datasets: [{
-      data: monthlyRevenue,
-      backgroundColor: '#f4a261',
-      barPercentage:0.6,
-      categoryPercentage:0.7
-    }]
-  },
-  options: {
-    ...commonOpts,
-    scales: {
-      x: { 
-        ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } },
-        grid: { display: false }
-      },
-      y: { 
-        beginAtZero: true,
-        ticks: { callback: v => v.toLocaleString(), font: { size: 10 } },
-        grid: { display: false },
-        title: { display: true, text: '단위: 원', font: { size: 11, weight: 'bold' } }
-      }
-    }
-  }
+  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#f4a261', barPercentage:0.6 }] },
+  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
 });
 
-
-// ====== [3] 20년 누적 수익 (단위: 원) ======
+// === 20년 누적 수익 ===
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
-  data: { 
+  data: {
     labels: Array.from({length:20},(_,i)=>`${i+1}년`),
     datasets: [
-      { 
-        label:'누적 수익',
-        data: accumRevenue,
-        backgroundColor: '#4caf50',
-        barPercentage:0.6,
-        categoryPercentage:0.7,
-        order: 1
-      },
-      { 
-        label:'손익분기점',
-        data: Array(20).fill(breakeven),
-        type:'line',
-        borderColor:'#1d3557',
-        borderDash:[6,4],
-        borderWidth: 3,
-        pointRadius: 0,
-        order: 0
-      }
+      { label:'누적 수익', data: accumRevenue, backgroundColor:'#4caf50', barPercentage:0.6 },
+      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:3, pointRadius:0 }
     ]
   },
-  options: {
-    ...commonOpts,
-    scales: {
-      x: { 
-        ticks: {
-          autoSkip: false,
-          callback: (v, i) => (i + 1) % 2 === 1 ? `${i + 1}년` : '',
-          font: { size: 11 },
-          padding: 8
-        },
-        grid: { display: false }
-      },
-      y: { 
-        beginAtZero: true,
-        ticks: { callback: v => v.toLocaleString(), font: { size: 10 } },
-        grid: { display: false },
-        title: { display: true, text: '단위: 원', font: { size: 11, weight: 'bold' } }
-      }
-    },
-    plugins: { 
-      tooltip: { 
-        enabled: true, 
-        callbacks: { label: ctx => ctx.raw.toLocaleString() + ' 원' } 
-      },
-      legend: { display: false }
-    }
-  }
+  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
 });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
