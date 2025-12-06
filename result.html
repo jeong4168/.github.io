@@ -112,7 +112,7 @@
     </div>
 
     <div class="chart-card">
-      <h3>20년 누적 수익 (0.5% 효율 저하율 반영)</h3>
+      <h3>20년 누적 수익 </h3>
       <canvas id="accumChart"></canvas>
     </div>
   </div>
@@ -272,7 +272,7 @@ new Chart(document.getElementById("revenueChart"), {
   options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
 });
 
-// 20년 누적 수익 (효율 저하율 반영)
+// 20년 누적 수익 
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: {
@@ -287,3 +287,4 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
