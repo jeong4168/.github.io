@@ -97,7 +97,6 @@
   <div class="summary-box">
     <h2>발전량 시뮬레이션 결과</h2>
     <table id="summaryTable"></table>
-    <!-- ✅ 경로 수정: GitHub Pages 상대경로 -->
     <button class="back-btn" onclick="location.href='./calc.html'">← 계산기로 돌아가기</button>
   </div>
 
@@ -259,7 +258,7 @@ const commonOpts = {
   }
 };
 
-//  월별 발전량
+// 월별 발전량
 new Chart(document.getElementById("monthlyChart"), {
   type: 'bar',
   data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6 }] },
@@ -273,12 +272,18 @@ new Chart(document.getElementById("revenueChart"), {
   options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
 });
 
-//  20년 누적 수익 (효율 저하율 반영)
+// 20년 누적 수익 (효율 저하율 반영)
 new Chart(document.getElementById("accumChart"), {
   type: 'bar',
   data: {
-    labels: Array.from({length:20},(_,i)=>`${i+1}년`),
+    labels: Array.from({length:20}, (_,i)=>`${i+1}년`),
     datasets: [
       { label:'누적 수익', data: accumRevenue, backgroundColor:'#4caf50', barPercentage:0.6 },
       { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:3, pointRadius:0 }
-   
+    ]
+  },
+  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
+});
+</script>
+</body>
+</html>
