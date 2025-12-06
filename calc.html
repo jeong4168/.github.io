@@ -10,37 +10,34 @@ body {
   background:#f0f3f5; 
   margin:0;
   padding:20px; 
-  display: flex; 
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  display:flex; 
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
 }
 .container {
   max-width:90%;
-  width: 100%;
-  margin:auto;
+  width:100%;
   background:white;
   border-radius:18px; 
   padding:40px; 
   box-shadow:0 8px 30px rgba(0,0,0,0.1); 
-  border: 1px solid #e0e0e0;
+  border:1px solid #e0e0e0;
 }
 h2 {
   text-align:center;
   color:#1d3557;
-  margin: -40px -40px 30px -40px; 
-  padding: 25px 40px;
-  background: #e8f0fe;
-  border-radius: 18px 18px 0 0;
-  font-size: 1.5em;
-  font-weight: 700;
+  margin:-40px -40px 30px -40px; 
+  padding:25px 40px;
+  background:#e8f0fe;
+  border-radius:18px 18px 0 0;
 }
 label {
   font-weight:600;
   display:block;
   margin-top:15px; 
   color:#333;
-  font-size: 1em;
+  font-size:1em;
 }
 input, select {
   width:100%;
@@ -50,12 +47,12 @@ input, select {
   border:1px solid #a8b3c3; 
   font-size:1em;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
-  transition: border-color 0.2s;
+  transition:border-color 0.2s;
 }
 input:focus, select:focus {
-  border-color: #1d3557;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
+  border-color:#1d3557;
+  outline:none;
+  box-shadow:0 0 0 3px rgba(29,53,87,0.2);
 }
 .panel-size {
   display:flex;
@@ -71,8 +68,7 @@ input:focus, select:focus {
   margin-top:30px; 
   color:#1d3557; 
   line-height:1.6;
-  font-size:1em;
-  border-left: 5px solid #1d3557; 
+  border-left:5px solid #1d3557; 
 }
 button {
   margin-top:30px; 
@@ -85,50 +81,44 @@ button {
   border-radius:8px;
   cursor:pointer;
   font-weight:bold;
-  box-shadow: 0 4px #163049; 
-  transition: all 0.15s ease;
+  box-shadow:0 4px #163049; 
+  transition:all 0.15s ease;
 }
 button:hover { background:#0f223a; }
-button:active {
-  box-shadow: 0 2px #163049;
-  transform: translateY(2px);
-}
+button:active { box-shadow:0 2px #163049; transform:translateY(2px); }
 
 /* 자동/직접 입력 모드 */
 .mode-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  margin: 15px 0 25px 0;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin:15px 0 25px 0;
 }
 .mode-toggle label {
-  font-weight: 600;
-  color: #1d3557;
-  background: #e8f0fe;
-  border: 2px solid #cfd8e3;
-  border-radius: 6px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-weight:600;
+  color:#1d3557;
+  background:#e8f0fe;
+  border:2px solid #cfd8e3;
+  border-radius:6px;
+  padding:8px 16px;
+  cursor:pointer;
+  transition:0.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-/* 기본 라디오 버튼 숨김 */
 .mode-toggle input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  display: none;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  display:none;
 }
 .mode-toggle label:has(input[type="radio"]:checked) {
-  background: #1d3557;
-  color: white;
-  border-color: #1d3557;
+  background:#1d3557;
+  color:white;
+  border-color:#1d3557;
 }
-.mode-toggle label:hover {
-  background: #d9e7ff;
-}
+.mode-toggle label:hover { background:#d9e7ff; }
 
 .korean-hint {
   font-size:0.9em;
@@ -136,10 +126,10 @@ button:active {
   margin-top:4px;
 }
 
-@media (max-width: 650px) {
-  body { padding: 20px; }
-  .container { padding: 25px; border-radius: 12px; }
-  h2 { margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 12px 12px 0 0; }
+@media (max-width:650px) {
+  body{padding:20px;}
+  .container{padding:25px; border-radius:12px;}
+  h2{margin:-25px -25px 20px -25px; padding:20px 25px; border-radius:12px 12px 0 0;}
 }
 </style>
 </head>
@@ -172,14 +162,14 @@ button:active {
   <input type="number" id="power" placeholder="예: 600">
 
   <label for="invest">투자 금액 (₩)</label>
-  <input type="text" id="invest" placeholder="예: 500000000">
+  <input type="text" id="invest" placeholder="예: 1,000,000">
   <div id="investLabel" class="korean-hint"></div>
 
   <label for="support">지원 금액 (₩)</label>
-  <input type="text" id="support" placeholder="예: 100000000">
+  <input type="text" id="support" placeholder="예: 500,000">
   <div id="supportLabel" class="korean-hint"></div>
 
-  <div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 여기에 표시됩니다.</div>
+  <div class="result-box" id="calcResult">입력값을 모두 입력하면 계산 결과가 표시됩니다.</div>
   <button onclick="goToResult()">계산결과 보기</button>
 </div>
 
@@ -209,7 +199,7 @@ function formatInput(input, labelId) {
   document.getElementById(labelId).innerText = '(' + formatKoreanWon(parseInt(val)) + ')';
 }
 
-// ---------- 사이트 기본값 ----------
+// ---------- 사이트 데이터 ----------
 const siteData = {
   "산업단지": { area: 7719419, irradiance: 1175.34 },
   "주차장": { area: 241197, irradiance: 1074.80 },
@@ -226,10 +216,7 @@ function updateCalculation() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
   const resultDiv = document.getElementById('calcResult');
 
-  if (!site) {
-    resultDiv.innerHTML = "부지를 선택하세요.";
-    return;
-  }
+  if (!site) { resultDiv.innerHTML = "부지를 선택하세요."; return; }
 
   const { area, irradiance } = siteData[site];
   if (!width || !height || !power) {
@@ -275,7 +262,7 @@ function updateCalculation() {
   `;
 }
 
-// ---------- 입력 리스너 ----------
+// ---------- 입력 이벤트 ----------
 document.getElementById('invest').addEventListener('input', function(){formatInput(this, 'investLabel');});
 document.getElementById('support').addEventListener('input', function(){formatInput(this, 'supportLabel');});
 
@@ -290,7 +277,7 @@ document.querySelectorAll('input[name="mode"]').forEach(el =>
   })
 );
 
-// ---------- 자동 계산 모드 시 입력창 잠금 ----------
+// ---------- 자동 모드 입력 비활성 ----------
 function toggleInputs() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
   const investInput = document.getElementById('invest');
@@ -301,6 +288,8 @@ function toggleInputs() {
     supportInput.disabled = true;
     investInput.style.background = "#f1f3f6";
     supportInput.style.background = "#f1f3f6";
+    investInput.value = '';
+    supportInput.value = '';
     document.getElementById('investLabel').innerText = '';
     document.getElementById('supportLabel').innerText = '';
   } else {
