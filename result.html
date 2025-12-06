@@ -21,51 +21,51 @@
     gap: 15px;
   }
   .summary-box {
-    background: #f5f8ff;
-    border: 1px solid #cdd8f0;
-    border-radius: 10px;
-    padding: 10px 15px;
-    width: 100%;
-    font-size: 13px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background:#f5f8ff;
+    border:1px solid #cdd8f0;
+    border-radius:10px;
+    padding:10px 15px;
+    width:100%;
+    font-size:13px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
   }
   .summary-box h2 {
-    text-align: center;
-    color: #1d3557;
-    font-size: 16px;
-    margin-bottom: 8px;
+    text-align:center;
+    color:#1d3557;
+    font-size:16px;
+    margin-bottom:8px;
   }
-  .summary-box table { width: 100%; border-collapse: collapse; }
+  .summary-box table { width:100%; border-collapse:collapse; }
   .summary-box th {
-    background: #e8f0fe;
-    color: #1d3557;
-    text-align: left;
-    padding: 5px 8px;
-    border-bottom: 1px solid #dce2ff;
-    font-weight: 600;
-    width: 55%;
+    background:#e8f0fe;
+    color:#1d3557;
+    text-align:left;
+    padding:5px 8px;
+    border-bottom:1px solid #dce2ff;
+    font-weight:600;
+    width:55%;
   }
   .summary-box td {
-    text-align: right;
-    padding: 5px 8px;
-    border-bottom: 1px solid #edf0ff;
-    color: #333;
-    font-weight: 500;
+    text-align:right;
+    padding:5px 8px;
+    border-bottom:1px solid #edf0ff;
+    color:#333;
+    font-weight:500;
   }
   .back-btn {
-    display: block;
+    display:block;
     margin: 15px auto 0 auto;
-    background: #1d3557;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 9px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
+    background:#1d3557;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:9px 20px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
   }
-  .back-btn:hover { background: #0f223a; }
+  .back-btn:hover { background:#0f223a; }
   .chart-container {
     display: flex;
     flex-direction: column;
@@ -80,10 +80,10 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.05);
   }
   .chart-card h3 {
-    text-align: center;
-    color: #1d3557;
-    font-size: 14px;
-    margin-bottom: 4px;
+    text-align:center;
+    color:#1d3557;
+    font-size:14px;
+    margin-bottom:4px;
   }
   .chart-card canvas {
     height: 22vh !important;
@@ -112,13 +112,31 @@
     </div>
 
     <div class="chart-card">
-      <h3>20년 누적 수익 </h3>
+      <h3>20년 누적 수익 (0.5% 효율 저하율 반영)</h3>
       <canvas id="accumChart"></canvas>
     </div>
   </div>
 </div>
 
 <script>
+// ------------------------
+// 한글 금액 변환 함수
+// ------------------------
+function formatKoreanWon(num) {
+  if (isNaN(num) || num === 0) return '';
+  const 억 = Math.floor(num / 100000000);
+  const 만 = Math.floor((num % 100000000) / 10000);
+  const 천 = Math.floor((num % 10000) / 1000);
+  let result = '';
+  if (억 > 0) result += `${억}억 `;
+  if (만 > 0) result += `${만}만 `;
+  if (천 > 0) result += `${천}천 `;
+  return result.trim() + '원';
+}
+
+// ------------------------
+// URL 파라미터 읽기
+// ------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const mode = urlParams.get('mode');
 const site = urlParams.get('site');
@@ -128,9 +146,9 @@ const power = parseFloat(urlParams.get('power'));
 let invest = parseFloat(urlParams.get('invest')) || 0;
 const support = parseFloat(urlParams.get('support')) || 0;
 
-// -------------------------
-//  부지별 기본데이터
-// -------------------------
+// ------------------------
+// 부지별 기본데이터
+// ------------------------
 const siteData = {
   "산업단지": {
     area: 7718419,
@@ -161,25 +179,20 @@ const siteData = {
   }
 };
 
-// -------------------------
-//  기본 상수
-// -------------------------
+// ------------------------
+// 상수
+// ------------------------
 const SMP = [137.91,119.49,134.4,125.9,126.35,125.99,132.46,145.79,138.78,117.2,112.26,116.58];
 const REC = [77939,79323,79058,75584,74466,74916,75801,78753,79282,76866,75010,67159];
-const pricePerKwh = 163; // 절감 단가
+const pricePerKwh = 163;
 const performanceRatio = 0.86;
 const correctionFactor = 1.034947;
 const degradationRate = 0.005;
 
-// -------------------------
-//  기본 계산
-// -------------------------
+// ------------------------
+// 계산
+// ------------------------
 const siteObj = siteData[site];
-if (!siteObj) {
-  document.getElementById("summaryTable").innerHTML = "<tr><td>부지를 선택하세요.</td></tr>";
-  throw new Error("부지 선택 오류");
-}
-
 const a = Math.max(width, height) / 1000;
 const b = Math.min(width, height) / 1000;
 let totalArea = siteObj.area;
@@ -199,41 +212,35 @@ if (site === "산업단지" || site === "철도 유휴부지") {
 
 const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 const totalKW = moduleCount * (power / 1000);
+if (mode === "auto") invest = totalKW * 1200000;
 
-// 자동계산 모드에서는 1kW당 120만원 적용
-if (mode === "auto") {
-  invest = totalKW * 1200000;
-}
-
-// -------------------------
-//  월별 발전량 및 매출
-// -------------------------
+// 월별 발전량 & 매출
 const months = Object.keys(siteObj.irradiance);
 const monthlyEnergy = Object.values(siteObj.irradiance).map(val =>
   Math.round(totalKW * val * performanceRatio * correctionFactor)
 );
 const monthlyRevenue = monthlyEnergy.map((val, i) =>
-  Math.round(val * (SMP[i] + REC[i] / 1000))
+  Math.round(val * (SMP[i] + REC[i]/1000))
 );
-const annualEnergy = monthlyEnergy.reduce((a, b) => a + b, 0);
-const yearlyRevenue = monthlyRevenue.reduce((a, b) => a + b, 0);
-const breakeven = invest - support;
+const annualEnergy = monthlyEnergy.reduce((a,b)=>a+b,0);
+const yearlyRevenue = monthlyRevenue.reduce((a,b)=>a+b,0);
 const saving = Math.round(annualEnergy * pricePerKwh);
 
-// -------------------------
-//  20년 누적 수익 계산
-// -------------------------
+// 누적 수익
 let accumRevenue = [];
 let total = 0;
+let paybackYear = null;
 for (let year = 1; year <= 20; year++) {
   const efficiency = Math.pow(1 - degradationRate, year - 1);
   total += yearlyRevenue * efficiency;
   accumRevenue.push(Math.round(total));
+  if (!paybackYear && total >= invest) paybackYear = year;
 }
+if (!paybackYear) paybackYear = '20년 초과';
 
-// -------------------------
-//  결과표
-// -------------------------
+// ------------------------
+// 출력
+// ------------------------
 document.getElementById("summaryTable").innerHTML = `
   <tr><th>선택된 부지</th><td>${site}</td></tr>
   <tr><th>전체 부지 면적</th><td>${totalArea.toLocaleString()} ㎡</td></tr>
@@ -242,49 +249,56 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>총 발전용량</th><td>${totalKW.toFixed(1)} kW</td></tr>
   <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
   <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년</td></tr>
-  <tr><th>투자 금액</th><td>${Math.round(invest).toLocaleString()} 원 (${mode === "auto" ? "자동 계산" : "직접 입력"})</td></tr>
-  <tr><th>손익분기점</th><td>${breakeven.toLocaleString()} 원</td></tr>
+  <tr><th>투자 금액</th><td>${Math.round(invest).toLocaleString()}원<br><span style="color:#1d3557;">(${formatKoreanWon(invest)})</span></td></tr>
+  <tr><th>예상 투자 회수 시점</th><td>${paybackYear}년차</td></tr>
 `;
 
-// -------------------------
-//  Chart.js 그래프
-// -------------------------
+// ------------------------
+// 그래프 설정
+// ------------------------
 const commonOpts = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    tooltip: { enabled: true, callbacks: { label: ctx => ctx.raw.toLocaleString() } },
-    legend: { display: false }
+  responsive:true,
+  maintainAspectRatio:false,
+  plugins:{
+    tooltip:{enabled:true,callbacks:{label:ctx=>ctx.raw.toLocaleString()}},
+    legend:{display:false}
+  },
+  scales:{
+    x:{
+      grid:{display:false},
+      ticks:{autoSkip:false, maxRotation:0, minRotation:0}
+    },
+    y:{grid:{display:false}}
   }
 };
 
 // 월별 발전량
 new Chart(document.getElementById("monthlyChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyEnergy, backgroundColor: '#1d3557', barPercentage:0.6 }] },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: kWh'} } } }
+  type:'bar',
+  data:{labels:months, datasets:[{data:monthlyEnergy, backgroundColor:'#1d3557'}]},
+  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: kWh'},grid:{display:false}}}}
 });
 
 // 월별 매출액
 new Chart(document.getElementById("revenueChart"), {
-  type: 'bar',
-  data: { labels: months, datasets: [{ data: monthlyRevenue, backgroundColor: '#f4a261', barPercentage:0.6 }] },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
+  type:'bar',
+  data:{labels:months, datasets:[{data:monthlyRevenue, backgroundColor:'#f4a261'}]},
+  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: 원'},grid:{display:false}}}}
 });
 
-// 20년 누적 수익 
+// 누적 수익
 new Chart(document.getElementById("accumChart"), {
-  type: 'bar',
-  data: {
-    labels: Array.from({length:20}, (_,i)=>`${i+1}년`),
-    datasets: [
-      { label:'누적 수익', data: accumRevenue, backgroundColor:'#4caf50', barPercentage:0.6 },
-      { label:'손익분기점', data:Array(20).fill(breakeven), type:'line', borderColor:'#1d3557', borderDash:[6,4], borderWidth:3, pointRadius:0 }
+  type:'bar',
+  data:{
+    labels:Array.from({length:20},(_,i)=>`${i+1}년`),
+    datasets:[
+      {label:'누적 수익',data:accumRevenue,backgroundColor:'#4caf50',order:2},
+      {label:'손익분기점',data:Array(20).fill(invest),
+       type:'line',borderColor:'#1d3557',borderDash:[6,4],borderWidth:3,pointRadius:0,order:1}
     ]
   },
-  options: { ...commonOpts, scales: { y: { title:{display:true,text:'단위: 원'} } } }
+  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: 원'},grid:{display:false}}}}
 });
 </script>
 </body>
 </html>
-
