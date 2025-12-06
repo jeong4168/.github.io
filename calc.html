@@ -161,11 +161,11 @@ button:active { box-shadow:0 2px #163049; transform:translateY(2px); }
   <label for="power">모듈 최대출력 (W)</label>
   <input type="number" id="power" placeholder="예: 600">
 
-  <label for="invest">투자 금액 (₩)</label>
+  <label for="invest">투자 금액 (원)</label>
   <input type="text" id="invest" placeholder="예: 1,000,000">
   <div id="investLabel" class="korean-hint"></div>
 
-  <label for="support">지원 금액 (₩)</label>
+  <label for="support">지원 금액 (원)</label>
   <input type="text" id="support" placeholder="예: 500,000">
   <div id="supportLabel" class="korean-hint"></div>
 
@@ -196,7 +196,7 @@ function formatInput(input, labelId) {
     return;
   }
   input.value = parseInt(val).toLocaleString('ko-KR');
-  document.getElementById(labelId).innerText = '(' + formatKoreanWon(parseInt(val)) + ')';
+  document.getElementById(labelId).innerText =   formatKoreanWon(parseInt(val)) ;
 }
 
 // ---------- 사이트 데이터 ----------
@@ -323,3 +323,4 @@ function goToResult() {
 </script>
 </body>
 </html>
+
