@@ -258,7 +258,7 @@ function updateCalculation() {
     모듈 수: ${moduleCount.toLocaleString()}개<br>
     총 용량: ${totalKW.toLocaleString(undefined,{maximumFractionDigits:1})} kW<br>
     예상 연간 발전량: ${annualEnergy.toLocaleString(undefined,{maximumFractionDigits:0})} kWh<br>
-    투자 금액: ₩${finalInvest.toLocaleString()} (${formatKoreanWon(finalInvest)})
+    투자 금액: ${finalInvest.toLocaleString()}원 (${formatKoreanWon(finalInvest)})
   `;
 }
 
@@ -323,4 +323,5 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
