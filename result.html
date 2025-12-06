@@ -257,49 +257,114 @@ document.getElementById("summaryTable").innerHTML = `
 // 그래프 설정
 // ------------------------
 const commonOpts = {
-  responsive:true,
-  maintainAspectRatio:false,
-  plugins:{
-    tooltip:{enabled:true,callbacks:{label:ctx=>ctx.raw.toLocaleString()}},
-    legend:{display:false}
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: {
+    mode: 'nearest',
+    intersect: false // 커서 근처에서도 툴팁 활성화
   },
-  scales:{
-    x:{
-      grid:{display:false},
-      ticks:{autoSkip:false, maxRotation:0, minRotation:0}
+  plugins: {
+    tooltip: {
+      enabled: true,
+      callbacks: {
+        label: ctx => ctx.raw.toLocaleString() + ' ' + 
+          (ctx.chart.canvas.id === 'monthlyChart' ? 'kWh' :
+           ctx.chart.canvas.id === 'revenueChart' ? '원' : '')
+      },
+      backgroundColor: 'rgba(29,53,87,0.9)',
+      titleFont: { size: 12 },
+      bodyFont: { size: 11 },
+      padding: 8
     },
-    y:{grid:{display:false}}
+    legend: { display: false }
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 }
+    },
+    y: { grid: { display: false } }
   }
 };
 
 // 월별 발전량
 new Chart(document.getElementById("monthlyChart"), {
-  type:'bar',
-  data:{labels:months, datasets:[{data:monthlyEnergy, backgroundColor:'#1d3557'}]},
-  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: kWh'},grid:{display:false}}}}
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      data: monthlyEnergy,
+      backgroundColor: '#1d3557',
+      barPercentage: 0.7,
+      categoryPercentage: 0.8
+    }]
+  },
+  options: {
+    ...commonOpts,
+    scales: { 
+      ...commonOpts.scales, 
+      y: { title: { display: true, text: '단위: kWh' }, grid: { display: false } } 
+    }
+  }
 });
 
 // 월별 매출액
 new Chart(document.getElementById("revenueChart"), {
-  type:'bar',
-  data:{labels:months, datasets:[{data:monthlyRevenue, backgroundColor:'#f4a261'}]},
-  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: 원'},grid:{display:false}}}}
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      data: monthlyRevenue,
+      backgroundColor: '#f4a261',
+      barPercentage: 0.7,
+      categoryPercentage: 0.8
+    }]
+  },
+  options: {
+    ...commonOpts,
+    scales: { 
+      ...commonOpts.scales, 
+      y: { title: { display: true, text: '단위: 원' }, grid: { display: false } } 
+    }
+  }
 });
 
 // 누적 수익
 new Chart(document.getElementById("accumChart"), {
-  type:'bar',
-  data:{
-    labels:Array.from({length:20},(_,i)=>`${i+1}년`),
-    datasets:[
-      {label:'누적 수익',data:accumRevenue,backgroundColor:'#4caf50',order:2},
-      {label:'손익분기점',data:Array(20).fill(invest),
-       type:'line',borderColor:'#1d3557',borderDash:[6,4],borderWidth:3,pointRadius:0,order:1}
+  type: 'bar',
+  data: {
+    labels: Array.from({length:20}, (_,i)=>`${i+1}년`),
+    datasets: [
+      {
+        label: '누적 수익',
+        data: accumRevenue,
+        backgroundColor: '#4caf50',
+        barPercentage: 0.7,
+        categoryPercentage: 0.8,
+        order: 2
+      },
+      {
+        label: '손익분기점',
+        data: Array(20).fill(invest),
+        type: 'line',
+        borderColor: '#1d3557',
+        borderDash: [6, 4],
+        borderWidth: 3,
+        pointRadius: 0,
+        order: 1
+      }
     ]
   },
-  options:{...commonOpts, scales:{...commonOpts.scales,y:{title:{display:true,text:'단위: 원'},grid:{display:false}}}}
+  options: {
+    ...commonOpts,
+    scales: { 
+      ...commonOpts.scales, 
+      y: { title: { display: true, text: '단위: 원' }, grid: { display: false } } 
+    }
+  }
 });
 </script>
 </body>
 </html>
+
 
