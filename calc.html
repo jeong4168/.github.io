@@ -196,7 +196,7 @@ function formatInput(input, labelId) {
     return;
   }
   input.value = parseInt(val).toLocaleString('ko-KR');
-  document.getElementById(labelId).innerText =   formatKoreanWon(parseInt(val)) ;
+  document.getElementById(labelId).innerText = formatKoreanWon(parseInt(val));
 }
 
 // ---------- 사이트 데이터 ----------
@@ -205,6 +205,9 @@ const siteData = {
   "주차장": { area: 241197, irradiance: 1074.80 },
   "철도 유휴부지": { area: 72040, irradiance: 1079.25 }
 };
+
+// ---------- 전역 단가 변수 ----------
+let unitPrice = 1200000; // 기본값
 
 function updateCalculation() {
   const site = document.getElementById('site').value;
@@ -248,7 +251,10 @@ function updateCalculation() {
   const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
-  let autoInvest = (site === "주차장") ? totalKW * 1500000 : totalKW * 1200000;
+  // ✅ 부지별 단가 설정
+  unitPrice = (site === "주차장") ? 1500000 : 1200000;
+
+  let autoInvest = totalKW * unitPrice;
   const finalInvest = mode === "auto" ? autoInvest : invest;
 
   resultDiv.innerHTML = `
@@ -317,12 +323,9 @@ function goToResult() {
     alert("모든 값을 입력하세요!");
     return;
   }
-window.location.href=`./result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}&unitPrice=${unitPrice}`;
+
+  window.location.href=`./result.html?mode=${mode}&site=${site}&width=${width}&height=${height}&power=${power}&invest=${invest}&support=${support}&unitPrice=${unitPrice}`;
 }
 </script>
 </body>
 </html>
-
-
-
-
