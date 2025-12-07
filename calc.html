@@ -248,7 +248,7 @@ function updateCalculation() {
   const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
-  let autoInvest = totalKW * 1200000;
+  let autoInvest = (site === "주차장") ? totalKW * 1500000 : totalKW * 1200000;
   const finalInvest = mode === "auto" ? autoInvest : invest;
 
   resultDiv.innerHTML = `
@@ -323,5 +323,6 @@ function goToResult() {
 </script>
 </body>
 </html>
+
 
 
