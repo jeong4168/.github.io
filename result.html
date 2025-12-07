@@ -248,9 +248,6 @@ document.getElementById("summaryTable").innerHTML = `
   <tr><th>모듈 수</th><td>${moduleCount.toLocaleString()} 개</td></tr>
   <tr><th>총 발전용량</th><td>${totalKW.toFixed(1)} kW</td></tr>
   <tr><th>예상 연간 발전량</th><td>${annualEnergy.toLocaleString()} kWh</td></tr>
-  <tr><th>절감 전기요금</th><td>${saving.toLocaleString()} 원/년<br<span style="color:#1d3557;">(${formatKoreanWon(saving)}/년)</span>
-  </td>
-</tr>
   <tr><th>투자 금액</th><td>${Math.round(invest).toLocaleString()}원<br><span style="color:#1d3557;">(${formatKoreanWon(invest)})</span></td></tr>
   <tr><th>예상 투자 회수 시점</th><td>${paybackYear}년차</td></tr>
 `;
@@ -395,6 +392,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
