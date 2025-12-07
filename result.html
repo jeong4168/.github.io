@@ -145,6 +145,7 @@ const height = parseFloat(urlParams.get('height'));
 const power = parseFloat(urlParams.get('power'));
 let invest = parseFloat(urlParams.get('invest')) || 0;
 const support = parseFloat(urlParams.get('support')) || 0;
+  const unitPrice = parseFloat(urlParams.get('unitPrice')) || (site === "주차장" ? 1500000 : 1200000);
 
 // ------------------------
 // 부지별 기본데이터
@@ -212,8 +213,7 @@ if (site === "산업단지" || site === "철도 유휴부지") {
 
 const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 const totalKW = moduleCount * (power / 1000);
-if (mode === "auto") invest = totalKW * 1200000;
-
+if (mode === "auto") { invest = totalKW * unitPrice;}
 // 월별 발전량 & 매출
 const months = Object.keys(siteObj.irradiance);
 const monthlyEnergy = Object.values(siteObj.irradiance).map(val =>
@@ -395,6 +395,7 @@ new Chart(document.getElementById("accumChart"), {
 </script>
 </body>
 </html>
+
 
 
 
