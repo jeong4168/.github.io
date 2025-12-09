@@ -251,7 +251,7 @@ function updateCalculation() {
   const annualEnergy = totalKW * irradiance * performanceRatio * correctionFactor;
   const usageRate = ((effectiveArea / totalArea) * 100).toFixed(1);
 
-  // ✅ 부지별 단가 설정
+  // 부지별 단가 설정
   unitPrice = (site === "주차장") ? 1500000 : 1200000;
 
   let autoInvest = totalKW * unitPrice;
@@ -329,3 +329,4 @@ function goToResult() {
 </script>
 </body>
 </html>
+
